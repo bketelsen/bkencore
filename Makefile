@@ -1,4 +1,6 @@
-
+check:
+	encore check
+	
 dev:
 	encore run --listen 0.0.0.0:4000
 
