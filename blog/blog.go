@@ -70,6 +70,8 @@ func CreateBlogPost(ctx context.Context, params *CreateBlogPostParams) error {
 	_, err := sqldb.Exec(ctx, `
 		INSERT INTO "article" (slug, created_at, published, modified_at, title, summary,body, body_rendered)
 		VALUES ($1,  NOW(), $2, NOW(), $3, $4, $5, $6)
+		ON CONFLICT (slug) DO UPDATE
+		SET published = $2, modified_at = NOW(), title = $3, summary = $4, body = $5, body_rendered = $6
 
 	`, params.Slug, params.Published, params.Title, params.Summary, params.Body, string(rendered))
 	if err != nil {
