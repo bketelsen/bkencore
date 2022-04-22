@@ -5,9 +5,11 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/russross/blackfriday/v2"
+
+	"encore.dev/beta/auth"
 	"encore.dev/beta/errs"
 	"encore.dev/storage/sqldb"
-	"github.com/russross/blackfriday/v2"
 )
 
 type BlogPost struct {
@@ -65,18 +67,18 @@ func GetBlogPost(ctx context.Context, slug string) (*BlogPost, error) {
 // CreateBlogPost creates a new blog post.
 //encore:api auth
 func CreateBlogPost(ctx context.Context, params *CreateBlogPostParams) error {
-
 	rendered := blackfriday.Run([]byte(params.Body))
 	_, err := sqldb.Exec(ctx, `
 		INSERT INTO "article" (slug, created_at, published, modified_at, title, summary,body, body_rendered)
 		VALUES ($1,  NOW(), $2, NOW(), $3, $4, $5, $6)
 		ON CONFLICT (slug) DO UPDATE
 		SET published = $2, modified_at = NOW(), title = $3, summary = $4, body = $5, body_rendered = $6
-
 	`, params.Slug, params.Published, params.Title, params.Summary, params.Body, string(rendered))
+
 	if err != nil {
 		return fmt.Errorf("insert article: %v", err)
 	}
+
 	return nil
 
 }
@@ -86,10 +88,10 @@ func CreateBlogPost(ctx context.Context, params *CreateBlogPostParams) error {
 //encore:api public method=GET path=/blog
 func GetBlogPosts(ctx context.Context, params *GetBlogPostsParams) (*GetBlogPostsResponse, error) {
 	rows, err := sqldb.Query(ctx, `
-	SELECT slug, created_at, published, modified_at, title, summary, body, body_rendered
-	FROM "article"
-	LIMIT $1
-	OFFSET $2
+		SELECT slug, created_at, published, modified_at, title, summary, body, body_rendered
+		FROM "article"
+		LIMIT $1
+		OFFSET $2
 	`, params.Limit, params.Offset)
 	if err != nil {
 		return &GetBlogPostsResponse{
@@ -117,4 +119,9 @@ func GetBlogPosts(ctx context.Context, params *GetBlogPostsParams) (*GetBlogPost
 		Count:     i,
 		BlogPosts: q,
 	}, rows.Err()
+}
+
+//encore:authhandler
+func AuthHandler(ctx context.Context, token string) (auth.UID, error) {
+	return "", nil
 }
