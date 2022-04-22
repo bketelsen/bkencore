@@ -10,7 +10,6 @@ import (
 var cfgData []byte
 
 var cfg struct {
-	StrapiURL     string `json:"strapi_url"`
 	MailgunDomain string `json:"mailgun_domain"`
 }
 
@@ -22,6 +21,5 @@ func init() {
 
 var secrets struct {
 	MailGunAPIKey string
-	AuthPassword  string
 	TokenHashKey  string
 }
