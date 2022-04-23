@@ -88,6 +88,7 @@ func push() error {
 			rest, err := frontmatter.Parse(f, &post)
 			cobra.CheckErr(err)
 			post.Body = string(rest)
+			post.Slug = slug[0]
 
 			fmt.Println(post)
 			err = cl.Blog.CreateBlogPost(context.Background(), post)
