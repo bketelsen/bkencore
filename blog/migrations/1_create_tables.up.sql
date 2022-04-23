@@ -8,3 +8,8 @@ CREATE TABLE "article" (
     body TEXT,
     body_rendered TEXT
 );
+
+CREATE TABLE "email_subscriber" (
+    email TEXT NOT NULL PRIMARY KEY,
+    subscribed_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW()
+);
