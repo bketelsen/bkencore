@@ -71,7 +71,7 @@ const BlogPost: NextPage = () => {
                 </defs>
                 <rect width={404} height={384} fill="url(#f210dbf6-a58d-4871-961e-36d5016a0f49)" />
               </svg>
-              
+
             </div>
           </div>
           <div className="relative px-4 sm:px-6 lg:px-8">
@@ -86,7 +86,7 @@ const BlogPost: NextPage = () => {
               </p>
             </div>
             <div className="mt-6 prose prose-indigo prose-lg text-gray-500 mx-auto"
-              dangerouslySetInnerHTML={{__html: post.BodyRendered}} />
+              dangerouslySetInnerHTML={{ __html: post.BodyRendered }} />
           </div>
         </div>
       )}
