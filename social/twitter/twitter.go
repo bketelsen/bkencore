@@ -99,8 +99,8 @@ func OAuthBegin(w http.ResponseWriter, req *http.Request) {
 // OAuthToken retrieves an OAuth token.
 //encore:api public raw method=GET path=/twitter/oauth/token
 func OAuthToken(w http.ResponseWriter, req *http.Request) {
-	wantState := cookieValue(req, "state")
-	challenge := cookieValue(req, "challenge")
+	wantState := cookieValue(req, "oauth2_state")
+	challenge := cookieValue(req, "oauth2_challenge")
 	if got := req.FormValue("state"); got != wantState {
 		rlog.Error("state mismatch", "got", got, "want", wantState)
 		http.Error(w, "bad state", http.StatusBadRequest)
