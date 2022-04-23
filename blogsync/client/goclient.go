@@ -46,7 +46,7 @@ func New(target BaseURL, options ...Option) (*Client, error) {
 	base := &baseClient{
 		baseURL:    baseURL,
 		httpClient: http.DefaultClient,
-		userAgent:  "devweek-k65i-Generated-Client (Encore/v1.0.0)",
+		userAgent:  "devweek-k65i-Generated-Client (Encore/)",
 	}
 
 	// Apply any given options
@@ -96,10 +96,10 @@ func WithAuthFunc(tokenGenerator func(ctx context.Context) (string, error)) Opti
 type BlogBlogPost struct {
 	Slug         string
 	CreatedAt    time.Time `qs:"created_at"`
-	Published    bool      `yaml:"published"`
+	Published    bool
 	ModifiedAt   time.Time `qs:"modified_at"`
-	Title        string    `json:"title" yaml:"title"`
-	Summary      string    `yaml:"summary"`
+	Title        string
+	Summary      string
 	Body         string
 	BodyRendered string `qs:"body_rendered"`
 }
@@ -125,7 +125,6 @@ type BlogGetBlogPostsResponse struct {
 // BlogClient Provides you access to call public and authenticated APIs on blog. The concrete implementation is blogClient.
 // It is setup as an interface allowing you to use GoMock to create mock implementations during tests.
 type BlogClient interface {
-
 	// CreateBlogPost creates a new blog post.
 	CreateBlogPost(ctx context.Context, params BlogCreateBlogPostParams) error
 
@@ -145,23 +144,24 @@ var _ BlogClient = (*blogClient)(nil)
 
 // CreateBlogPost creates a new blog post.
 func (c *blogClient) CreateBlogPost(ctx context.Context, params BlogCreateBlogPostParams) error {
-	_, err := callAPI[struct{}](ctx, c.base, "POST", "/blog.CreateBlogPost", params)
-	return err
+	return callAPI(ctx, c.base, "POST", "/blog.CreateBlogPost", params, nil)
 }
 
 // GetBlogPost retrieves a blog post by slug.
-func (c *blogClient) GetBlogPost(ctx context.Context, slug string) (BlogBlogPost, error) {
-	return callAPI[BlogBlogPost](ctx, c.base, "GET", fmt.Sprintf("/blog/%s", slug), nil)
+func (c *blogClient) GetBlogPost(ctx context.Context, slug string) (resp BlogBlogPost, err error) {
+	err = callAPI(ctx, c.base, "GET", fmt.Sprintf("/blog/%s", slug), nil, &resp)
+	return resp, err
 }
 
 // GetBlogPosts retrieves a list of blog posts with
 // optional limit and offset.
-func (c *blogClient) GetBlogPosts(ctx context.Context, params BlogGetBlogPostsParams) (BlogGetBlogPostsResponse, error) {
+func (c *blogClient) GetBlogPosts(ctx context.Context, params BlogGetBlogPostsParams) (resp BlogGetBlogPostsResponse, err error) {
 	queryString := url.Values{
 		"limit":  []string{fmt.Sprint(params.Limit)},
 		"offset": []string{fmt.Sprint(params.Offset)},
 	}
-	return callAPI[BlogGetBlogPostsResponse](ctx, c.base, "GET", fmt.Sprintf("/blog?%s", queryString.Encode()), nil)
+	err = callAPI(ctx, c.base, "GET", fmt.Sprintf("/blog?%s", queryString.Encode()), nil, &resp)
+	return resp, err
 }
 
 type EmailCreateTemplateParams struct {
@@ -178,7 +178,6 @@ type EmailUnsubscribeParams struct {
 // EmailClient Provides you access to call public and authenticated APIs on email. The concrete implementation is emailClient.
 // It is setup as an interface allowing you to use GoMock to create mock implementations during tests.
 type EmailClient interface {
-
 	// CreateTemplate creates an email template.
 	// If the template with that id already exists it is updated.
 	CreateTemplate(ctx context.Context, id string, params EmailCreateTemplateParams) error
@@ -196,14 +195,12 @@ var _ EmailClient = (*emailClient)(nil)
 // CreateTemplate creates an email template.
 // If the template with that id already exists it is updated.
 func (c *emailClient) CreateTemplate(ctx context.Context, id string, params EmailCreateTemplateParams) error {
-	_, err := callAPI[struct{}](ctx, c.base, "PUT", fmt.Sprintf("/email/templates/%s", id), params)
-	return err
+	return callAPI(ctx, c.base, "PUT", fmt.Sprintf("/email/templates/%s", id), params, nil)
 }
 
 // Unsubscribe unsubscribes the user from the email list.
 func (c *emailClient) Unsubscribe(ctx context.Context, params EmailUnsubscribeParams) error {
-	_, err := callAPI[struct{}](ctx, c.base, "POST", "/email/unsubscribe", params)
-	return err
+	return callAPI(ctx, c.base, "POST", "/email/unsubscribe", params, nil)
 }
 
 type HelloResponse struct {
@@ -213,7 +210,6 @@ type HelloResponse struct {
 // HelloClient Provides you access to call public and authenticated APIs on hello. The concrete implementation is helloClient.
 // It is setup as an interface allowing you to use GoMock to create mock implementations during tests.
 type HelloClient interface {
-
 	// This is a simple REST API that responds with a personalized greeting.
 	// To call it, run in your terminal:
 	//
@@ -230,8 +226,9 @@ var _ HelloClient = (*helloClient)(nil)
 // This is a simple REST API that responds with a personalized greeting.
 // To call it, run in your terminal:
 //     curl http://localhost:4000/hello/World
-func (c *helloClient) World(ctx context.Context, name string) (HelloResponse, error) {
-	return callAPI[HelloResponse](ctx, c.base, "GET", fmt.Sprintf("/hello/%s", name), nil)
+func (c *helloClient) World(ctx context.Context, name string) (resp HelloResponse, err error) {
+	err = callAPI(ctx, c.base, "GET", fmt.Sprintf("/hello/%s", name), nil, &resp)
+	return resp, err
 }
 
 type TwitterTweetParams struct {
@@ -245,7 +242,6 @@ type TwitterTweetResponse struct {
 // TwitterClient Provides you access to call public and authenticated APIs on twitter. The concrete implementation is twitterClient.
 // It is setup as an interface allowing you to use GoMock to create mock implementations during tests.
 type TwitterClient interface {
-
 	// OAuthBegin begins an OAuth handshake.
 	OAuthBegin(ctx context.Context, request *http.Request) (*http.Response, error)
 
@@ -287,8 +283,9 @@ func (c *twitterClient) OAuthToken(ctx context.Context, request *http.Request) (
 }
 
 // Tweet sends a tweet using the Twitter API.
-func (c *twitterClient) Tweet(ctx context.Context, params TwitterTweetParams) (TwitterTweetResponse, error) {
-	return callAPI[TwitterTweetResponse](ctx, c.base, "POST", "/twitter/tweet", params)
+func (c *twitterClient) Tweet(ctx context.Context, params TwitterTweetParams) (resp TwitterTweetResponse, err error) {
+	err = callAPI(ctx, c.base, "POST", "/twitter/tweet", params, &resp)
+	return resp, err
 }
 
 type UrlShortenParams struct {
@@ -303,7 +300,6 @@ type UrlURL struct {
 // UrlClient Provides you access to call public and authenticated APIs on url. The concrete implementation is urlClient.
 // It is setup as an interface allowing you to use GoMock to create mock implementations during tests.
 type UrlClient interface {
-
 	// Get retrieves the original URL for the id.
 	Get(ctx context.Context, id string) (UrlURL, error)
 
@@ -318,13 +314,15 @@ type urlClient struct {
 var _ UrlClient = (*urlClient)(nil)
 
 // Get retrieves the original URL for the id.
-func (c *urlClient) Get(ctx context.Context, id string) (UrlURL, error) {
-	return callAPI[UrlURL](ctx, c.base, "GET", fmt.Sprintf("/url/%s", id), nil)
+func (c *urlClient) Get(ctx context.Context, id string) (resp UrlURL, err error) {
+	err = callAPI(ctx, c.base, "GET", fmt.Sprintf("/url/%s", id), nil, &resp)
+	return resp, err
 }
 
 // Shorten shortens a URL.
-func (c *urlClient) Shorten(ctx context.Context, params UrlShortenParams) (UrlURL, error) {
-	return callAPI[UrlURL](ctx, c.base, "POST", "/url", params)
+func (c *urlClient) Shorten(ctx context.Context, params UrlShortenParams) (resp UrlURL, err error) {
+	err = callAPI(ctx, c.base, "POST", "/url", params, &resp)
+	return resp, err
 }
 
 // HTTPDoer is an interface which can be used to swap out the default
@@ -365,15 +363,13 @@ func (b *baseClient) Do(req *http.Request) (*http.Response, error) {
 }
 
 // callAPI is used by each generated API method to actually make request and decode the responses
-func callAPI[Response any](ctx context.Context, client *baseClient, method, path string, body any) (Response, error) {
-	var response Response
-
+func callAPI(ctx context.Context, client *baseClient, method, path string, body, resp any) error {
 	// Encode the API body
 	var bodyReader io.Reader
 	if body != nil {
 		bodyBytes, err := json.Marshal(body)
 		if err != nil {
-			return response, fmt.Errorf("unable to marshal api request body: %w", err)
+			return fmt.Errorf("marshal request: %w", err)
 		}
 		bodyReader = bytes.NewReader(bodyBytes)
 	}
@@ -381,21 +377,26 @@ func callAPI[Response any](ctx context.Context, client *baseClient, method, path
 	// Create the request
 	req, err := http.NewRequestWithContext(ctx, method, path, bodyReader)
 	if err != nil {
-		return response, fmt.Errorf("unable to create api request: %w", err)
+		return fmt.Errorf("create request: %w", err)
 	}
 
 	// Make the request via the base client
 	rawResponse, err := client.Do(req)
 	if err != nil {
-		return response, fmt.Errorf("api request failed: %w", err)
+		return fmt.Errorf("request failed: %w", err)
 	}
 	defer func() {
 		_ = rawResponse.Body.Close()
 	}()
+	if rawResponse.StatusCode >= 400 {
+		return fmt.Errorf("got error response: %s", rawResponse.Status)
+	}
 
 	// Decode the response
-	if err := json.NewDecoder(rawResponse.Body).Decode(&response); err != nil {
-		return response, fmt.Errorf("api request failed: %w", err)
+	if resp != nil {
+		if err := json.NewDecoder(rawResponse.Body).Decode(resp); err != nil {
+			return fmt.Errorf("decode response: %w", err)
+		}
 	}
-	return response, nil
+	return nil
 }
