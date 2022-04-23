@@ -90,6 +90,7 @@ func GetBlogPosts(ctx context.Context, params *GetBlogPostsParams) (*GetBlogPost
 	rows, err := sqldb.Query(ctx, `
 		SELECT slug, created_at, published, modified_at, title, summary, body, body_rendered
 		FROM "article"
+		ORDER BY created_at DESC
 		LIMIT $1
 		OFFSET $2
 	`, params.Limit, params.Offset)
