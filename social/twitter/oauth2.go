@@ -2,72 +2,16 @@
 package twitter
 
 import (
-	"bytes"
 	"context"
 	"crypto/rand"
 	"encoding/base64"
-	"encoding/json"
-	"io/ioutil"
 	"net/http"
 	"time"
 
 	"golang.org/x/oauth2"
 
-	"encore.dev/beta/errs"
 	"encore.dev/rlog"
 )
-
-type TweetParams struct {
-	// Text is the text to tweet.
-	Text string
-}
-
-type TweetResponse struct {
-	// ID is the tweet id.
-	ID string
-}
-
-// Tweet sends a tweet using the Twitter API.
-//encore:api public method=POST path=/twitter/tweet
-func Tweet(ctx context.Context, p *TweetParams) (*TweetResponse, error) {
-	eb := errs.B()
-	client := httpClient(ctx)
-	data, _ := json.Marshal(map[string]any{
-		"text": p.Text,
-	})
-	req, err := http.NewRequestWithContext(ctx, "POST", "https://api.twitter.com/2/tweets", bytes.NewReader(data))
-	if err != nil {
-		return nil, eb.Cause(err).Msg("unable to create request").Err()
-	}
-	req.Header.Set("Content-Type", "application/json")
-
-	resp, err := client.Do(req)
-	if err != nil {
-		return nil, eb.Cause(err).Msg("unable to make request").Err()
-	}
-	defer resp.Body.Close()
-	if resp.StatusCode != http.StatusCreated {
-		body, _ := ioutil.ReadAll(resp.Body)
-		return nil, eb.Msgf("got non-201 response from Twitter API: %s (%s)", resp.Status, body).Err()
-	}
-
-	var respData struct {
-		ID string `json:"id"`
-	}
-	if err := json.NewDecoder(resp.Body).Decode(&respData); err != nil {
-		return nil, eb.Cause(err).Msg("unable to decode response").Err()
-	}
-	return &TweetResponse{ID: respData.ID}, nil
-}
-
-// httpClient returns an HTTP client to make authenticated requests to the Twitter API.
-func httpClient(ctx context.Context) *http.Client {
-	return cfg.Client(ctx, &oauth2.Token{
-		TokenType:    "bearer",
-		RefreshToken: secrets.TwitterRefreshToken,
-		Expiry:       time.Now().Add(-1 * time.Hour),
-	})
-}
 
 // OAuthBegin begins an OAuth handshake.
 //encore:api public raw method=GET path=/twitter/oauth/begin
@@ -134,6 +78,15 @@ func cookieValue(req *http.Request, name string) string {
 		return cookie.Value
 	}
 	return ""
+}
+
+// httpClient returns an HTTP client to make authenticated requests to the Twitter API.
+func httpClient(ctx context.Context) *http.Client {
+	return cfg.Client(ctx, &oauth2.Token{
+		TokenType:    "bearer",
+		RefreshToken: secrets.TwitterRefreshToken,
+		Expiry:       time.Now().Add(-1 * time.Hour),
+	})
 }
 
 var secrets struct {
