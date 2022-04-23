@@ -23,7 +23,6 @@ package cmd
 
 import (
 	"context"
-	"fmt"
 	"os"
 	"path/filepath"
 	"strings"
@@ -70,27 +69,27 @@ func push() error {
 
 	currentDirectory, err := os.Getwd() // todo
 	cobra.CheckErr(err)
+	postsDir := filepath.Join(currentDirectory, "posts")
 
-	filepath.Walk(currentDirectory, func(path string, info os.FileInfo, err error) error {
+	filepath.Walk(postsDir, func(path string, info os.FileInfo, err error) error {
 		cobra.CheckErr(err)
 		// slug will be the relative path minus the extension
-		rel, err := filepath.Rel(currentDirectory, path)
 		cobra.CheckErr(err)
 		if !info.IsDir() {
-			slug := strings.Split(rel, ".")
-			fmt.Printf("%q: \n", slug[0])
-			fmt.Printf("%q \n", path)
+			slug := strings.Split(info.Name(), ".")
 
+			// read the file
 			f, err := os.Open(path)
-
 			cobra.CheckErr(err)
+
+			// create a blogpost and populate frontmatter
 			var post client.BlogCreateBlogPostParams
 			rest, err := frontmatter.Parse(f, &post)
 			cobra.CheckErr(err)
 			post.Body = string(rest)
 			post.Slug = slug[0]
 
-			fmt.Println(post)
+			// submit to the API
 			err = cl.Blog.CreateBlogPost(context.Background(), post)
 			cobra.CheckErr(err)
 		}

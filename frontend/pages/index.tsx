@@ -45,7 +45,7 @@ const Home: NextPage = () => {
                         {post.category.name}
                       </a> */}
                     </p>
-                    <a href={post.Slug} className="block mt-2">
+                    <a href={ '/posts/' + post.Slug} className="block mt-2">
                       <p className="text-xl font-semibold text-gray-900">{post.Title}</p>
                       <p className="mt-3 text-base text-gray-500">{post.Summary}</p>
                     </a>

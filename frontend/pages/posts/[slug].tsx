@@ -2,13 +2,13 @@ import type { NextPage } from 'next'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
-import { blog, DefaultClient } from '../client'
+import { blog, DefaultClient } from '../../client'
 
 const BlogPost: NextPage = () => {
   const router = useRouter()
   const {slug} = router.query
   const [post, setPost] = useState<blog.BlogPost>()
-  
+
   useEffect(() => {
     if (!slug) { return }
 
