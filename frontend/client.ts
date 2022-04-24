@@ -421,4 +421,4 @@ function encodeQuery(parts: any[]): string {
     }
     return pairs.join("&")
 }
-export const DefaultClient = new Client("local")
+export const DefaultClient = new Client("prod")
