@@ -10,12 +10,6 @@ In this first post of (likely) a multi-part series I'm going to discuss how I am
 
 ### The Problem Statement
 
-{{< alert >}}
-**Warning!** This action is destructive!
-{{< /alert >}}
-
-
-
 There are several contributing factors to the problem. Let's start with the obvious ones:
 
 -   I'm a digital packrat
