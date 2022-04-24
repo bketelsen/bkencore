@@ -1,5 +1,5 @@
 import { FC, useState } from "react"
-import { DefaultClient } from "../client"
+import { DefaultClient } from "../client/default"
 
 interface LoadingResult {
   result: "loading"
@@ -33,7 +33,7 @@ const NewsletterSignup: FC = () => {
   }
 
   return (
-    <div className="bg-white">
+    <div>
       <div className="max-w-7xl mx-auto px-4 pt-12 sm:px-6 lg:pt-16 lg:px-8">
         <div className="px-6 py-6 bg-indigo-700 rounded-lg md:py-12 md:px-12 lg:py-16 lg:px-16 xl:flex xl:items-center">
           <div className="xl:w-0 xl:flex-1">
