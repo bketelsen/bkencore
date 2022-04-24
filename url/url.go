@@ -66,5 +66,5 @@ func insert(ctx context.Context, id, url string) error {
 
 // FormatShortURL formats a short id into the short URL.
 func FormatShortURL(id string) string {
-	return "https://bjk.fyi/" + url.PathEscape(id)
+	return "https://url.bjk.fyi/" + url.PathEscape(id)
 }
