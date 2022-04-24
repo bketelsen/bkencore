@@ -27,7 +27,7 @@ type TweetResponse struct {
 }
 
 // Tweet writes a mock tweet to the database.
-//encore:api public method=POST path=/twitter/tweet
+//encore:api auth method=POST path=/twitter/tweet
 func Tweet(ctx context.Context, p *TweetParams) (*TweetResponse, error) {
 	var id int64
 	err := sqldb.QueryRow(ctx, `
@@ -39,7 +39,7 @@ func Tweet(ctx context.Context, p *TweetParams) (*TweetResponse, error) {
 }
 
 // Tweet sends a tweet using the Twitter API.
-//encore:api public method=POST path=/twitter/tweet/for-real
+//encore:api auth method=POST path=/twitter/tweet/for-real
 func TweetForReal(ctx context.Context, p *TweetParams) (*TweetResponse, error) {
 	eb := errs.B()
 	client := httpClient(ctx)
@@ -108,7 +108,7 @@ func Schedule(ctx context.Context, p *ScheduleParams) (*ScheduleResponse, error)
 }
 
 // SendDue posts tweets that are due.
-//encore:api public method=POST path=/twitter/send-due
+//encore:api auth method=POST path=/twitter/send-due
 func SendDue(ctx context.Context) error {
 	tweet, err := queryDueTweet(ctx, time.Now())
 	if errors.Is(err, sqldb.ErrNoRows) {

@@ -19,10 +19,10 @@ type SubscribeParams struct {
 //encore:api public method=POST path=/email/subscribe
 func Subscribe(ctx context.Context, p *SubscribeParams) error {
 	_, err := sqldb.Exec(ctx, `
-		INSERT INTO "user" (email, optin)
+		INSERT INTO "user" (email_address, optin)
 		VALUES ($1, true)
-		ON CONFLICT (email) DO UPDATE
-		SET optin = true, option_changed = NOW()
+		ON CONFLICT (email_address) DO UPDATE
+		SET optin = true, optin_changed = NOW()
 	`, p.Email)
 	return err
 }
@@ -30,7 +30,7 @@ func Subscribe(ctx context.Context, p *SubscribeParams) error {
 // getAllSubscribers returns all the subscribers to the email newsletter.
 func getAllSubscribers(ctx context.Context) (emails []string, err error) {
 	rows, err := sqldb.Query(ctx, `
-		SELECT email
+		SELECT email_address
 		FROM "user"
 		WHERE optin
 	`)

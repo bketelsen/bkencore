@@ -44,7 +44,7 @@ func Promote(ctx context.Context, slug string, p *PromoteParams) error {
 
 	// Create a template for the email
 	err = email.CreateTemplate(ctx, slug, &email.CreateTemplateParams{
-		Sender:   "todo@example.org", // TODO
+		Sender:   "Brian Ketelsen <me@brian.dev>", // TODO
 		Subject:  post.Title,
 		BodyText: post.Body,
 		BodyHTML: post.BodyRendered,
