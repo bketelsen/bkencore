@@ -16,8 +16,6 @@ function MyApp({ Component, pageProps }: AppProps) {
 
     </SWRConfig>
   )
-} <script defer type="text/javascript" src="https://api.pirsch.io/pirsch.js"
-  id="pirschjs"
-  data-code="vWhcy7gh61Rp6p292VnP1SdSSBiwvkij"></script>
+} 
 
 export default MyApp
