@@ -24,7 +24,7 @@ const BlogIndex: NextPage = () => {
 
       <div>
         <p className="text-base lg:text-lg tracking-tight text-neutral-400">I wrote this</p>
-        <h1 className="text-2xl font-extrabold tracking-tight text-neutral-900 md:text-3xl lg:text-4xl">Blog</h1>
+        <h1 className="text-3xl font-extrabold tracking-tight text-neutral-900 md:text-4xl">Blog</h1>
         <p className="mt-6 mb-9 text-xl text-neutral-500">
           It was just too long for a twitter thread.
         </p>
