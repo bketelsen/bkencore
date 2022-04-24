@@ -22,36 +22,38 @@ THE SOFTWARE.
 package cmd
 
 import (
+	"errors"
 	"fmt"
+	"net/url"
 
 	"github.com/spf13/cobra"
+
+	"encore.app/blogsync/client"
 )
 
-// syncCmd represents the sync command
-var syncCmd = &cobra.Command{
-	Use:   "sync",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
+// shortenCmd represents the shorten command
+var shortenCmd = &cobra.Command{
+	Use:   "shorten URL",
+	Short: "Shortens a URL and returns a new, short URL that redirects to the original URL.",
+	Args:  cobra.ExactArgs(1),
+	RunE: func(cmd *cobra.Command, args []string) error {
+		// Parse the URL
+		u, err := url.Parse(args[0])
+		cobra.CheckErr(err)
+		if u.Scheme == "" {
+			return errors.New("url must be fully qualified with a scheme and a host")
+		}
 
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
-	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("sync called")
+		// Generate the short URL
+		resp, err := backend.Url.Shorten(cmd.Context(), client.UrlShortenParams{
+			URL: args[0],
+		})
+		cobra.CheckErr(err)
+		fmt.Println(resp.ShortURL)
+		return nil
 	},
 }
 
 func init() {
-	rootCmd.AddCommand(syncCmd)
-
-	// Here you will define your flags and configuration settings.
-
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// syncCmd.PersistentFlags().String("foo", "", "A help for foo")
-
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// syncCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	rootCmd.AddCommand(shortenCmd)
 }

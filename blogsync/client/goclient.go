@@ -293,8 +293,9 @@ type UrlShortenParams struct {
 }
 
 type UrlURL struct {
-	ID  string // short-form URL id
-	URL string // complete URL, in long form
+	ID       string // short-form URL id
+	URL      string // complete URL, in long form
+	ShortURL string // short URL
 }
 
 // UrlClient Provides you access to call public and authenticated APIs on url. The concrete implementation is urlClient.
