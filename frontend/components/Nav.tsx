@@ -3,6 +3,7 @@ import { Disclosure } from '@headlessui/react'
 import { MenuIcon, XIcon } from '@heroicons/react/outline'
 import { useRouter } from 'next/router'
 import { FC } from 'react'
+import Link from 'next/link'
 
 interface NavItem {
   name: string
@@ -42,17 +43,13 @@ const Nav: FC = (props) => {
               </div>
               <div className="flex-1 flex items-center justify-center sm:items-stretch sm:justify-start">
                 <div className="flex-shrink-0 flex items-center">
-                  <a href="/">
-                    <img
-                      className="block lg:hidden h-8 w-auto"
-                      src="https://tailwindui.com/img/logos/workflow-mark-indigo-500.svg"
-                      alt="Workflow"
-                    />
-                    <span
-                      className="hidden lg:block h-8 w-auto  text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
-                      
-                    >brian.dev</span>
-                  </a>
+                <span className="hidden lg:block h-8 w-auto  text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">
+
+                  <Link href="/"
+                      >
+                    brian.dev
+                  </Link>
+                      </span>
                 </div>
                 <div className="hidden sm:block sm:ml-6">
                   <div className="flex space-x-4">
