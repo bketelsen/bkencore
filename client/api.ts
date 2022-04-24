@@ -1,15 +1,15 @@
 export default class Client {
     blog: blog.ServiceClient
+    bytes: bytes.ServiceClient
     email: email.ServiceClient
-    hello: hello.ServiceClient
     twitter: twitter.ServiceClient
     url: url.ServiceClient
 
     constructor(environment: string = "prod", token?: string) {
         const base = new BaseClient(environment, token)
         this.blog = new blog.ServiceClient(base)
+        this.bytes = new bytes.ServiceClient(base)
         this.email = new email.ServiceClient(base)
-        this.hello = new hello.ServiceClient(base)
         this.twitter = new twitter.ServiceClient(base)
         this.url = new url.ServiceClient(base)
     }
@@ -25,6 +25,7 @@ export namespace blog {
         Summary: string
         Body: string
         BodyRendered: string
+        FeaturedImage: string
     }
 
     export interface CreateBlogPostParams {
@@ -33,6 +34,20 @@ export namespace blog {
         Title: string
         Summary: string
         Body: string
+        FeaturedImage: string
+    }
+
+    export interface CreatePageParams {
+        Published: boolean
+        Title: string
+        Subtitle: string
+        HeroText: string
+        Summary: string
+        Body: string
+        /**
+         * empty string means no image
+         */
+        FeaturedImage: string
     }
 
     export interface GetBlogPostsParams {
@@ -44,6 +59,34 @@ export namespace blog {
         Count: number
         BlogPosts: BlogPost[]
     }
+
+    export interface Page {
+        Slug: string
+        CreatedAt: string
+        ModifiedAt: string
+        Published: boolean
+        Title: string
+        Subtitle: string
+        HeroText: string
+        Summary: string
+        Body: string
+        BodyRendered: string
+        /**
+         * emty string means no image
+         */
+        FeaturedImage: string
+    }
+
+    export interface PromoteParams {
+        /**
+         * Schedule decides how the promotion should be scheduled.
+         * Valid values are "auto" for scheduling it at a suitable time
+         * based on the current posting schedule, and "now" to schedule it immediately.
+         */
+        Schedule: ScheduleType
+    }
+
+    export type ScheduleType = string
 
     export class ServiceClient {
         private baseClient: BaseClient
@@ -57,6 +100,13 @@ export namespace blog {
          */
         public CreateBlogPost(params: CreateBlogPostParams): Promise<void> {
             return this.baseClient.doVoid("POST", `/blog.CreateBlogPost`, params)
+        }
+
+        /**
+         * CreatePage creates a new page, or updates it if it already exists.
+         */
+        public CreatePage(slug: string, params: CreatePageParams): Promise<void> {
+            return this.baseClient.doVoid("PUT", `/page/${slug}`, params)
         }
 
         /**
@@ -76,6 +126,75 @@ export namespace blog {
                 "offset", params.Offset,
             ]
             return this.baseClient.do<GetBlogPostsResponse>("GET", `/blog?${encodeQuery(query)}`)
+        }
+
+        /**
+         * GetPage retrieves a page by slug.
+         */
+        public GetPage(slug: string): Promise<Page> {
+            return this.baseClient.do<Page>("GET", `/page/${slug}`)
+        }
+
+        /**
+         * Promote schedules the promotion a blog post.
+         */
+        public Promote(slug: string, params: PromoteParams): Promise<void> {
+            return this.baseClient.doVoid("POST", `/blog/${slug}/promote`, params)
+        }
+    }
+}
+
+export namespace bytes {
+    export interface Byte {
+        ID: number
+        Title: string
+        Summary: string
+        URL: string
+        Created: string
+    }
+
+    export interface ListParams {
+        Limit: number
+        Offset: number
+    }
+
+    export interface ListResponse {
+        Bytes: Byte[]
+    }
+
+    export interface PublishParams {
+        Title: string
+        Summary: string
+        URL: string
+    }
+
+    export interface PublishResponse {
+        ID: number
+    }
+
+    export class ServiceClient {
+        private baseClient: BaseClient
+
+        constructor(baseClient: BaseClient) {
+            this.baseClient = baseClient
+        }
+
+        /**
+         * List lists published bytes.
+         */
+        public List(params: ListParams): Promise<ListResponse> {
+            const query: any[] = [
+                "limit", params.Limit,
+                "offset", params.Offset,
+            ]
+            return this.baseClient.do<ListResponse>("GET", `/bytes?${encodeQuery(query)}`)
+        }
+
+        /**
+         * Publish publishes a byte.
+         */
+        public Publish(params: PublishParams): Promise<PublishResponse> {
+            return this.baseClient.do<PublishResponse>("POST", `/bytes`, params)
         }
     }
 }
@@ -103,6 +222,10 @@ export namespace email {
         BodyHTML: string
     }
 
+    export interface SubscribeParams {
+        Email: string
+    }
+
     export interface UnsubscribeParams {
         /**
          * Token is the unsubscribe token in to the email.
@@ -126,34 +249,17 @@ export namespace email {
         }
 
         /**
+         * Subscribe subscribes to the email newsletter for a given email.
+         */
+        public Subscribe(params: SubscribeParams): Promise<void> {
+            return this.baseClient.doVoid("POST", `/email/subscribe`, params)
+        }
+
+        /**
          * Unsubscribe unsubscribes the user from the email list.
          */
         public Unsubscribe(params: UnsubscribeParams): Promise<void> {
             return this.baseClient.doVoid("POST", `/email/unsubscribe`, params)
-        }
-    }
-}
-
-export namespace hello {
-    export interface Response {
-        Message: string
-    }
-
-    export class ServiceClient {
-        private baseClient: BaseClient
-
-        constructor(baseClient: BaseClient) {
-            this.baseClient = baseClient
-        }
-
-        /**
-         * This is a simple REST API that responds with a personalized greeting.
-         * To call it, run in your terminal:
-         * 
-         *     curl http://localhost:4000/hello/World
-         */
-        public World(name: string): Promise<Response> {
-            return this.baseClient.do<Response>("GET", `/hello/${name}`)
         }
     }
 }
@@ -195,6 +301,13 @@ export namespace twitter {
         }
 
         /**
+         * SendDue posts tweets that are due.
+         */
+        public SendDue(): Promise<void> {
+            return this.baseClient.doVoid("POST", `/twitter/send-due`)
+        }
+
+        /**
          * Tweet sends a tweet using the Twitter API.
          */
         public Tweet(params: TweetParams): Promise<TweetResponse> {
@@ -218,9 +331,14 @@ export namespace url {
         ID: string
 
         /**
-         * complete URL, in long form
+         * original URL, in long form
          */
         URL: string
+
+        /**
+         * short URL
+         */
+        ShortURL: string
     }
 
     export class ServiceClient {
