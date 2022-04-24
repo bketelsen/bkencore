@@ -112,6 +112,16 @@ type BlogCreateBlogPostParams struct {
 	Body      string
 }
 
+type BlogCreatePageParams struct {
+	Published     bool
+	Title         string
+	Subtitle      string
+	HeroText      string `qs:"hero_text"`
+	Summary       string
+	Body          string
+	FeaturedImage string `qs:"featured_image"` // empty string means no image
+}
+
 type BlogGetBlogPostsParams struct {
 	Limit  int
 	Offset int
@@ -120,6 +130,20 @@ type BlogGetBlogPostsParams struct {
 type BlogGetBlogPostsResponse struct {
 	Count     int
 	BlogPosts []BlogBlogPost `qs:"blog_posts"`
+}
+
+type BlogPage struct {
+	Slug          string
+	CreatedAt     time.Time `qs:"created_at"`
+	ModifiedAt    time.Time `qs:"modified_at"`
+	Published     bool
+	Title         string
+	Subtitle      string
+	HeroText      string `qs:"hero_text"`
+	Summary       string
+	Body          string
+	BodyRendered  string `qs:"body_rendered"`
+	FeaturedImage string `qs:"featured_image"` // emty string means no image
 }
 
 type BlogPromoteParams struct {
@@ -138,12 +162,18 @@ type BlogClient interface {
 	// CreateBlogPost creates a new blog post.
 	CreateBlogPost(ctx context.Context, params BlogCreateBlogPostParams) error
 
+	// CreatePage creates a new page, or updates it if it already exists.
+	CreatePage(ctx context.Context, slug string, params BlogCreatePageParams) error
+
 	// GetBlogPost retrieves a blog post by slug.
 	GetBlogPost(ctx context.Context, slug string) (BlogBlogPost, error)
 
 	// GetBlogPosts retrieves a list of blog posts with
 	// optional limit and offset.
 	GetBlogPosts(ctx context.Context, params BlogGetBlogPostsParams) (BlogGetBlogPostsResponse, error)
+
+	// GetPage retrieves a page by slug.
+	GetPage(ctx context.Context, slug string) (BlogPage, error)
 
 	// Promote schedules the promotion a blog post.
 	Promote(ctx context.Context, slug string, params BlogPromoteParams) error
@@ -160,6 +190,11 @@ func (c *blogClient) CreateBlogPost(ctx context.Context, params BlogCreateBlogPo
 	return callAPI(ctx, c.base, "POST", "/blog.CreateBlogPost", params, nil)
 }
 
+// CreatePage creates a new page, or updates it if it already exists.
+func (c *blogClient) CreatePage(ctx context.Context, slug string, params BlogCreatePageParams) error {
+	return callAPI(ctx, c.base, "PUT", fmt.Sprintf("/page/%s", slug), params, nil)
+}
+
 // GetBlogPost retrieves a blog post by slug.
 func (c *blogClient) GetBlogPost(ctx context.Context, slug string) (resp BlogBlogPost, err error) {
 	err = callAPI(ctx, c.base, "GET", fmt.Sprintf("/blog/%s", slug), nil, &resp)
@@ -174,6 +209,12 @@ func (c *blogClient) GetBlogPosts(ctx context.Context, params BlogGetBlogPostsPa
 		"offset": []string{fmt.Sprint(params.Offset)},
 	}
 	err = callAPI(ctx, c.base, "GET", fmt.Sprintf("/blog?%s", queryString.Encode()), nil, &resp)
+	return resp, err
+}
+
+// GetPage retrieves a page by slug.
+func (c *blogClient) GetPage(ctx context.Context, slug string) (resp BlogPage, err error) {
+	err = callAPI(ctx, c.base, "GET", fmt.Sprintf("/page/%s", slug), nil, &resp)
 	return resp, err
 }
 

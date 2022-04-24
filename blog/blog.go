@@ -31,10 +31,6 @@ type CreateBlogPostParams struct {
 	Body      string
 }
 
-type GetBlogPostParams struct {
-	Slug string
-}
-
 type GetBlogPostsParams struct {
 	Limit  int
 	Offset int
