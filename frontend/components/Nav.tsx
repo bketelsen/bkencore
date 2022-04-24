@@ -1,9 +1,9 @@
 /* This example requires Tailwind CSS v2.0+ */
 import { Disclosure } from '@headlessui/react'
 import { MenuIcon, XIcon } from '@heroicons/react/outline'
+import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { FC } from 'react'
-import Link from 'next/link'
 
 interface NavItem {
   name: string
@@ -44,11 +44,11 @@ const Nav: FC = (props) => {
             <div className="flex-1 flex items-center justify-center sm:items-stretch sm:justify-between text-lg font-semibold text-neutral-900">
 
               <div className="flex-shrink-0 flex items-center">
-                <a href="/" className="hover-underline">
+                <Link href="/"><a className="hover-underline">
                   <span
                     className="hidden lg:block"
                   >brian.dev</span>
-                </a>
+                </a></Link>
               </div>
 
               <div className="hidden sm:block sm:ml-6">
