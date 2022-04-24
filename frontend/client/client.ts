@@ -350,9 +350,15 @@ class BaseClient {
         if (token !== undefined) {
             this.headers["Authorization"] = "Bearer " + token
         }
-        if (environment === "local") {
+
+        switch (environment) {
+        case "local":
             this.baseURL = "http://localhost:4000"
-        } else {
+            break
+        case "prod":
+            this.baseURL = "https://api.brian.dev"
+            break
+        default:
             this.baseURL = `https://devweek-k65i.encoreapi.com/${environment}`
         }
     }
