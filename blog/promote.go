@@ -26,7 +26,7 @@ type PromoteParams struct {
 }
 
 // Promote schedules the promotion a blog post.
-//encore:api public method=POST path=/blog/:slug/promote
+//encore:api auth method=POST path=/blog/:slug/promote
 func Promote(ctx context.Context, slug string, p *PromoteParams) error {
 	eb := errs.B().Meta("slug", slug)
 	post, err := GetBlogPost(ctx, slug)

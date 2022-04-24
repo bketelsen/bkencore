@@ -81,6 +81,7 @@ type ScheduleAllParams struct {
 }
 
 // ScheduleAll schedules emails to be sent to all subscribers.
+//encore:api private
 func ScheduleAll(ctx context.Context, p *ScheduleAllParams) (*ScheduleResponse, error) {
 	// Schedule the email messages to be sent.
 	sendAt := time.Now()
@@ -90,7 +91,7 @@ func ScheduleAll(ctx context.Context, p *ScheduleAllParams) (*ScheduleResponse, 
 
 	rows, err := sqldb.Query(ctx, `
 		INSERT INTO "message" (email_address, template_id, scheduled_at)
-		SELECT email, $2, $3
+		SELECT email_address, $1, $2
 			FROM "user"
 			WHERE optin
 		RETURNING id
@@ -124,7 +125,7 @@ type CreateTemplateParams struct {
 
 // CreateTemplate creates an email template.
 // If the template with that id already exists it is updated.
-//encore:api auth method=PUT path=/email/templates/:id
+//encore:api private method=PUT path=/email/templates/:id
 func CreateTemplate(ctx context.Context, id string, p *CreateTemplateParams) error {
 	_, err := sqldb.Exec(ctx, `
 		INSERT INTO "template" (id, sender, subject, body_text, body_html)
