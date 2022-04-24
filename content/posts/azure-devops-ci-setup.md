@@ -21,7 +21,7 @@ I clicked on the "Set up a plan" button, and then selected the Free option, and 
 
 Next I confirmed the Marketplace change by choosing the "Complete order and begin installation" button.
 
-![Review Order](Screen-Shot-2018-09-11-at-9.43.26-AM.png)
+![Review Order](/static/images/azure-devops-ci-setup/Screen-Shot-2018-09-11-at-9.43.26-AM.png)
 
 After authentication with my Azure account, I needed to create a Project.  Projects in Azure DevOps are conceptual containers that host a single repository and it's build procedures.
 
