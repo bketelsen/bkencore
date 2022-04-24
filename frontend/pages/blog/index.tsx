@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import { blog } from '../../client/client'
 import { DefaultClient } from '../../client/default'
 import BlogPostList from '../../components/BlogPostList'
+import { SEO } from '../../components/SEO'
 
 const BlogIndex: NextPage = () => {
   const [posts, setPosts] = useState<blog.BlogPost[]>()
@@ -18,9 +19,10 @@ const BlogIndex: NextPage = () => {
 
   return (
     <div>
-      <Head>
-        <title>Blog | Brian Ketelsen</title>
-      </Head>
+      <SEO
+        title="Blog"
+        description="I wrote this"
+      />
 
       <div>
         <p className="text-base lg:text-lg tracking-tight text-neutral-400">I wrote this</p>
