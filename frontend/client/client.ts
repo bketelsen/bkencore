@@ -200,28 +200,6 @@ export namespace bytes {
 }
 
 export namespace email {
-    export interface CreateTemplateParams {
-        /**
-         * sender email
-         */
-        Sender: string
-
-        /**
-         * subject line to use
-         */
-        Subject: string
-
-        /**
-         * plaintext body
-         */
-        BodyText: string
-
-        /**
-         * html body
-         */
-        BodyHTML: string
-    }
-
     export interface SubscribeParams {
         Email: string
     }
@@ -238,14 +216,6 @@ export namespace email {
 
         constructor(baseClient: BaseClient) {
             this.baseClient = baseClient
-        }
-
-        /**
-         * CreateTemplate creates an email template.
-         * If the template with that id already exists it is updated.
-         */
-        public CreateTemplate(id: string, params: CreateTemplateParams): Promise<void> {
-            return this.baseClient.doVoid("PUT", `/email/templates/${id}`, params)
         }
 
         /**
@@ -308,10 +278,17 @@ export namespace twitter {
         }
 
         /**
-         * Tweet sends a tweet using the Twitter API.
+         * Tweet writes a mock tweet to the database.
          */
         public Tweet(params: TweetParams): Promise<TweetResponse> {
             return this.baseClient.do<TweetResponse>("POST", `/twitter/tweet`, params)
+        }
+
+        /**
+         * Tweet sends a tweet using the Twitter API.
+         */
+        public TweetForReal(params: TweetParams): Promise<TweetResponse> {
+            return this.baseClient.do<TweetResponse>("POST", `/twitter/tweet/for-real`, params)
         }
     }
 }
@@ -421,4 +398,3 @@ function encodeQuery(parts: any[]): string {
     }
     return pairs.join("&")
 }
-export const DefaultClient = new Client("prod")
