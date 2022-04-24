@@ -5,7 +5,7 @@ import { SWRConfig } from 'swr'
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
-    <SWRConfig 
+    <SWRConfig
       value={{
         fetcher: (resource, init) => fetch(`http://localhost:4000${resource}`, init).then(res => res.json())
       }}
@@ -13,8 +13,11 @@ function MyApp({ Component, pageProps }: AppProps) {
       <Layout>
         <Component {...pageProps} />
       </Layout>
+
     </SWRConfig>
   )
-}
+} <script defer type="text/javascript" src="https://api.pirsch.io/pirsch.js"
+  id="pirschjs"
+  data-code="vWhcy7gh61Rp6p292VnP1SdSSBiwvkij"></script>
 
 export default MyApp

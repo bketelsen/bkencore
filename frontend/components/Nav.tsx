@@ -48,11 +48,10 @@ const Nav: FC = (props) => {
                       src="https://tailwindui.com/img/logos/workflow-mark-indigo-500.svg"
                       alt="Workflow"
                     />
-                    <img
-                      className="hidden lg:block h-8 w-auto"
-                      src="https://tailwindui.com/img/logos/workflow-logo-indigo-500-mark-white-text.svg"
-                      alt="Workflow"
-                    />
+                    <span
+                      className="hidden lg:block h-8 w-auto  text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+                      
+                    >brian.dev</span>
                   </a>
                 </div>
                 <div className="hidden sm:block sm:ml-6">

@@ -22,7 +22,7 @@ const BlogPost: NextPage = () => {
   return (
     <div>
       <Head>
-        <title>Create Next App</title>
+        <title>{post?.Title} | Brian Ketelsen</title>
       </Head>
 
       {!post ? "Loading..." : (
