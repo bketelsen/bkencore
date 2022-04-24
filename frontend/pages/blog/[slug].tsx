@@ -22,6 +22,7 @@ const BlogPost: NextPage = () => {
     fetch()
   }, [slug])
 
+
   return (
     <div>
       <Head>
@@ -34,6 +35,7 @@ const BlogPost: NextPage = () => {
         </div>
         <h1 className="text-4xl font-extrabold text-neutral-900">{post.Title}</h1>
         <div className="mt-3 text-base text-neutral-500">{timeToRead(post.Body)}</div>
+        {post.FeaturedImage && <img className="mt-6 mb-6 rounded w-full h-auto max-w-prose" src={post.FeaturedImage} />}
         <div className="mt-6 prose prose-indigo text-gray-500 max-w-prose"
           dangerouslySetInnerHTML={{ __html: post.BodyRendered }} />
       </>}
