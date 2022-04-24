@@ -11,6 +11,43 @@ import (
 	"encore.dev/storage/sqldb"
 )
 
+type SubscribeParams struct {
+	Email string
+}
+
+// Subscribe subscribes to the email newsletter for a given email.
+//encore:api public method=POST path=/email/subscribe
+func Subscribe(ctx context.Context, p *SubscribeParams) error {
+	_, err := sqldb.Exec(ctx, `
+		INSERT INTO "user" (email, optin)
+		VALUES ($1, true)
+		ON CONFLICT (email) DO UPDATE
+		SET optin = true, option_changed = NOW()
+	`, p.Email)
+	return err
+}
+
+// getAllSubscribers returns all the subscribers to the email newsletter.
+func getAllSubscribers(ctx context.Context) (emails []string, err error) {
+	rows, err := sqldb.Query(ctx, `
+		SELECT email
+		FROM "user"
+		WHERE optin
+	`)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	for rows.Next() {
+		var email string
+		if err := rows.Scan(&email); err != nil {
+			return nil, err
+		}
+		emails = append(emails, email)
+	}
+	return emails, rows.Err()
+}
+
 type UnsubscribeParams struct {
 	// Token is the unsubscribe token in to the email.
 	Token string
@@ -35,17 +72,6 @@ func Unsubscribe(ctx context.Context, params *UnsubscribeParams) error {
 		INSERT INTO "unsubscribe_event" (email_address, message_id)
 		VALUES ($1, $2)
 	`, email, emailID)
-	return err
-}
-
-// ensureUserCreated inserts a user row for the given email, with optin true.
-// If the user already exists, it does nothing.
-func ensureUserCreated(ctx context.Context, email string) error {
-	_, err := sqldb.Exec(ctx, `
-		INSERT INTO "user" (email_address, optin, optin_changed)
-		VALUES ($1, true, NOW())
-		ON CONFLICT (email_address) DO NOTHING
-	`, email)
 	return err
 }
 

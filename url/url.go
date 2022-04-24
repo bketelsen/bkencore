@@ -4,13 +4,15 @@ import (
 	"context"
 	"crypto/rand"
 	"encoding/base64"
+	"net/url"
 
 	"encore.dev/storage/sqldb"
 )
 
 type URL struct {
-	ID  string // short-form URL id
-	URL string // complete URL, in long form
+	ID       string // short-form URL id
+	URL      string // original URL, in long form
+	ShortURL string // short URL
 }
 
 type ShortenParams struct {
@@ -26,7 +28,11 @@ func Shorten(ctx context.Context, p *ShortenParams) (*URL, error) {
 	} else if err := insert(ctx, id, p.URL); err != nil {
 		return nil, err
 	}
-	return &URL{ID: id, URL: p.URL}, nil
+	return &URL{
+		ID:       id,
+		URL:      p.URL,
+		ShortURL: FormatShortURL(id),
+	}, nil
 }
 
 // Get retrieves the original URL for the id.
@@ -56,4 +62,9 @@ func insert(ctx context.Context, id, url string) error {
         VALUES ($1, $2)
     `, id, url)
 	return err
+}
+
+// FormatShortURL formats a short id into the short URL.
+func FormatShortURL(id string) string {
+	return "https://bjk.fyi/" + url.PathEscape(id)
 }

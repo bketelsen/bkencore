@@ -71,6 +71,50 @@ func Schedule(ctx context.Context, p *ScheduleParams) (*ScheduleResponse, error)
 	return &ScheduleResponse{MessageIDs: ids}, nil
 }
 
+type ScheduleAllParams struct {
+	// TemplateID is the email template to use.
+	TemplateID string
+
+	// SendAt is the time to send the email.
+	// If nil it defaults to the current time.
+	SendAt *time.Time
+}
+
+// ScheduleAll schedules emails to be sent to all subscribers.
+func ScheduleAll(ctx context.Context, p *ScheduleAllParams) (*ScheduleResponse, error) {
+	// Schedule the email messages to be sent.
+	sendAt := time.Now()
+	if p.SendAt != nil {
+		sendAt = *p.SendAt
+	}
+
+	rows, err := sqldb.Query(ctx, `
+		INSERT INTO "message" (email_address, template_id, scheduled_at)
+		SELECT email, $2, $3
+			FROM "user"
+			WHERE optin
+		RETURNING id
+	`, p.TemplateID, sendAt)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var ids []int64
+	for rows.Next() {
+		var id int64
+		if err := rows.Scan(&id); err != nil {
+			return nil, err
+		}
+		ids = append(ids, id)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+
+	return &ScheduleResponse{MessageIDs: ids}, nil
+}
+
 type CreateTemplateParams struct {
 	Sender   string // sender email
 	Subject  string // subject line to use
