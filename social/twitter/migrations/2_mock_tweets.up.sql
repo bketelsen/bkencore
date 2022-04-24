@@ -1,0 +1,4 @@
+CREATE TABLE "mock_tweet" (
+	id BIGSERIAL PRIMARY KEY,
+	body TEXT NOT NULL
+);
