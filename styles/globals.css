@@ -1,0 +1,11 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* purgecss start ignore */
+
+@layer base {
+	html, body, #__next { @apply h-full; }
+}
+
+/* purgecss end ignore */
