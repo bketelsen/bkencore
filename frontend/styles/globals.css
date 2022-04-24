@@ -1,0 +1,15 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* purgecss start ignore */
+
+@layer base {
+	html, body, #__next { @apply h-full; }
+
+	.hover-underline {
+		@apply hover:underline hover:decoration-purple-600 hover:underline-offset-2 hover:decoration-2
+	}
+}
+
+/* purgecss end ignore */

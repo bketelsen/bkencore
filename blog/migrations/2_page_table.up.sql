@@ -1,0 +1,13 @@
+CREATE TABLE "page" (
+	slug TEXT NOT NULL PRIMARY KEY,
+	created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
+	modified_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
+	published BOOLEAN NOT NULL,
+	title TEXT NOT NULL,
+	subtitle TEXT NOT NULL,
+	hero_text TEXT NOT NULL,
+	summary TEXT NOT NULL,
+	body TEXT NOT NULL,
+	body_rendered TEXT NOT NULL,
+	featured_image TEXT NULL
+);

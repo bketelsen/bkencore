@@ -1,0 +1,5 @@
+# install
+- docker
+- go
+- encore
+
