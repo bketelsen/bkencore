@@ -1,6 +1,5 @@
 import { NewspaperIcon, PhoneIcon, SupportIcon } from '@heroicons/react/outline'
 import type { NextPage } from 'next'
-import Head from 'next/head'
 import { useEffect, useState } from 'react'
 import { blog } from '../client/client'
 import { DefaultClient } from '../client/default'
