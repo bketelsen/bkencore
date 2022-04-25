@@ -6,7 +6,9 @@ import { DefaultClient } from '../client/default'
 import BlogPostList from '../components/BlogPostList'
 import { SEO } from '../components/SEO'
 import { social } from '../components/social'
+import { InferGetStaticPropsType } from 'next'
 
+import { GetStaticPaths, GetStaticProps } from 'next'
 const links = [
   {
     name: 'Blog',
@@ -28,16 +30,7 @@ const links = [
   },
 ]
 
-const Home: NextPage = () => {
-  const [posts, setPosts] = useState<blog.BlogPost[]>()
-  useEffect(() => {
-    const fetch = async() => {
-      const p = await DefaultClient.blog.GetBlogPosts({Limit: 10, Offset: 0})
-      setPosts(p.BlogPosts ?? [])
-    }
-    fetch()
-  }, [])
-
+function Home({posts}: InferGetStaticPropsType<typeof getStaticProps>) {
   return (
     <div>
       <SEO
@@ -74,5 +67,18 @@ const Home: NextPage = () => {
     </div>
   )
 }
+export  const getStaticProps: GetStaticProps = async()=>{
 
+  const res = await DefaultClient.blog.GetBlogPosts({Limit: 5, Offset:0})
+  const posts = res.BlogPosts
+  return {
+    props: {
+      posts,
+    },
+    // Next.js will attempt to re-generate the page:
+    // - When a request comes in
+    // - At most once every 10 seconds
+    revalidate: 60, // In seconds
+  }
+}
 export default Home
