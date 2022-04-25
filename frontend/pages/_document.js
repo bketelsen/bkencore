@@ -23,8 +23,8 @@ class MyDocument extends Document {
           <meta name="theme-color" content="#000000" />
           <link rel="alternate" type="application/rss+xml" href="/feed.xml" />
           <script defer type="text/javascript" src="https://api.pirsch.io/pirsch.js"
-  id="pirschjs"
-  data-code="vWhcy7gh61Rp6p292VnP1SdSSBiwvkij"></script>
+            id="pirschjs"
+            data-code="vWhcy7gh61Rp6p292VnP1SdSSBiwvkij"></script>
         </Head>
         <body>
           <Main />

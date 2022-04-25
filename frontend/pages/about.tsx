@@ -10,7 +10,7 @@ const About: NextPage = () => {
 
       <p className="text-base lg:text-lg tracking-tight text-neutral-400">More than you probably need to know</p>
       <h1 className="text-4xl font-extrabold text-neutral-900">Oversharing</h1>
-      <div className="mt-6 prose prose-indigo prose-lg text-gray-500 max-w-prose">
+      <div className="mt-6 prose prose-indigo text-gray-500 max-w-prose">
 
         <p>
           Howdy! Thanks for stopping by. I&apos;m Brian Ketelsen, and I&apos;ve been doing technology things

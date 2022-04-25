@@ -200,6 +200,28 @@ export namespace bytes {
 }
 
 export namespace email {
+    export interface CreateTemplateParams {
+        /**
+         * sender email
+         */
+        Sender: string
+
+        /**
+         * subject line to use
+         */
+        Subject: string
+
+        /**
+         * plaintext body
+         */
+        BodyText: string
+
+        /**
+         * html body
+         */
+        BodyHTML: string
+    }
+
     export interface SubscribeParams {
         Email: string
     }
@@ -216,6 +238,14 @@ export namespace email {
 
         constructor(baseClient: BaseClient) {
             this.baseClient = baseClient
+        }
+
+        /**
+         * CreateTemplate creates an email template.
+         * If the template with that id already exists it is updated.
+         */
+        public CreateTemplate(id: string, params: CreateTemplateParams): Promise<void> {
+            return this.baseClient.doVoid("PUT", `/email/templates/${id}`, params)
         }
 
         /**
@@ -278,17 +308,10 @@ export namespace twitter {
         }
 
         /**
-         * Tweet writes a mock tweet to the database.
+         * Tweet sends a tweet using the Twitter API.
          */
         public Tweet(params: TweetParams): Promise<TweetResponse> {
             return this.baseClient.do<TweetResponse>("POST", `/twitter/tweet`, params)
-        }
-
-        /**
-         * Tweet sends a tweet using the Twitter API.
-         */
-        public TweetForReal(params: TweetParams): Promise<TweetResponse> {
-            return this.baseClient.do<TweetResponse>("POST", `/twitter/tweet/for-real`, params)
         }
     }
 }
@@ -350,15 +373,9 @@ class BaseClient {
         if (token !== undefined) {
             this.headers["Authorization"] = "Bearer " + token
         }
-
-        switch (environment) {
-        case "local":
+        if (environment === "local") {
             this.baseURL = "http://localhost:4000"
-            break
-        case "prod":
-            this.baseURL = "https://api.brian.dev"
-            break
-        default:
+        } else {
             this.baseURL = `https://devweek-k65i.encoreapi.com/${environment}`
         }
     }
@@ -404,3 +421,4 @@ function encodeQuery(parts: any[]): string {
     }
     return pairs.join("&")
 }
+export const DefaultClient = new Client("local")
