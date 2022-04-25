@@ -7,23 +7,15 @@ import { blog } from '../../client/client'
 import { DefaultClient } from '../../client/default'
 import { timeToRead } from '../../components/BlogPostList'
 import { SEO } from '../../components/SEO'
+import { InferGetStaticPropsType } from 'next'
 
-const BlogPost: NextPage = () => {
-  const router = useRouter()
-  const {slug} = router.query
-  const [post, setPost] = useState<blog.BlogPost>()
+import { GetStaticPaths, GetStaticProps } from 'next'
+import { ParsedUrlQuery } from 'querystring'
 
-  useEffect(() => {
-    if (!slug) { return }
-
-    const fetch = async() => {
-      const p = await DefaultClient.blog.GetBlogPost(slug as string)
-      setPost(p)
-    }
-    fetch()
-  }, [slug])
-
-
+interface IParams extends ParsedUrlQuery {
+  slug: string
+}
+function BlogPost({post}: InferGetStaticPropsType<typeof getStaticProps>) {
   return (
     <div>
       <SEO
@@ -43,6 +35,29 @@ const BlogPost: NextPage = () => {
       </>}
     </div>
   )
+}
+
+export  const getStaticProps: GetStaticProps = async(context)=>{
+  const { slug } = context.params as IParams
+  const post = await DefaultClient.blog.GetBlogPost(slug as string)
+
+  return {
+    props: {
+      post,
+    },
+    // Next.js will attempt to re-generate the page:
+    // - When a request comes in
+    // - At most once every 10 seconds
+    revalidate: 60, // In seconds
+  }
+}
+export async function getStaticPaths() {
+ const posts= await DefaultClient.blog.GetBlogPosts({Limit: 10, Offset:0})
+const slugs = posts.BlogPosts.map((post) =>  ({ params: {slug: post.Slug}}))
+  return {
+    paths: slugs,
+    fallback: "blocking" // See the "fallback" section below
+  };
 }
 
 export default BlogPost

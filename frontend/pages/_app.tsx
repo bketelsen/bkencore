@@ -1,7 +1,6 @@
 import '../styles/globals.css'
 import type { AppProps } from 'next/app'
 import Layout from '../components/Layout'
-import { SWRConfig } from 'swr'
 
 var baseURL = "http://localhost:4000"
 const env = process.env.NEXT_PUBLIC_ENCORE_ENV ?? "prod"
@@ -18,16 +17,10 @@ switch (env) {
 console.log(baseURL)
 function MyApp({ Component, pageProps }: AppProps) {
   return (
-    <SWRConfig
-      value={{
-        fetcher: (resource, init) => fetch(`${baseURL}${resource}`, init).then(res => res.json())
-      }}
-    >
       <Layout>
         <Component {...pageProps} />
       </Layout>
 
-    </SWRConfig>
   )
 } 
 

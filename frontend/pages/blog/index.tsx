@@ -5,17 +5,11 @@ import { blog } from '../../client/client'
 import { DefaultClient } from '../../client/default'
 import BlogPostList from '../../components/BlogPostList'
 import { SEO } from '../../components/SEO'
+import { InferGetStaticPropsType } from 'next'
 
-const BlogIndex: NextPage = () => {
-  const [posts, setPosts] = useState<blog.BlogPost[]>()
+import { GetStaticPaths, GetStaticProps } from 'next'
+function BlogIndex({posts}: InferGetStaticPropsType<typeof getStaticProps>) {
   
-  useEffect(() => {
-    const fetch = async() => {
-      const p = await DefaultClient.blog.GetBlogPosts({Limit: 100, Offset: 0})
-      setPosts(p.BlogPosts ?? [])
-    }
-    fetch()
-  }, [])
 
   return (
     <div>
@@ -43,5 +37,18 @@ const BlogIndex: NextPage = () => {
     </div>
   )
 }
+export  const getStaticProps: GetStaticProps = async()=>{
 
+  const res = await DefaultClient.blog.GetBlogPosts({Limit: 100, Offset:0})
+  const posts = res.BlogPosts
+  return {
+    props: {
+      posts,
+    },
+    // Next.js will attempt to re-generate the page:
+    // - When a request comes in
+    // - At most once every 10 seconds
+    revalidate: 60, // In seconds
+  }
+}
 export default BlogIndex
