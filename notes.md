@@ -1,4 +1,4 @@
-# install
+# installations required
 - docker
 - go
 - encore
