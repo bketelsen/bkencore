@@ -1,12 +1,20 @@
 import type { NextPage } from 'next';
-import Head from 'next/head';
-import useSWR from 'swr';
+import { useEffect, useState } from 'react';
 import { bytes } from '../../client/client';
+import { DefaultClient } from '../../client/default';
 import BytesList from '../../components/BytesList';
 import { SEO } from '../../components/SEO';
 
 const BytesIndex: NextPage = () => {
-  const {data: bytes, error} = useSWR<{Bytes: bytes.Byte[]}>("/bytes", {refreshInterval: 1000})
+  const [bytes, setBytes] = useState<bytes.Byte[]>()
+  
+  useEffect(() => {
+    const fetch = async() => {
+      const p = await DefaultClient.bytes.List({Limit: 100, Offset: 0})
+      setBytes(p.Bytes ?? [])
+    }
+    fetch()
+  }, [])
   
   return (
     <div>
@@ -27,7 +35,7 @@ const BytesIndex: NextPage = () => {
         {!bytes ? (
           <div className="text-neutral-400">Loading...</div>
         ) : (
-          <BytesList bytes={bytes.Bytes} />
+          <BytesList bytes={bytes} />
         )}
       </section>
 
