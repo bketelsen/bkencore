@@ -1,10 +1,10 @@
 import { NewspaperIcon, PhoneIcon, SupportIcon } from '@heroicons/react/outline'
 import type { NextPage } from 'next'
-import Head from 'next/head'
 import { useEffect, useState } from 'react'
 import { blog } from '../client/client'
 import { DefaultClient } from '../client/default'
 import BlogPostList from '../components/BlogPostList'
+import { SEO } from '../components/SEO'
 import { social } from '../components/social'
 
 const links = [
@@ -40,9 +40,10 @@ const Home: NextPage = () => {
 
   return (
     <div>
-      <Head>
-        <title>Brian Ketelsen</title>
-      </Head>
+      <SEO
+        title={undefined /* defaults to "Brian Ketelsen" */}
+        description="Head in the clouds"
+      />
 
       {/* Profile section */}
       <section className="flex flex-col justify-center max-w-[65ch] mx-auto pb-20 lg:pb-28">

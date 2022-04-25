@@ -1,15 +1,18 @@
 import type { NextPage } from 'next'
-import Head from 'next/head'
+import { SEO } from '../components/SEO'
 
 const About: NextPage = () => {
   return (
     <div>
-      <Head>
-        <title>About Me | Brian Ketelsen</title>
-      </Head>
+      <SEO
+        title="About Me"
+        description="More than you probably need to know"
+      />
 
       <p className="text-base lg:text-lg tracking-tight text-neutral-400">More than you probably need to know</p>
       <h1 className="text-4xl font-extrabold text-neutral-900">Oversharing</h1>
+      <img className="mt-6 mb-6 rounded-md w-full h-auto max-w-prose"
+        src="https://cdn.sanity.io/images/rfbt4ocs/production/48b794f0ca1bc0852d15e7b9b7f3b19914f9e540-2209x1474.jpg?w=800&fit=fillmax" />
       <div className="mt-6 prose prose-indigo text-gray-500 max-w-prose">
 
         <p>

@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react'
 import { blog } from '../../client/client'
 import { DefaultClient } from '../../client/default'
 import { timeToRead } from '../../components/BlogPostList'
+import { SEO } from '../../components/SEO'
 
 const BlogPost: NextPage = () => {
   const router = useRouter()
@@ -22,11 +23,13 @@ const BlogPost: NextPage = () => {
     fetch()
   }, [slug])
 
+
   return (
     <div>
-      <Head>
-        <title>{post?.Title} | Brian Ketelsen</title>
-      </Head>
+      <SEO
+        title={post?.Title}
+        description={post?.Summary}
+      />
 
       {!post ? "Loading..." : <>
         <div className="text-neutral-500">
@@ -34,6 +37,7 @@ const BlogPost: NextPage = () => {
         </div>
         <h1 className="text-4xl font-extrabold text-neutral-900">{post.Title}</h1>
         <div className="mt-3 text-base text-neutral-500">{timeToRead(post.Body)}</div>
+        {post.FeaturedImage && <img className="mt-6 mb-6 rounded-md w-full h-auto max-w-prose" src={post.FeaturedImage} />}
         <div className="mt-6 prose prose-indigo text-gray-500 max-w-prose"
           dangerouslySetInnerHTML={{ __html: post.BodyRendered }} />
       </>}
