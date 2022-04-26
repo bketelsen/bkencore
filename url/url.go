@@ -14,6 +14,10 @@ type URL struct {
 	URL      string // original URL, in long form
 	ShortURL string // short URL
 }
+type GetListResponse struct {
+	Count int
+	URLS  []*URL
+}
 
 type ShortenParams struct {
 	URL string // the URL to shorten
@@ -44,6 +48,44 @@ func Get(ctx context.Context, id string) (*URL, error) {
         WHERE id = $1
     `, id).Scan(&u.URL)
 	return u, err
+}
+
+// List retrieves all shortened URLs
+//encore:api public method=GET path=/url
+func List(ctx context.Context) (*GetListResponse, error) {
+	rows, err := sqldb.Query(ctx, `
+		SELECT id, original_url
+		FROM "url"
+	`)
+	if err != nil {
+		return &GetListResponse{
+			Count: 0,
+			URLS:  []*URL{},
+		}, err
+	}
+	defer rows.Close()
+
+	var q []*URL
+	var i = 0
+	for rows.Next() {
+		var (
+			b URL
+		)
+		err := rows.Scan(&b.ID, &b.URL)
+		if err != nil {
+			return &GetListResponse{
+				Count: 0,
+				URLS:  []*URL{},
+			}, err
+		}
+
+		q = append(q, &b)
+		i = i + 1
+	}
+	return &GetListResponse{
+		Count: i,
+		URLS:  q,
+	}, rows.Err()
 }
 
 // generateID generates a random short ID.
