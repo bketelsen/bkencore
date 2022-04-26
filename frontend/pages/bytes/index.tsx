@@ -1,20 +1,12 @@
-import type { NextPage } from 'next';
-import { useEffect, useState } from 'react';
 import { bytes } from '../../client/client';
 import { DefaultClient } from '../../client/default';
 import BytesList from '../../components/BytesList';
 import { SEO } from '../../components/SEO';
+import { InferGetStaticPropsType } from 'next'
 
-const BytesIndex: NextPage = () => {
-  const [bytes, setBytes] = useState<bytes.Byte[]>()
-  
-  useEffect(() => {
-    const fetch = async() => {
-      const p = await DefaultClient.bytes.List({Limit: 100, Offset: 0})
-      setBytes(p.Bytes ?? [])
-    }
-    fetch()
-  }, [])
+import {  GetStaticProps } from 'next'
+function BytesIndex({bytes}: InferGetStaticPropsType<typeof getStaticProps>) {
+
   
   return (
     <div>
@@ -43,5 +35,18 @@ const BytesIndex: NextPage = () => {
     </div>
   )
 }
+export  const getStaticProps: GetStaticProps = async()=>{
 
+  const res = await DefaultClient.bytes.List({Offset:0, Limit: 20})
+  const bytes = res.Bytes
+  return {
+    props: {
+      bytes,
+    },
+    // Next.js will attempt to re-generate the page:
+    // - When a request comes in
+    // - At most once every 10 seconds
+    revalidate: 60, // In seconds
+  }
+}
 export default BytesIndex

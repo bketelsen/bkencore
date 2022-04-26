@@ -1,10 +1,14 @@
 ---yaml
-title:      "My First Post"
-summary:  "A worthy article"
+title:      "About This Site"
+summary:  "Meta Information about this blog"
 ---
 
-## Title Of My post
-I'm a post. Read me!
+## Source Code
 
-### Subtitle
-Because that's important
+The source code for this blog and the backend that powers it is on [GitHub](https://github.com/bketelsen/bkencore)
+
+### Technologies
+
+The backend is powered by [Encore](https://encore.dev) hosted on Azure.
+
+The site is served by Vercel running Next.js. 
