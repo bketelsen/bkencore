@@ -5,7 +5,7 @@ export default class Client {
     twitter: twitter.ServiceClient
     url: url.ServiceClient
 
-    constructor(environment: string = "staging", token?: string) {
+    constructor(environment: string = "prod", token?: string) {
         const base = new BaseClient(environment, token)
         this.blog = new blog.ServiceClient(base)
         this.bytes = new bytes.ServiceClient(base)
@@ -200,28 +200,6 @@ export namespace bytes {
 }
 
 export namespace email {
-    export interface CreateTemplateParams {
-        /**
-         * sender email
-         */
-        Sender: string
-
-        /**
-         * subject line to use
-         */
-        Subject: string
-
-        /**
-         * plaintext body
-         */
-        BodyText: string
-
-        /**
-         * html body
-         */
-        BodyHTML: string
-    }
-
     export interface SubscribeParams {
         Email: string
     }
@@ -238,14 +216,6 @@ export namespace email {
 
         constructor(baseClient: BaseClient) {
             this.baseClient = baseClient
-        }
-
-        /**
-         * CreateTemplate creates an email template.
-         * If the template with that id already exists it is updated.
-         */
-        public CreateTemplate(id: string, params: CreateTemplateParams): Promise<void> {
-            return this.baseClient.doVoid("PUT", `/email/templates/${id}`, params)
         }
 
         /**
@@ -301,22 +271,27 @@ export namespace twitter {
         }
 
         /**
-         * SendDue posts tweets that are due.
+         * Tweet writes a mock tweet to the database.
          */
-        public SendDue(): Promise<void> {
-            return this.baseClient.doVoid("POST", `/twitter/send-due`)
+        public Tweet(params: TweetParams): Promise<TweetResponse> {
+            return this.baseClient.do<TweetResponse>("POST", `/twitter/tweet`, params)
         }
 
         /**
          * Tweet sends a tweet using the Twitter API.
          */
-        public Tweet(params: TweetParams): Promise<TweetResponse> {
-            return this.baseClient.do<TweetResponse>("POST", `/twitter/tweet`, params)
+        public TweetForReal(params: TweetParams): Promise<TweetResponse> {
+            return this.baseClient.do<TweetResponse>("POST", `/twitter/tweet/for-real`, params)
         }
     }
 }
 
 export namespace url {
+    export interface GetListResponse {
+        Count: number
+        URLS: URL[]
+    }
+
     export interface ShortenParams {
         /**
          * the URL to shorten
@@ -353,6 +328,13 @@ export namespace url {
          */
         public Get(id: string): Promise<URL> {
             return this.baseClient.do<URL>("GET", `/url/${id}`)
+        }
+
+        /**
+         * List retrieves all shortened URLs
+         */
+        public List(): Promise<GetListResponse> {
+            return this.baseClient.do<GetListResponse>("GET", `/url`)
         }
 
         /**
