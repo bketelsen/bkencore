@@ -108,7 +108,7 @@ func Schedule(ctx context.Context, p *ScheduleParams) (*ScheduleResponse, error)
 }
 
 // SendDue posts tweets that are due.
-//encore:api auth method=POST path=/twitter/send-due
+//encore:api private method=POST path=/twitter/send-due
 func SendDue(ctx context.Context) error {
 	tweet, err := queryDueTweet(ctx, time.Now())
 	if errors.Is(err, sqldb.ErrNoRows) {
