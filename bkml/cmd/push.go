@@ -30,7 +30,7 @@ import (
 	"github.com/adrg/frontmatter"
 	"github.com/spf13/cobra"
 
-	"encore.app/blogsync/client"
+	"encore.app/bkml/client"
 )
 
 // pushCmd represents the push command

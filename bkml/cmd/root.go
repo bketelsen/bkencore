@@ -26,7 +26,7 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"encore.app/blogsync/client"
+	"encore.app/bkml/client"
 )
 
 var (
@@ -40,8 +40,8 @@ var (
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
-	Use:   "blogsync",
-	Short: "Commands to administrate the brian.dev blog",
+	Use:   "bkml",
+	Short: "Commands to administer content",
 	PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
 		var err error
 		base := client.Local
@@ -61,5 +61,5 @@ func Execute() {
 }
 
 func init() {
-	rootCmd.PersistentFlags().StringVarP(&envName, "env", "e", "local", "environment to connect to ('local', 'prod', 'staging')")
+	rootCmd.PersistentFlags().StringVarP(&envName, "env", "e", "local", "environment to connect to ('local',  'staging')")
 }

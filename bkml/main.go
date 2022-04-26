@@ -21,7 +21,7 @@ THE SOFTWARE.
 */
 package main
 
-import "encore.app/blogsync/cmd"
+import "encore.app/bkml/cmd"
 
 func main() {
 	cmd.Execute()

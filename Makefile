@@ -8,12 +8,15 @@ dev:
 generate: 
 	encore gen client -e local --lang=typescript devweek-k65i > client/api.ts
 	encore gen client -e local --lang=go devweek-k65i > goclient.gox
-	rm blogsync/client/goclient.go
-	mv goclient.gox blogsync/client/goclient.go
+	rm bkml/client/goclient.go
+	mv goclient.gox bkml/client/goclient.go
 
-.PHONY: blogsync
-blogsync:
-	cd blogsync && go build
+.PHONY: bkml 
+bkml:
+	cd bkml && go install
 
-sync:
-	cd content && ../blogsync/blogsync push
+sync: bkml
+	cd content && bkml push -e staging
+
+synclocal: bkml
+	cd content && bkml push

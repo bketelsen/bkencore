@@ -34,5 +34,5 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 /.encore
-blogsync/blogsync
+bkml/bkml
 .envrc 

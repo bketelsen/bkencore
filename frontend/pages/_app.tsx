@@ -3,12 +3,12 @@ import type { AppProps } from 'next/app'
 import Layout from '../components/Layout'
 
 var baseURL = "http://localhost:4000"
-const env = process.env.NEXT_PUBLIC_ENCORE_ENV ?? "prod"
+const env = process.env.NEXT_PUBLIC_ENCORE_ENV ?? "staging"
 switch (env) {
   case "local":
       baseURL = "http://localhost:4000"
       break
-  case "prod":
+  case "staging":
       baseURL = "https://api.brian.dev"
       break
   default:

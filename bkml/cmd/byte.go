@@ -28,32 +28,42 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"encore.app/blogsync/client"
+	"encore.app/bkml/client"
 )
 
-// shortenCmd represents the shorten command
-var shortenCmd = &cobra.Command{
-	Use:   "shorten URL",
-	Short: "Shortens a URL and returns a new, short URL that redirects to the original URL.",
-	Args:  cobra.ExactArgs(1),
-	RunE: func(cmd *cobra.Command, args []string) error {
-		// Parse the URL
-		u, err := url.Parse(args[0])
-		cobra.CheckErr(err)
-		if u.Scheme == "" {
-			return errors.New("url must be fully qualified with a scheme and a host")
-		}
-
-		// Generate the short URL
-		resp, err := backend.Url.Shorten(cmd.Context(), client.UrlShortenParams{
-			URL: args[0],
-		})
-		cobra.CheckErr(err)
-		fmt.Println(resp.ShortURL)
-		return nil
-	},
-}
-
 func init() {
-	rootCmd.AddCommand(shortenCmd)
+	var title, desc string
+
+	// byteCmd represents the shorten command
+	var byteCmd = &cobra.Command{
+		Use:   "byte URL --title=TITLE --desc=DESC",
+		Short: "Publish a quick byte, a short post that links to interesting articles etc",
+		Args:  cobra.ExactArgs(1),
+		RunE: func(cmd *cobra.Command, args []string) error {
+			// Parse the URL
+			u, err := url.Parse(args[0])
+			cobra.CheckErr(err)
+			if u.Scheme == "" {
+				return errors.New("url must be fully qualified with a scheme and a host")
+			}
+
+			if title == "" {
+				return errors.New("--title must not be empty")
+			}
+
+			// Generate the short URL
+			resp, err := backend.Bytes.Publish(cmd.Context(), client.BytesPublishParams{
+				Title:   title,
+				Summary: desc,
+				URL:     args[0],
+			})
+			cobra.CheckErr(err)
+			fmt.Printf("Successfully published byte with id %v\n", resp.ID)
+			return nil
+		},
+	}
+
+	byteCmd.Flags().StringVar(&title, "title", "", "The byte's title (required)")
+	byteCmd.Flags().StringVar(&desc, "desc", "", "The byte's description (optional)")
+	rootCmd.AddCommand(byteCmd)
 }

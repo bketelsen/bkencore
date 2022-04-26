@@ -5,7 +5,7 @@ export default class Client {
     twitter: twitter.ServiceClient
     url: url.ServiceClient
 
-    constructor(environment: string = "prod", token?: string) {
+    constructor(environment: string = "staging", token?: string) {
         const base = new BaseClient(environment, token)
         this.blog = new blog.ServiceClient(base)
         this.bytes = new bytes.ServiceClient(base)
@@ -355,7 +355,7 @@ class BaseClient {
         case "local":
             this.baseURL = "http://localhost:4000"
             break
-        case "prod":
+        case "staging":
             this.baseURL = "https://api.brian.dev"
             break
         default:
