@@ -51,8 +51,21 @@ func push() error {
 	currentDirectory, err := os.Getwd() // todo
 	cobra.CheckErr(err)
 	postsDir := filepath.Join(currentDirectory, "posts")
+	pagesDir := filepath.Join(currentDirectory, "pages")
 
-	filepath.Walk(postsDir, func(path string, info os.FileInfo, err error) error {
+	err = posts(postsDir)
+	if err != nil {
+		return err
+	}
+	err = pages(pagesDir)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func posts(postsDir string) error {
+	err := filepath.Walk(postsDir, func(path string, info os.FileInfo, err error) error {
 		cobra.CheckErr(err)
 		// slug will be the relative path minus the extension
 		cobra.CheckErr(err)
@@ -77,6 +90,32 @@ func push() error {
 
 		return nil
 	})
+	return err
+}
+func pages(pagesDir string) error {
+	err := filepath.Walk(pagesDir, func(path string, info os.FileInfo, err error) error {
+		cobra.CheckErr(err)
+		// slug will be the relative path minus the extension
+		cobra.CheckErr(err)
+		if !info.IsDir() {
+			slug := strings.Split(info.Name(), ".")
 
-	return nil
+			// read the file
+			f, err := os.Open(path)
+			cobra.CheckErr(err)
+
+			// create a blogpost and populate frontmatter
+			var post client.BlogCreatePageParams
+			rest, err := frontmatter.Parse(f, &post)
+			cobra.CheckErr(err)
+			post.Body = string(rest)
+
+			// submit to the API
+			err = backend.Blog.CreatePage(context.Background(), slug[0], post)
+			cobra.CheckErr(err)
+		}
+
+		return nil
+	})
+	return err
 }

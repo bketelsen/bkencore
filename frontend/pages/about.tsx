@@ -1,7 +1,10 @@
 import type { NextPage } from 'next'
 import { SEO } from '../components/SEO'
+import { DefaultClient } from '../client/default'
+import Page from '../components/Page'
+import { InferGetStaticPropsType } from 'next'
 
-const About: NextPage = () => {
+function About({ page}: InferGetStaticPropsType<typeof getStaticProps>) {
   return (
     <div>
       <SEO
@@ -9,8 +12,8 @@ const About: NextPage = () => {
         description="More than you probably need to know"
       />
 
-      <p className="text-base lg:text-lg tracking-tight text-neutral-400">More than you probably need to know</p>
-      <h1 className="text-4xl font-extrabold text-neutral-900">Oversharing</h1>
+<Page page={page} />
+
       <img className="mt-6 mb-6 rounded-md w-full h-auto max-w-prose"
         src="https://cdn.sanity.io/images/rfbt4ocs/production/48b794f0ca1bc0852d15e7b9b7f3b19914f9e540-2209x1474.jpg?w=800&fit=fillmax" />
       <div className="mt-6 prose prose-indigo text-gray-500 max-w-prose">
@@ -46,5 +49,19 @@ const About: NextPage = () => {
     </div>
   )
 }
+export  const getStaticProps: GetStaticProps = async()=>{
 
+
+    const pageRes = await DefaultClient.blog.GetPage("about")
+    const page = pageRes
+  return {
+    props: {
+      page,
+    },
+    // Next.js will attempt to re-generate the page:
+    // - When a request comes in
+    // - At most once every 10 seconds
+    revalidate: 60, // In seconds
+  }
+}
 export default About

@@ -19,4 +19,4 @@ sync: bkml
 	cd content && bkml push -e staging
 
 synclocal: bkml
-	cd content && bkml push
+	cd content && bkml push -e local

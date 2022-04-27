@@ -3,9 +3,10 @@ import { DefaultClient } from '../../client/default';
 import BytesList from '../../components/BytesList';
 import { SEO } from '../../components/SEO';
 import { InferGetStaticPropsType } from 'next'
+import Page from '../../components/Page'
 
 import {  GetStaticProps } from 'next'
-function BytesIndex({bytes}: InferGetStaticPropsType<typeof getStaticProps>) {
+function BytesIndex({bytes, page}: InferGetStaticPropsType<typeof getStaticProps>) {
 
   
   return (
@@ -14,14 +15,8 @@ function BytesIndex({bytes}: InferGetStaticPropsType<typeof getStaticProps>) {
         title="Bytes"
         description="Quick dopamine hits"
       />
+<Page page={page} />
 
-      <div>
-        <p className="text-base lg:text-lg tracking-tight text-neutral-400">Quick dopamine hits</p>
-        <h1 className="text-3xl font-extrabold tracking-tight text-neutral-900 md:text-4xl">Bytes</h1>
-        <p className="mt-6 mb-9 text-xl text-neutral-500">
-          I found it so you don&apos;t have to
-        </p>
-      </div>
 
       <section>
         {!bytes ? (
@@ -39,9 +34,12 @@ export  const getStaticProps: GetStaticProps = async()=>{
 
   const res = await DefaultClient.bytes.List({Offset:0, Limit: 20})
   const bytes = res.Bytes
+        const pageRes = await DefaultClient.blog.GetPage("bytes")
+    const page = pageRes
   return {
     props: {
       bytes,
+      page,
     },
     // Next.js will attempt to re-generate the page:
     // - When a request comes in

@@ -6,6 +6,7 @@ import { DefaultClient } from '../client/default'
 import BlogPostList from '../components/BlogPostList'
 import { SEO } from '../components/SEO'
 import { social } from '../components/social'
+import Page from '../components/Page'
 import { InferGetStaticPropsType } from 'next'
 
 import { GetStaticPaths, GetStaticProps } from 'next'
@@ -30,7 +31,7 @@ const links = [
   },
 ]
 
-function Home({posts}: InferGetStaticPropsType<typeof getStaticProps>) {
+function Home({posts, page}: InferGetStaticPropsType<typeof getStaticProps>) {
   return (
     <div>
       <SEO
@@ -40,11 +41,7 @@ function Home({posts}: InferGetStaticPropsType<typeof getStaticProps>) {
 
       {/* Profile section */}
       <section className="flex flex-col justify-center max-w-[65ch] mx-auto pb-20 lg:pb-28">
-        <p className="text-base lg:text-lg font-medium tracking-tight text-neutral-400 text-center">Head in the clouds</p>
-        <h1 className="text-2xl font-extrabold tracking-tight text-neutral-900 md:text-3xl lg:text-4xl text-center">Brian Ketelsen</h1>
-        <p className="my-6 text-xl text-neutral-500 text-center">
-          Howdy! Thanks for stopping by. Inside you&apos;ll find articles, tutorials, technical reference material and maybe even a rant or two :)
-        </p>
+      <Page page={page} />
         <div className="flex justify-center space-x-6">
           {social.map((item) => (
             <a key={item.name} rel="nofollow" href={item.href} className="text-gray-400 hover:text-gray-500">
@@ -71,9 +68,12 @@ export  const getStaticProps: GetStaticProps = async()=>{
 
   const res = await DefaultClient.blog.GetBlogPosts({Limit: 5, Offset:0})
   const posts = res.BlogPosts
+    const pageRes = await DefaultClient.blog.GetPage("index")
+    const page = pageRes
   return {
     props: {
       posts,
+      page,
     },
     // Next.js will attempt to re-generate the page:
     // - When a request comes in

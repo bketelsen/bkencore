@@ -6,9 +6,10 @@ import { DefaultClient } from '../../client/default'
 import BlogPostList from '../../components/BlogPostList'
 import { SEO } from '../../components/SEO'
 import { InferGetStaticPropsType } from 'next'
+import Page from '../../components/Page'
 
 import { GetStaticPaths, GetStaticProps } from 'next'
-function BlogIndex({posts}: InferGetStaticPropsType<typeof getStaticProps>) {
+function BlogIndex({posts, page}: InferGetStaticPropsType<typeof getStaticProps>) {
   
 
   return (
@@ -18,13 +19,8 @@ function BlogIndex({posts}: InferGetStaticPropsType<typeof getStaticProps>) {
         description="I wrote this"
       />
 
-      <div>
-        <p className="text-base lg:text-lg tracking-tight text-neutral-400">I wrote this</p>
-        <h1 className="text-3xl font-extrabold tracking-tight text-neutral-900 md:text-4xl">Blog</h1>
-        <p className="mt-6 mb-9 text-xl text-neutral-500">
-          It was just too long for a twitter thread.
-        </p>
-      </div>
+<Page page={page} />
+
 
       <section>
         {!posts ? (
@@ -41,9 +37,12 @@ export  const getStaticProps: GetStaticProps = async()=>{
 
   const res = await DefaultClient.blog.GetBlogPosts({Limit: 100, Offset:0})
   const posts = res.BlogPosts
+      const pageRes = await DefaultClient.blog.GetPage("blog")
+    const page = pageRes
   return {
     props: {
       posts,
+      page,
     },
     // Next.js will attempt to re-generate the page:
     // - When a request comes in

@@ -271,13 +271,6 @@ export namespace twitter {
         }
 
         /**
-         * SendDue posts tweets that are due.
-         */
-        public SendDue(): Promise<void> {
-            return this.baseClient.doVoid("POST", `/twitter/send-due`)
-        }
-
-        /**
          * Tweet writes a mock tweet to the database.
          */
         public Tweet(params: TweetParams): Promise<TweetResponse> {
@@ -294,6 +287,11 @@ export namespace twitter {
 }
 
 export namespace url {
+    export interface GetListResponse {
+        Count: number
+        URLS: URL[]
+    }
+
     export interface ShortenParams {
         /**
          * the URL to shorten
@@ -330,6 +328,13 @@ export namespace url {
          */
         public Get(id: string): Promise<URL> {
             return this.baseClient.do<URL>("GET", `/url/${id}`)
+        }
+
+        /**
+         * List retrieves all shortened URLs
+         */
+        public List(): Promise<GetListResponse> {
+            return this.baseClient.do<GetListResponse>("GET", `/url`)
         }
 
         /**
