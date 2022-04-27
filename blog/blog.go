@@ -91,7 +91,7 @@ func CreateBlogPost(ctx context.Context, params *CreateBlogPostParams) error {
 //encore:api public method=GET path=/blog
 func GetBlogPosts(ctx context.Context, params *GetBlogPostsParams) (*GetBlogPostsResponse, error) {
 	rows, err := sqldb.Query(ctx, `
-		SELECT slug, created_at, published, modified_at, title, summary, body, body_rendered, featured_image, update_reason
+		SELECT slug, created_at, published, modified_at, title, summary, body, body_rendered, featured_image
 		FROM "article"
 		ORDER BY created_at DESC
 		LIMIT $1
