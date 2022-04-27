@@ -5,6 +5,7 @@ import (
 	"context"
 	"time"
 
+	"encore.dev/beta/errs"
 	"encore.dev/storage/sqldb"
 )
 
@@ -47,6 +48,25 @@ type Byte struct {
 
 type ListResponse struct {
 	Bytes []Byte
+}
+
+// Get retrieves a byte.
+//encore:api public method=GET path=/bytes/:id
+func Get(ctx context.Context, id int64) (*Byte, error) {
+	var b Byte
+	err := sqldb.QueryRow(ctx, `
+		SELECT id, title, summary, url, created_at	
+		FROM "byte"
+		WHERE id = $1
+	`, id).Scan(&b.ID, &b.Title, &b.Summary, &b.URL, &b.Created)
+	if err != nil {
+		return nil, &errs.Error{
+			Code:    errs.NotFound,
+			Message: "byte not found",
+		}
+	}
+	return &b, nil
+
 }
 
 // List lists published bytes.

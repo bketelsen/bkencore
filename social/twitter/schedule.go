@@ -27,7 +27,7 @@ type TweetResponse struct {
 }
 
 // Tweet writes a mock tweet to the database.
-//encore:api auth method=POST path=/twitter/tweet
+//encore:api private method=POST path=/twitter/tweet
 func Tweet(ctx context.Context, p *TweetParams) (*TweetResponse, error) {
 	var id int64
 	err := sqldb.QueryRow(ctx, `
@@ -39,7 +39,7 @@ func Tweet(ctx context.Context, p *TweetParams) (*TweetResponse, error) {
 }
 
 // Tweet sends a tweet using the Twitter API.
-//encore:api auth method=POST path=/twitter/tweet/for-real
+//encore:api private method=POST path=/twitter/tweet/for-real
 func TweetForReal(ctx context.Context, p *TweetParams) (*TweetResponse, error) {
 	eb := errs.B()
 	client := httpClient(ctx)
@@ -117,7 +117,7 @@ func SendDue(ctx context.Context) error {
 		return err
 	}
 
-	resp, err := Tweet(ctx, tweet.Tweet)
+	resp, err := TweetForReal(ctx, tweet.Tweet)
 	if err != nil {
 		return err
 	}
