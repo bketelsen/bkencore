@@ -91,7 +91,7 @@ func CreateBlogPost(ctx context.Context, params *CreateBlogPostParams) error {
 //encore:api public method=GET path=/blog
 func GetBlogPosts(ctx context.Context, params *GetBlogPostsParams) (*GetBlogPostsResponse, error) {
 	rows, err := sqldb.Query(ctx, `
-		SELECT slug, created_at, published, modified_at, title, summary, body, body_rendered, featured_image
+		SELECT slug, created_at, published, modified_at, title, summary, body, body_rendered, featured_image, update_reason
 		FROM "article"
 		ORDER BY created_at DESC
 		LIMIT $1
@@ -131,5 +131,10 @@ func GetBlogPosts(ctx context.Context, params *GetBlogPostsParams) (*GetBlogPost
 
 //encore:authhandler
 func AuthHandler(ctx context.Context, token string) (auth.UID, error) {
+	eb := errs.B().Meta("auth", token)
+
+	if token != secrets.AuthPassword {
+		return "", eb.Code(errs.Unauthenticated).Msg("authentication failure").Err()
+	}
 	return "", nil
 }

@@ -22,6 +22,7 @@ THE SOFTWARE.
 package cmd
 
 import (
+	"errors"
 	"os"
 
 	"github.com/spf13/cobra"
@@ -48,7 +49,11 @@ var rootCmd = &cobra.Command{
 		if envName != "local" {
 			base = client.Environment(envName)
 		}
-		backend, err = client.New(base, client.WithAuthToken("yourmom"))
+		token := os.Getenv("AUTH_PASSWORD")
+		if token == "" {
+			return errors.New("no AUTH_PASSWORD set")
+		}
+		backend, err = client.New(base, client.WithAuthToken(token))
 		return err
 	},
 }

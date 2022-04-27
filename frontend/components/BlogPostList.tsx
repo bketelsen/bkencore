@@ -18,10 +18,6 @@ const BlogPostList: FC<{ posts: blog.BlogPost[] }> = ({ posts }) => (
           <p className="mt-1 text-sm text-neutral-500">
             <time dateTime={post.CreatedAt}>{created.toFormat("d LLL yyyy")}</time>
             <span className="px-2 text-primary-500">·</span>
-            {!modified.equals(created) && <>
-              <time dateTime={post.ModifiedAt}>Updated: {modified.toFormat("d LLL yyyy")}</time>
-              <span className="px-2 text-primary-500">·</span>
-            </>}
             <span>{timeToRead(post.Body)}</span>
 
           </p>
