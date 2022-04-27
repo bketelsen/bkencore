@@ -3,6 +3,7 @@ import { SEO } from '../components/SEO'
 import { DefaultClient } from '../client/default'
 import Page from '../components/Page'
 import { InferGetStaticPropsType } from 'next'
+import { GetStaticPaths, GetStaticProps } from 'next'
 
 function About({ page}: InferGetStaticPropsType<typeof getStaticProps>) {
   return (
