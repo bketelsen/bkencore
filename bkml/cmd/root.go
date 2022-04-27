@@ -23,6 +23,7 @@ package cmd
 
 import (
 	"errors"
+	"fmt"
 	"os"
 
 	"github.com/spf13/cobra"
@@ -53,6 +54,7 @@ var rootCmd = &cobra.Command{
 		if token == "" {
 			return errors.New("no AUTH_PASSWORD set")
 		}
+		fmt.Printf("Using %s environment\n", envName)
 		backend, err = client.New(base, client.WithAuthToken(token))
 		return err
 	},
@@ -66,5 +68,5 @@ func Execute() {
 }
 
 func init() {
-	rootCmd.PersistentFlags().StringVarP(&envName, "env", "e", "local", "environment to connect to ('local',  'staging')")
+	rootCmd.PersistentFlags().StringVarP(&envName, "env", "e", "staging", "environment to connect to ('local',  'staging')")
 }
