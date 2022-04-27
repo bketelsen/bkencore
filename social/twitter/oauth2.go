@@ -103,6 +103,6 @@ var cfg = oauth2.Config{
 		TokenURL:  "https://api.twitter.com/2/oauth2/token",
 		AuthStyle: oauth2.AuthStyleInHeader,
 	},
-	RedirectURL: "http://localhost:4000/twitter/oauth/token", // TODO
+	RedirectURL: "https://api.brian.dev/twitter/oauth/token", // TODO
 	Scopes:      []string{"tweet.read", "tweet.write", "users.read", "offline.access"},
 }
