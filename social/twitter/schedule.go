@@ -94,7 +94,7 @@ func SendDue(ctx context.Context) error {
 		return err
 	}
 
-	resp, err := Tweet(ctx, tweet.Tweet)
+	resp, err := TweetForReal(ctx, tweet.Tweet)
 	if err != nil {
 		return err
 	}

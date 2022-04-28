@@ -38,7 +38,7 @@ func Promote(ctx context.Context, id int64, p *PromoteParams) error {
 		SendAt: sendAt,
 		Tweet: &twitter.TweetParams{
 			// TODO very placeholder tweet text
-			Text: fmt.Sprintf("Quick Byte: %s\n\n%s", byte.Title, byte.URL),
+			Text: fmt.Sprintf("Quick Byte: %s - %s \n\n%s", byte.Title, byte.Summary, byte.URL),
 		},
 	})
 	if err != nil {
