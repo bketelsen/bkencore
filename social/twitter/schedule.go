@@ -2,13 +2,11 @@
 package twitter
 
 import (
-	"bytes"
 	"context"
 	"encoding/json"
 	"errors"
 	"fmt"
-	"io/ioutil"
-	"net/http"
+	"strconv"
 	"time"
 
 	"encore.dev/beta/errs"
@@ -42,35 +40,14 @@ func Tweet(ctx context.Context, p *TweetParams) (*TweetResponse, error) {
 //encore:api private method=POST path=/twitter/tweet/for-real
 func TweetForReal(ctx context.Context, p *TweetParams) (*TweetResponse, error) {
 	eb := errs.B()
-	client := httpClient(ctx)
-	data, _ := json.Marshal(map[string]any{
-		"text": p.Text,
-	})
-	req, err := http.NewRequestWithContext(ctx, "POST", "https://api.twitter.com/2/tweets", bytes.NewReader(data))
-	if err != nil {
-		return nil, eb.Cause(err).Msg("unable to create request").Err()
-	}
-	req.Header.Set("Content-Type", "application/json")
+	client := twitterClient()
 
-	resp, err := client.Do(req)
+	tweet, _, err := client.Statuses.Update(p.Text, nil)
 	if err != nil {
 		return nil, eb.Cause(err).Msg("unable to make request").Err()
 	}
-	defer resp.Body.Close()
-	if resp.StatusCode != http.StatusCreated {
-		body, _ := ioutil.ReadAll(resp.Body)
-		return nil, eb.Msgf("got non-201 response from Twitter API: %s (%s)", resp.Status, body).Err()
-	}
 
-	var respData struct {
-		Data struct {
-			ID string `json:"id"`
-		} `json:"data"`
-	}
-	if err := json.NewDecoder(resp.Body).Decode(&respData); err != nil {
-		return nil, eb.Cause(err).Msg("unable to decode response").Err()
-	}
-	return &TweetResponse{ID: respData.Data.ID}, nil
+	return &TweetResponse{ID: strconv.FormatInt(tweet.ID, 10)}, nil
 }
 
 type ScheduleParams struct {
