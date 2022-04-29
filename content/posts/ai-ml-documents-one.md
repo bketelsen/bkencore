@@ -58,7 +58,7 @@ The pricing for the OCR is really attractive - as of September, 2019 it is:
 
 I know that I'll be fine tuning the processes that run, and likely running them repeatedly. I wanted to find a way to store the results from the OCR for each document, but I am also aware that I can't use the document name and path as the canonical key to find the document later, because the goal of this app is to move them and rename them appropriately! So I decided to use a hash of the file contents as a key. `SHA256` seems to be the right algorithm for file contents, low cost computation, low collision chance. So I created a hash function that calculates the `SHA256` hash of the document after it is read:
 
-```go
+```go:document.go
 func (d *Document) GetHash() {
 
 	f, err := os.Open(d.Path)
@@ -135,7 +135,7 @@ After receiving the results, the responses are serialized using the above mentio
 
 Based on the results there are some simple `bag of words` matches that can be done. Some of the documents I have contain very unique text that is indicative of a particular document type. For example, Bank of America always includes my account number and their address in `Wilmington`. No other document in my corpus has those two distinct things together, so I can write a simple classifier for all Bank of America documents. I decided to use simple TOML for a configuration file here:
 
-```
+```toml
 [[entity]]
 name = "Bank of America"
 directory = "BOA"
