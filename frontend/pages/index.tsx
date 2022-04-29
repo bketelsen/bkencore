@@ -44,18 +44,18 @@ function Home({posts, page}: InferGetStaticPropsType<typeof getStaticProps>) {
       <Page page={page} />
         <div className="flex justify-center space-x-6">
           {social.map((item) => (
-            <a key={item.name} rel="nofollow" href={item.href} className="text-gray-400 hover:text-gray-500">
+            <a key={item.name} rel="nofollow" href={item.href} className="text-secondary hover:text-accent-focus">
               <span className="sr-only">{item.name}</span>
-              <item.icon className="h-6 w-6" aria-hidden="true" />
+              <item.icon className="w-6 h-6" aria-hidden="true" />
             </a>
           ))}
         </div>
       </section>
 
       <section>
-        <h2 className="text-xl tracking-tight font-extrabold text-gray-900 sm:text-2xl">Recent blog posts</h2>
+        <h2 className="text-xl font-extrabold tracking-tight text-base-content sm:text-2xl">Recent blog posts</h2>
         {!posts ? (
-          <div className="text-neutral-400">Loading...</div>
+          <div className="text-neutral-content">Loading...</div>
         ) : (
           <BlogPostList posts={posts} />
         )}

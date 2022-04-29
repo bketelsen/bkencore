@@ -7,7 +7,7 @@ const ThemeSwitch = () => {
 
   // When mounted on client, now we can show the UI
   useEffect(() => setMounted(true), [])
-
+  console.log(theme,resolvedTheme)
   return (
     <button
       aria-label="Toggle Dark Mode"
@@ -31,6 +31,11 @@ const ThemeSwitch = () => {
           <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" />
         )}
       </svg>
+      {mounted && (theme === 'dark' || resolvedTheme === 'dark') ? (
+
+        <p>dark</p>
+      ) : (<p>light</p>)
+}
     </button>
   )
 }

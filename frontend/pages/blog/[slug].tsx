@@ -32,15 +32,15 @@ function BlogPost({post,mdx}: InferGetStaticPropsType<typeof getStaticProps>) {
       />
 
       {!post ? "Loading..." : <>
-        <div className="text-neutral-500">
+        <div className="text-secondary">
           <Link href="/blog"><a className="hover:underline hover:decoration-neutral-300 font-sm">Blog</a></Link> /
         </div>
-        <h1 className="text-4xl font-extrabold text-neutral-900">{post.Title}</h1>
-        <div className="mt-3 text-base text-neutral-500">{timeToRead(post.Body)}</div>
-        {post.FeaturedImage && <img className="mt-6 mb-6 rounded-md w-full h-auto max-w-prose" src={post.FeaturedImage} />}
+        <h1 className="text-4xl font-extrabold text-neutral-content dark:text-neutral-300">{post.Title}</h1>
+        <div className="mt-3 text-base text-secondary">{timeToRead(post.Body)}</div>
+        {post.FeaturedImage && <img className="w-full h-auto mt-6 mb-6 rounded-md max-w-prose" src={post.FeaturedImage} />}
 
       </>}
-              <div className="mt-6 prose prose-lg prose-indigo text-gray-500 max-w-3xl">
+              <div className="max-w-3xl mt-6 prose ">
 
           <Component components={{
             Image,

@@ -4,7 +4,8 @@ import Nav from "./Nav"
 
 const Layout: FC<React.PropsWithChildren<{}>> = (props) => {
   return (
-    <div className="flex flex-col h-full max-w-5xl w-full mx-auto px-4 lg:px-0">
+    <div className="flex flex-col w-full h-full max-w-5xl px-4 mx-auto lg:px-0">
+      
       <div className="flex-none">
         <Nav />
       </div>

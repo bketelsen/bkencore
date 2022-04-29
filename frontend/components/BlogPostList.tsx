@@ -11,17 +11,17 @@ const BlogPostList: FC<{ posts: blog.BlogPost[] }> = ({ posts }) => (
       return (
         <div key={post.Slug} className="pt-8">
           <Link href={"/blog/" + post.Slug}>
-            <a className="block hover-underline text-xl font-semibold text-neutral-900">
+            <a className="block text-xl font-semibold text-base-content hover-underline ">
               {post.Title}
             </a>
           </Link>
-          <p className="mt-1 text-sm text-neutral-500">
+          <p className="mt-1 text-sm text-secondary">
             <time dateTime={post.CreatedAt}>{created.toFormat("d LLL yyyy")}</time>
-            <span className="px-2 text-primary-500">·</span>
+            <span className="px-2 text-primary">·</span>
             <span>{timeToRead(post.Body)}</span>
 
           </p>
-          <p className="mt-2 text-base text-gray-600">{post.Summary}</p>
+          <p className="mt-2 text-base text-base-content ">{post.Summary}</p>
         </div>
       )
     })}

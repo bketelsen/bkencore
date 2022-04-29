@@ -4,9 +4,9 @@ import { blog } from "../client/client";
 const Page: FC<{page: blog.Page}> = ({page}) => {
   return (
     <div>
-      <p className="text-base lg:text-lg font-medium tracking-tight text-neutral-500 text-center">{page.Subtitle}</p>
-      <h1 className="text-2xl font-extrabold tracking-tight text-neutral-900 md:text-3xl lg:text-4xl text-center">{page.Title}</h1>
-      <p className="my-6 text-xl text-neutral-500 text-center">{page.HeroText}</p>
+      <p className="text-base font-medium tracking-tight text-center lg:text-lg text-base-content">{page.Subtitle}</p>
+      <h1 className="text-2xl font-extrabold tracking-tight text-center text-base-content md:text-3xl lg:text-4xl">{page.Title}</h1>
+      <p className="my-6 text-xl text-center text-base-content ">{page.HeroText}</p>
     </div>
   )
 }
