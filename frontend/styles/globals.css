@@ -10,6 +10,9 @@
 	.hover-underline {
 		@apply hover:underline hover:decoration-purple-600 hover:underline-offset-2 hover:decoration-2
 	}
+	.remark-code-title {
+		@apply bg-purple-600 text-gray-100;
+	}
 }
 
 /* purgecss end ignore */

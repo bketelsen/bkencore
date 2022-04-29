@@ -1,4 +1,6 @@
-import '../styles/globals.css'
+import '@/styles/globals.css' 
+import '@/styles/prism.css'
+
 import type { AppProps } from 'next/app'
 import Layout from '../components/Layout'
 

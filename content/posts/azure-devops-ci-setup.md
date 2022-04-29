@@ -7,7 +7,6 @@ summary: Setting up CI on Azure DevOps
 
 Microsoft just announced a killer continuous integration setup for Github, and I was really anxious to give it a try.  This post documents my setup for an [Elixir/Phoenix application](https://github.com/gophersnacks/site) I'm building with [Aaron Schlesinger](https://twitter.com/arschles).
 
-<!--more-->
 
 ### Set Up Azure Pipelines
 

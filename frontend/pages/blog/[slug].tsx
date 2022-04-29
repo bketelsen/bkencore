@@ -1,21 +1,29 @@
-import type { NextPage } from 'next'
-import Head from 'next/head'
 import Link from 'next/link'
-import { useRouter } from 'next/router'
-import { useEffect, useState } from 'react'
-import { blog } from '../../client/client'
 import { DefaultClient } from '../../client/default'
 import { timeToRead } from '../../components/BlogPostList'
 import { SEO } from '../../components/SEO'
 import { InferGetStaticPropsType } from 'next'
+import { useMemo } from 'react'
+import Image from '@/components/Image'
+import CustomLink from '@/components/Link'
+import TOCInline from '@/components/TOCInline'
+import Pre from '@/components/Pre'
+import {  GetStaticProps } from 'next'
+import {getMdx} from '@/lib/mdx'
+import { getMDXComponent, MDXContentProps } from 'mdx-bundler/client'
 
-import { GetStaticPaths, GetStaticProps } from 'next'
 import { ParsedUrlQuery } from 'querystring'
+export const MDXComponents = {
+ // Image,
+ // TOCInline,
 
+
+}
 interface IParams extends ParsedUrlQuery {
   slug: string
 }
-function BlogPost({post}: InferGetStaticPropsType<typeof getStaticProps>) {
+function BlogPost({post,mdx}: InferGetStaticPropsType<typeof getStaticProps>) {
+  const Component = useMemo(() => getMDXComponent(mdx.mdxSource), [mdx.mdxSource])
   return (
     <div>
       <SEO
@@ -30,9 +38,20 @@ function BlogPost({post}: InferGetStaticPropsType<typeof getStaticProps>) {
         <h1 className="text-4xl font-extrabold text-neutral-900">{post.Title}</h1>
         <div className="mt-3 text-base text-neutral-500">{timeToRead(post.Body)}</div>
         {post.FeaturedImage && <img className="mt-6 mb-6 rounded-md w-full h-auto max-w-prose" src={post.FeaturedImage} />}
-        <div className="mt-6 prose prose-indigo text-gray-500 max-w-prose"
-          dangerouslySetInnerHTML={{ __html: post.BodyRendered }} />
+
       </>}
+              <div className="mt-6 prose prose-lg prose-indigo text-gray-500 max-w-3xl">
+
+          <Component components={{
+            Image,
+            TOCInline,
+              a: CustomLink,
+              pre: Pre,
+          }}/>
+              </div>
+
+
+
     </div>
   )
 }
@@ -40,10 +59,11 @@ function BlogPost({post}: InferGetStaticPropsType<typeof getStaticProps>) {
 export  const getStaticProps: GetStaticProps = async(context)=>{
   const { slug } = context.params as IParams
   const post = await DefaultClient.blog.GetBlogPost(slug as string)
-
+  const mdx = await getMdx(post)
   return {
     props: {
       post,
+      mdx,
     },
     // Next.js will attempt to re-generate the page:
     // - When a request comes in

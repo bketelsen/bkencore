@@ -5,16 +5,16 @@ summary: Make your life easier with Byobu
 
 [Byobu](http://byobu.co/) is a frontend for `tmux` and `screen` that allows you to save your terminal sessions and reconnect to them easily. It's one of the biggest time-savers in my bag of tricks. Read along to learn how I use it. This article applies to any \*nix-like system, despite the "on WSL" in the title.
 
-<!--more-->
 
 ### Installing
 
 You can install Byobu on nearly any \*nix-like operating system. Since I'm using Ubuntu and Debian, I'll use `apt` to install the version that is shipped with the OS:
 
-{{< figure src="byobucheck.png" alt="Check for byobu binary" position="center" caption="Check to see if byobu is installed" >}}
+![Check For Byobu Binary](/static/images/byobu-wsl/byobucheck.png)
 
 Once installed it's easy to start a session, just type the `byobu` command:
-{{< figure src="byobuopen.png" alt="new session" position="center" caption="A new Byobu session" >}}
+
+![A new Byobu Session](/static/images/byobu-wsl/byobuopen.png)
 
 ### Enabling
 
@@ -30,11 +30,12 @@ In stark contrast to `tmux` and `screen`, `byobu` is pretty easy to use. By defa
 
 Once inside a `byobu` session, you can create multiple windows inside your terminal session. If you've used a terminal client that supports tabs, this isn't much different. The benefit is that your windows are persisted with your session. So you can exit and resume your session with all your windows intact.
 
-{{< figure src="byobunvim.png" alt="a single byobu window" position="center" caption="A single byobu window" >}}
+![A Single Byobu Window](/static/images/byobu-wsl/byobunvim.png)
+
 
 Windows are labeled with a number in the status bar at the bottom of the screen. Press `F2` to open a new window and you should see a second terminal appear:
 
-{{< figure src="byobuwin.png" alt="a second byobu window" position="center" caption="A second byobu window" >}}
+![A Second Byobu Window](/static/images/byobu-wsl/byobuwin.png)
 
 Now I have two windows open, labeled `0:neovim` and `1:` in the taskbar. I skipped a step here and renamed my original window so I wouldn't get lost when I add more than one. Press `F8` to rename a window. Note that the window name is just for decoration, it doesn't relate to running processes at all.
 
@@ -44,7 +45,7 @@ To navigate between your windows, use `F3` and `F4` for previous and next window
 
 Sometimes, I like to have two different terminal applications running in one window. For example, when editing this blog:
 
-{{< figure src="byobusplit.png" alt="a second byobu window" position="center" caption="A second byobu window" >}}
+![A Split Window](/static/images/byobu-wsl/byobusplit.png)
 
 The top part of the split has `neovim` editing the content of this post. The bottom part of the split is the output of `hugo` as it watches the content directory.
 

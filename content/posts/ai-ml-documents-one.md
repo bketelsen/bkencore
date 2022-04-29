@@ -6,7 +6,6 @@ summary: "Organizing my loose documents with some machine learning, cognitive se
 
 In this first post of (likely) a multi-part series I'm going to discuss how I am using machine learning, AI, and good old-fashioned elbow grease to make sense of the 3000 files in my `~/Documents/Unfiled` directory.
 
-<!--more-->
 
 ### The Problem Statement
 
@@ -41,7 +40,7 @@ As a first step, I wrote a small Go program that calls [Azure Cognitive Services
 
 I created a domain type appropriately called `Document` that stores metadata about files on disk:
 
-```go
+```go:document.go
 type Document struct {
 	Hash         string
 	Path         string
@@ -74,13 +73,13 @@ func (d *Document) GetHash() {
 	}
 	d.Hash = fmt.Sprintf("%x", h.Sum(nil))
 }
-```
+```	
 
 After getting the results of the OCR operation, I set them in the `Document` type, then persist the metadata to disk in a hidden directory. Currently that's `~/.classifier/` but, as with all of this, it might change in the future.
 
 The file is stored using the `SHA256` hash of the contents as the file name, and the `Document` type is serialized to disk using Go's efficient and lightweight `encoding/gob` format. While I'm debugging and playing with this code, I decided to also persist the data in `json` format so it's easier to read. Here's the method on `Document` that saves/serializes to disk:
 
-```go
+```go:document.go
 func (d *Document) SaveMetadata() error {
   fmt.Println(d.Hash)
   //TODO use new XDG config dir location
