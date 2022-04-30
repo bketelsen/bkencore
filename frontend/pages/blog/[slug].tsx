@@ -6,7 +6,6 @@ import { InferGetStaticPropsType } from 'next'
 import { useMemo } from 'react'
 import Image from '@/components/Image'
 import CustomLink from '@/components/Link'
-import TOCInline from '@/components/TOCInline'
 import Pre from '@/components/Pre'
 import { GetStaticProps } from 'next'
 import { getMdx } from '@/lib/mdx'
@@ -55,7 +54,6 @@ function BlogPost({ post, mdx }: InferGetStaticPropsType<typeof getStaticProps>)
         <Component
           components={{
             Image,
-            TOCInline,
             a: CustomLink,
             pre: Pre,
           }}

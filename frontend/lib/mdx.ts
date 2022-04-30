@@ -17,7 +17,6 @@ import rehypeKatex from 'rehype-katex'
 
 import rehypePrismPlus from 'rehype-prism-plus'
 import rehypePresetMinify from 'rehype-preset-minify'
-import { Toc } from 'types/Toc'
 import { blog } from '../client/client'
 
 const root = process.cwd()
@@ -34,8 +33,7 @@ export async function getMdx(post: blog.BlogPost) {
     process.env.ESBUILD_BINARY_PATH = path.join(root, 'node_modules', 'esbuild', 'bin', 'esbuild')
   }
 
-  const toc: Toc = []
-
+  let toc = []
   const source = post.Body
   // Parsing frontmatter here to pass it in as options to rehype plugin
   const { code } = await bundleMDX({
@@ -48,7 +46,6 @@ export async function getMdx(post: blog.BlogPost) {
       // plugins in the future.
       options.remarkPlugins = [
         ...(options.remarkPlugins ?? []),
-        [remarkTocHeadings, { exportRef: toc }],
         remarkGfm,
         remarkCodeTitles,
         [remarkFootnotes, { inlineNotes: true }],
