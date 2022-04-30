@@ -2,6 +2,7 @@
 title: Azure DevOps CI Setup
 created_at: '2018-09-11'
 summary: Setting up CI on Azure DevOps
+featured_image: "/static/images/azure-devops-ci-setup/unsplash-photos-QRkew0KwXSM.jpg"
 ---
 
 

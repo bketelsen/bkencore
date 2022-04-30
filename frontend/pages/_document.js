@@ -1,4 +1,6 @@
 import Document, { Html, Head, Main, NextScript } from 'next/document'
+
+
 class MyDocument extends Document {
   render() {
     return (
@@ -26,7 +28,7 @@ class MyDocument extends Document {
             id="pirschjs"
             data-code="vWhcy7gh61Rp6p292VnP1SdSSBiwvkij"></script>
         </Head>
-        <body>
+        <body className="bg-base-300">
           <Main />
           <NextScript />
         </body>

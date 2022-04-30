@@ -102,7 +102,7 @@ type BlogBlogPost struct {
 	Summary       string
 	Body          string
 	BodyRendered  string `qs:"body_rendered"`
-	FeaturedImage string `qs:"featured_image"`
+	FeaturedImage string `qs:"featured_image" yaml:"featured_image"`
 }
 
 type BlogCreateBlogPostParams struct {
@@ -111,7 +111,7 @@ type BlogCreateBlogPostParams struct {
 	Title         string
 	Summary       string
 	Body          string
-	FeaturedImage string `qs:"featured_image"`
+	FeaturedImage string `qs:"featured_image" yaml:"featured_image"`
 }
 
 type BlogCreatePageParams struct {
@@ -121,7 +121,7 @@ type BlogCreatePageParams struct {
 	HeroText      string `qs:"hero_text"`
 	Summary       string
 	Body          string
-	FeaturedImage string `qs:"featured_image"` // empty string means no image
+	FeaturedImage string `qs:"featured_image" yaml:"featured_image"`
 }
 
 type BlogGetBlogPostsParams struct {
@@ -145,7 +145,7 @@ type BlogPage struct {
 	Summary       string
 	Body          string
 	BodyRendered  string `qs:"body_rendered"`
-	FeaturedImage string `qs:"featured_image"` // emty string means no image
+	FeaturedImage string `qs:"featured_image" yaml:"featured_image"`
 }
 
 type BlogPromoteParams struct {

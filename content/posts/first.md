@@ -1,6 +1,7 @@
 ---yaml
 title:      "About This Site"
-summary:  "Meta Information about this blog"
+summary:  "Meta Information about this blog - frontend and backend technologies."
+featured_image: "/static/images/time-machine.jpg"
 ---
 
 ## Source Code

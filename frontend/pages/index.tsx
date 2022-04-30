@@ -1,9 +1,6 @@
 import { NewspaperIcon, PhoneIcon, SupportIcon } from '@heroicons/react/outline'
-import type { NextPage } from 'next'
-import { useEffect, useState } from 'react'
-import { blog } from '../client/client'
 import { DefaultClient } from '../client/default'
-import BlogPostList from '../components/BlogPostList'
+import BlogPostList from '../components/BlogCardList'
 import { SEO } from '../components/SEO'
 import { social } from '../components/social'
 import Page from '../components/Page'
@@ -31,45 +28,43 @@ const links = [
   },
 ]
 
-function Home({posts, page}: InferGetStaticPropsType<typeof getStaticProps>) {
+function Home({ posts, page }: InferGetStaticPropsType<typeof getStaticProps>) {
   return (
     <div>
-      <SEO
-        title={undefined /* defaults to "Brian Ketelsen" */}
-        description="Head in the clouds"
-      />
+      <SEO title={undefined /* defaults to "Brian Ketelsen" */} description="Head in the clouds" />
 
       {/* Profile section */}
-      <section className="flex flex-col justify-center max-w-[65ch] mx-auto pb-20 lg:pb-28">
       <Page page={page} />
-        <div className="flex justify-center space-x-6">
-          {social.map((item) => (
-            <a key={item.name} rel="nofollow" href={item.href} className="text-secondary hover:text-accent-focus">
-              <span className="sr-only">{item.name}</span>
-              <item.icon className="w-6 h-6" aria-hidden="true" />
-            </a>
-          ))}
-        </div>
-      </section>
+      <div className="flex justify-center space-x-6">
+        {social.map((item) => (
+          <a
+            key={item.name}
+            rel="nofollow"
+            href={item.href}
+            className="text-secondary hover:text-accent-focus"
+          >
+            <span className="sr-only">{item.name}</span>
+            <item.icon className="w-6 h-6" aria-hidden="true" />
+          </a>
+        ))}
+      </div>
 
-      <section>
-        <h2 className="text-xl font-extrabold tracking-tight text-base-content sm:text-2xl">Recent blog posts</h2>
-        {!posts ? (
-          <div className="text-neutral-content">Loading...</div>
-        ) : (
-          <BlogPostList posts={posts} />
-        )}
-      </section>
-
+      <h2 className="flex justify-center mt-10 text-xl font-bold tracking-tight title-font text-base-content sm:text-2xl">
+        Recent Articles
+      </h2>
+      {!posts ? (
+        <div className="text-neutral-content">Loading...</div>
+      ) : (
+        <BlogPostList posts={posts} />
+      )}
     </div>
   )
 }
-export  const getStaticProps: GetStaticProps = async()=>{
-
-  const res = await DefaultClient.blog.GetBlogPosts({Limit: 5, Offset:0})
+export const getStaticProps: GetStaticProps = async () => {
+  const res = await DefaultClient.blog.GetBlogPosts({ Limit: 6, Offset: 0 })
   const posts = res.BlogPosts
-    const pageRes = await DefaultClient.blog.GetPage("index")
-    const page = pageRes
+  const pageRes = await DefaultClient.blog.GetPage('index')
+  const page = pageRes
   return {
     props: {
       posts,
