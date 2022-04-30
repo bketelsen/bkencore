@@ -1,4 +1,4 @@
----yaml
+---
 title: "Organizing Documents with Some AI, ML, and Elbow Grease"
 created_at: "2019-09-03"
 summary: "Organizing my loose documents with some machine learning, cognitive services, and elbow grease."
@@ -7,15 +7,14 @@ featured_image: "/static/images/ai-ml-documents-one/IGa3Md8wP6g.jpg"
 
 In this first post of (likely) a multi-part series I'm going to discuss how I am using machine learning, AI, and good old-fashioned elbow grease to make sense of the 3000 files in my `~/Documents/Unfiled` directory.
 
-
 ### The Problem Statement
 
 There are several contributing factors to the problem. Let's start with the obvious ones:
 
--   I'm a digital packrat
--   I'm a single parent of 3 (and therefore busy)
--   I can be lazy sometimes
--   I have ADHD, and get easily sidetracked from things I intended to do
+- I'm a digital packrat
+- I'm a single parent of 3 (and therefore busy)
+- I can be lazy sometimes
+- I have ADHD, and get easily sidetracked from things I intended to do
 
 When my dad passed away last year, it got even worse. Suddenly I was getting all of his mail, bills, correspondence, too. I didn't want to lose it; but I sure wasn't ready to read it all. So I scanned it and dropped it in the `Unfiled` folder.
 
@@ -41,7 +40,7 @@ As a first step, I wrote a small Go program that calls [Azure Cognitive Services
 
 I created a domain type appropriately called `Document` that stores metadata about files on disk:
 
-```go:document.go
+```go:document.go showLineNumbers
 type Document struct {
 	Hash         string
 	Path         string
@@ -74,7 +73,7 @@ func (d *Document) GetHash() {
 	}
 	d.Hash = fmt.Sprintf("%x", h.Sum(nil))
 }
-```	
+```
 
 After getting the results of the OCR operation, I set them in the `Document` type, then persist the metadata to disk in a hidden directory. Currently that's `~/.classifier/` but, as with all of this, it might change in the future.
 
@@ -111,9 +110,9 @@ func (d *Document) SaveMetadata() error {
 
 Lots of bad things happening in there, see above caveats about copying/pasting this code. The important part is the encoding in `gob` format of the contents of the `Document` metadata, which is then saved to disk using the `SHA256` hash as the filename. This is a nice future-proof solution, and provides several benefits.
 
--   If there is already a file with the same name, it's been processed once.
--   If the `.Path` is different from the document I'm inspecting, I might have an exact duplicate, which is a candidate for (soft) deleting
--   It doesn't matter where the files get moved, as long as the `SHA256` hash matches, I've got the metadata saved already.
+- If there is already a file with the same name, it's been processed once.
+- If the `.Path` is different from the document I'm inspecting, I might have an exact duplicate, which is a candidate for (soft) deleting
+- It doesn't matter where the files get moved, as long as the `SHA256` hash matches, I've got the metadata saved already.
 
 This is a very low-tech metadata database, of sorts. It's definitely not optimized for real-time use, but instead for batch operations.
 

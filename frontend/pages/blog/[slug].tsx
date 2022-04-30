@@ -30,13 +30,13 @@ function BlogPost({ post, mdx }: InferGetStaticPropsType<typeof getStaticProps>)
         'Loading...'
       ) : (
         <>
-          <div className="text-base-content">
+          <div className="text-secondary">
             <Link href="/blog">
               <a className="hover:underline hover:decoration-neutral-300 font-sm">Blog</a>
             </Link>{' '}
             /
           </div>
-          <h1 className="text-4xl font-extrabold text-base-content">{post.Title}</h1>
+          <h1 className="text-4xl font-extrabold text-primary">{post.Title}</h1>
           <div className="mt-3 text-base text-secondary">{timeToRead(post.Body)}</div>
           {post.FeaturedImage && (
             <div>

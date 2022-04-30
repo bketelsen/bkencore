@@ -41,7 +41,7 @@ function Home({ posts, page }: InferGetStaticPropsType<typeof getStaticProps>) {
             key={item.name}
             rel="nofollow"
             href={item.href}
-            className="text-secondary hover:text-accent-focus"
+            className="text-secondary hover:text-primary"
           >
             <span className="sr-only">{item.name}</span>
             <item.icon className="w-6 h-6" aria-hidden="true" />

@@ -11,6 +11,12 @@
   .remark-code-title {
     @apply text-gray-100 bg-purple-600;
   }
+  .prose h2 {
+    @apply text-secondary;
+  }
+  .prose h3 {
+    @apply text-secondary;
+  }
 }
 
 /* purgecss end ignore */
