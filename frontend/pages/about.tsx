@@ -28,6 +28,8 @@ function About({ page }: InferGetStaticPropsType<typeof getStaticProps>) {
         </p>
 
         <ul>
+          <li>Army Veteran, Bradley Fighting Vehicle Gunner, Infantry, 1st Armored Division</li>
+          <li>Father of four with 19 years difference between oldest and youngest child</li>
           <li>Co-founded GopherCon, the largest conference for Go developers</li>
           <li>Co-authored Go In Action for Manning Publishing</li>
           <li>
