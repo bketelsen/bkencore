@@ -1,6 +1,6 @@
 ---
 title: Byobu on WSL
-summary: Make your life easier with Byobu, an helper for tmux and screen.
+summary: Make your life easier with Byobu, a helper for tmux and screen.
 created_at: "2019-10-09T15:04:05+07:00"
 featured_image: "/static/images/byobu-wsl/mbLr6NEatMI.jpg"
 published: true
