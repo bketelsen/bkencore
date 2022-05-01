@@ -15,18 +15,20 @@ import (
 
 type BlogPost struct {
 	Slug          string
-	CreatedAt     time.Time
+	CreatedAt     time.Time `qs:"created_at" yaml:"created_at"`
+	ModifiedAt    time.Time `qs:"modified_at" yaml:"modified_at"`
 	Published     bool
-	ModifiedAt    time.Time
 	Title         string
 	Summary       string
 	Body          string
-	BodyRendered  string
-	FeaturedImage string
+	BodyRendered  string `qs:"body_rendered" yaml:"body_rendered"`
+	FeaturedImage string `qs:"featured_image" yaml:"featured_image"`
 }
 
 type CreateBlogPostParams struct {
 	Slug          string
+	CreatedAt     time.Time `qs:"created_at" yaml:"created_at"`
+	ModifiedAt    time.Time `qs:"modified_at" yaml:"modified_at"`
 	Published     bool
 	Title         string
 	Summary       string
@@ -70,13 +72,14 @@ func GetBlogPost(ctx context.Context, slug string) (*BlogPost, error) {
 //encore:api auth
 func CreateBlogPost(ctx context.Context, params *CreateBlogPostParams) error {
 	img := sql.NullString{String: params.FeaturedImage, Valid: params.FeaturedImage != ""}
+	fmt.Println(params)
 	rendered := blackfriday.Run([]byte(params.Body))
 	_, err := sqldb.Exec(ctx, `
 		INSERT INTO "article" (slug, created_at, published, modified_at, title, summary,body, body_rendered, featured_image)
-		VALUES ($1,  NOW(), $2, NOW(), $3, $4, $5, $6, $7)
+		VALUES ($1,  $2, $3,  $4, $5,  $6, $7, $8, $9)
 		ON CONFLICT (slug) DO UPDATE
-		SET published = $2, modified_at = NOW(), title = $3, summary = $4, body = $5, body_rendered = $6, featured_image = $7
-	`, params.Slug, params.Published, params.Title, params.Summary, params.Body, string(rendered), img)
+		SET published = $3, modified_at = $4, title = $5, summary = $6, body = $7, body_rendered = $8, featured_image = $9
+	`, params.Slug, params.CreatedAt, params.Published, params.ModifiedAt, params.Title, params.Summary, params.Body, string(rendered), img)
 
 	if err != nil {
 		return fmt.Errorf("insert article: %v", err)

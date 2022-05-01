@@ -23,7 +23,7 @@ type PromoteParams struct {
 	Schedule ScheduleType
 }
 
-// Promote schedules the promotion a blog post.
+// Promote schedules the promotion a byte.
 //encore:api auth method=POST path=/bytes/:id/promote
 func Promote(ctx context.Context, id int64, p *PromoteParams) error {
 	eb := errs.B().Meta("id", id)
@@ -31,7 +31,7 @@ func Promote(ctx context.Context, id int64, p *PromoteParams) error {
 	if err != nil {
 		return eb.Cause(err).Msg("unable to get byte ").Err()
 	}
-	sendAt := time.Now() // TODO factor in p.Schedule
+	sendAt := time.Now().Add(time.Minute * 2) // allow for site to refresh bytes
 
 	// Schedule twitter
 	_, err = twitter.Schedule(ctx, &twitter.ScheduleParams{

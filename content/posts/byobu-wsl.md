@@ -1,11 +1,12 @@
 ---
 title: Byobu on WSL
 summary: Make your life easier with Byobu, an helper for tmux and screen.
+created_at: "2019-10-09T15:04:05+07:00"
 featured_image: "/static/images/byobu-wsl/mbLr6NEatMI.jpg"
+published: true
 ---
 
 [Byobu](http://byobu.co/) is a frontend for `tmux` and `screen` that allows you to save your terminal sessions and reconnect to them easily. It's one of the biggest time-savers in my bag of tricks. Read along to learn how I use it. This article applies to any \*nix-like system, despite the "on WSL" in the title.
-
 
 ### Installing
 
@@ -32,7 +33,6 @@ In stark contrast to `tmux` and `screen`, `byobu` is pretty easy to use. By defa
 Once inside a `byobu` session, you can create multiple windows inside your terminal session. If you've used a terminal client that supports tabs, this isn't much different. The benefit is that your windows are persisted with your session. So you can exit and resume your session with all your windows intact.
 
 ![A Single Byobu Window](/static/images/byobu-wsl/byobunvim.png)
-
 
 Windows are labeled with a number in the status bar at the bottom of the screen. Press `F2` to open a new window and you should see a second terminal appear:
 
@@ -64,5 +64,5 @@ When I'm done working in the terminal, but not finished with a particular task, 
 
 Adding `byobu` to my toolbelt drastically cut the amount of time it takes to engage with a project I need to walk away from. I have a hard time guessing, but I think I'm saving an hour or more per week at a minimum. That's a lot of time.
 
--   [Ubuntu Wiki: Byobu](https://help.ubuntu.com/community/Byobu)
--   [Byobu Documentation](http://byobu.co/documentation.html)
+- [Ubuntu Wiki: Byobu](https://help.ubuntu.com/community/Byobu)
+- [Byobu Documentation](http://byobu.co/documentation.html)

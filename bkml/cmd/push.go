@@ -26,6 +26,7 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+	"time"
 
 	"github.com/adrg/frontmatter"
 	"github.com/spf13/cobra"
@@ -82,6 +83,12 @@ func posts(postsDir string) error {
 			cobra.CheckErr(err)
 			post.Body = string(rest)
 			post.Slug = slug[0]
+			if (post.CreatedAt == time.Time{}) {
+				post.CreatedAt = time.Now()
+			}
+			if (post.ModifiedAt == time.Time{}) {
+				post.ModifiedAt = post.CreatedAt
+			}
 
 			// submit to the API
 			err = backend.Blog.CreateBlogPost(context.Background(), post)

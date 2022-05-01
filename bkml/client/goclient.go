@@ -95,9 +95,9 @@ func WithAuthFunc(tokenGenerator func(ctx context.Context) (string, error)) Opti
 
 type BlogBlogPost struct {
 	Slug          string
-	CreatedAt     time.Time `qs:"created_at"`
+	CreatedAt     time.Time `qs:"created_at" yaml:"created_at"`
+	ModifiedAt    time.Time `qs:"modified_at" yaml:"modified_at"`
 	Published     bool
-	ModifiedAt    time.Time `qs:"modified_at"`
 	Title         string
 	Summary       string
 	Body          string
@@ -107,6 +107,8 @@ type BlogBlogPost struct {
 
 type BlogCreateBlogPostParams struct {
 	Slug          string
+	CreatedAt     time.Time `qs:"created_at" yaml:"created_at"`
+	ModifiedAt    time.Time `qs:"modified_at" yaml:"modified_at"`
 	Published     bool
 	Title         string
 	Summary       string
@@ -136,12 +138,12 @@ type BlogGetBlogPostsResponse struct {
 
 type BlogPage struct {
 	Slug          string
-	CreatedAt     time.Time `qs:"created_at"`
-	ModifiedAt    time.Time `qs:"modified_at"`
+	CreatedAt     time.Time `qs:"created_at" yaml:"created_at"`
+	ModifiedAt    time.Time `qs:"modified_at" yaml:"modified_at"`
 	Published     bool
 	Title         string
 	Subtitle      string
-	HeroText      string `qs:"hero_text"`
+	HeroText      string `qs:"hero_text" yaml:"hero_text"`
 	Summary       string
 	Body          string
 	BodyRendered  string `qs:"body_rendered"`
