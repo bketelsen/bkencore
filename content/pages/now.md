@@ -1,7 +1,7 @@
 ---
 title: "Now"
 subtitle: "What I'm Doing Now"
-herotext: "Here's some information about me and my background."
+herotext: "Catch up if we haven't talked in a bit"
 summary: "Blog Posts"
 ---
 
@@ -21,8 +21,10 @@ I lamented in maybe 2017 that the modern web was beyond my grasp. I doubled down
 
 ## That Florida Life
 
-I still hate Florida, but nearly everybody I love is here. So I'm still here, I guess. It's too hot, too humid, and some of the people are downright scary.
+I still hate Florida, but nearly everybody I love is here. So I'm still here, I guess. It's too hot, too humid, and some of the people are downright scary. Oh yeah, and practically every animal here is interested in killing you.
 
 ## Encore API
 
 I'm powering my "Personal API" with [encore](https://encore.dev). _This has really opened up so many possibilites_. I have micro-service style APIs for things like the blog, twitter, my email newsletter, a URL shortener and then some fun composite services that do things like auto-tweet new posts or send email notifications to subscribers of the blog for new articles. I'm just getting started, and I'm expecting that this will evolve rapidly into a really cool hub for all my digital world.
+
+Last update 1 May 2022

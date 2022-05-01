@@ -2,30 +2,55 @@
 import { FC } from 'react'
 import NewsletterSignup from './NewsletterSignup'
 import { social } from './social'
+import Link from 'next/link'
 
 const Footer: FC = (props) => {
   return (
-    <footer>
+    <>
       <NewsletterSignup />
 
-      <div className="pt-4 pb-12 px-4 sm:px-6 md:flex md:items-center md:justify-between">
-        <div className="flex justify-center space-x-6 md:order-2">
-          {social.map((item) => (
-            <a key={item.name} rel="nofollow" href={item.href} className="text-gray-400 hover:text-gray-500">
-              <span className="sr-only">{item.name}</span>
-              <item.icon className="h-6 w-6" aria-hidden="true" />
-            </a>
-          ))}
+      <footer className="p-10 mt-10 rounded lg:mt-20 footer footer-center bg-base-200 text-base-content">
+        <div className="grid grid-flow-col gap-4">
+          <Link href={'/about'}>
+            <a className="link link-hover hover-underline">About</a>
+          </Link>
+          <Link href={'/uses'}>
+            <a className="link link-hover hover-underline ">Uses</a>
+          </Link>
+          <Link href={'/now'}>
+            <a className="link link-hover hover-underline">Now</a>
+          </Link>
         </div>
-        <div className="mt-8 md:mt-0 md:order-1">
-          <p className="text-center text-base text-gray-400">
-            &copy; 2022 Brian Ketelsen 
-            →
-            <a href="https://twitter.com/bketelsen" className="ml-1 hover-underline" target="_blank" rel="noopener noreferrer">@bketelsen</a>
+        <div>
+          <div className="grid grid-flow-col gap-4">
+            {social.map((item) => (
+              <a
+                key={item.name}
+                rel="nofollow"
+                href={item.href}
+                className="text-gray-400 hover:text-gray-500"
+              >
+                <span className="sr-only">{item.name}</span>
+                <item.icon className="w-6 h-6" aria-hidden="true" />
+              </a>
+            ))}
+          </div>
+        </div>
+        <div>
+          <p>
+            Copyright © 2022 - Brian Ketelsen →
+            <a
+              href="https://twitter.com/bketelsen"
+              className="ml-1 hover-underline"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              @bketelsen
+            </a>
           </p>
         </div>
-      </div>
-    </footer>
+      </footer>
+    </>
   )
 }
 
