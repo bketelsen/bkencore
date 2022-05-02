@@ -76,7 +76,8 @@ func List(ctx context.Context, p *ListParams) (*ListResponse, error) {
 	limit := getOrDefault(p.Limit, 100)
 	rows, err := sqldb.Query(ctx, `
 		SELECT id, title, summary, url, created_at
-		FROM byte
+		FROM byte 
+		ORDER BY id desc
 		OFFSET $1
 		LIMIT $2
 	`, offset, limit)
