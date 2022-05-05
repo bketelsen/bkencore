@@ -93,7 +93,7 @@ func WithAuthFunc(tokenGenerator func(ctx context.Context) (string, error)) Opti
 
 type BlogBlogPost struct {
 	Slug          string
-	CreatedAt     time.Time `json:"created_at" yaml:"created_at" qs:"created_at"`
+	CreatedAt     time.Time `json:"created_at" qs:"created_at"`
 	ModifiedAt    time.Time `json:"modified_at" qs:"modified_at"`
 	Published     bool
 	Title         string
@@ -134,8 +134,10 @@ type BlogCreatePageParams struct {
 }
 
 type BlogGetBlogPostsParams struct {
-	Limit  int
-	Offset int
+	Limit    int
+	Offset   int
+	Category string
+	Tag      string
 }
 
 type BlogGetBlogPostsResponse struct {
@@ -155,8 +157,8 @@ type BlogGetTagsResponse struct {
 
 type BlogPage struct {
 	Slug          string
-	CreatedAt     time.Time `qs:"created_at"`
-	ModifiedAt    time.Time `qs:"modified_at"`
+	CreatedAt     time.Time `json:"created_at" qs:"created_at"`
+	ModifiedAt    time.Time `json:"modified_at" qs:"modified_at"`
 	Published     bool
 	Title         string
 	Subtitle      string
@@ -164,7 +166,7 @@ type BlogPage struct {
 	Summary       string
 	Body          string
 	BodyRendered  string `qs:"body_rendered"`
-	FeaturedImage string `qs:"featured_image"` // emty string means no image
+	FeaturedImage string `json:"featured_image" qs:"featured_image"`
 }
 
 type BlogPromoteParams struct {
@@ -262,8 +264,10 @@ func (c *blogClient) GetBlogPost(ctx context.Context, slug string) (resp BlogBlo
 // optional limit and offset.
 func (c *blogClient) GetBlogPosts(ctx context.Context, params BlogGetBlogPostsParams) (resp BlogGetBlogPostsResponse, err error) {
 	queryString := url.Values{
-		"limit":  []string{fmt.Sprint(params.Limit)},
-		"offset": []string{fmt.Sprint(params.Offset)},
+		"category": []string{fmt.Sprint(params.Category)},
+		"limit":    []string{fmt.Sprint(params.Limit)},
+		"offset":   []string{fmt.Sprint(params.Offset)},
+		"tag":      []string{fmt.Sprint(params.Tag)},
 	}
 	err = callAPI(ctx, c.base, "GET", fmt.Sprintf("/blog?%s", queryString.Encode()), nil, &resp)
 	return resp, err

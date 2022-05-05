@@ -8,7 +8,7 @@ import Page from '../../components/Page'
 import {  GetStaticProps } from 'next'
 function BytesIndex({bytes, page}: InferGetStaticPropsType<typeof getStaticProps>) {
 
-  
+
   return (
     <div>
       <SEO

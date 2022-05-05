@@ -86,7 +86,7 @@ export const getStaticProps: GetStaticProps = async (context) => {
   }
 }
 export async function getStaticPaths() {
-  const posts = await DefaultClient.blog.GetBlogPosts({ Limit: 10, Offset: 0 })
+  const posts = await DefaultClient.blog.GetBlogPosts({ Limit: 10, Offset: 0 , Category:'', Tag:''})
   const slugs = posts.BlogPosts.map((post) => ({ params: { slug: post.Slug } }))
   return {
     paths: slugs,

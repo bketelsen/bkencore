@@ -14,8 +14,8 @@ import (
 
 type Page struct {
 	Slug          string
-	CreatedAt     time.Time
-	ModifiedAt    time.Time
+	CreatedAt     time.Time `json:"created_at" yaml:"created_at"`
+	ModifiedAt    time.Time `json:"modified_at"`
 	Published     bool
 	Title         string
 	Subtitle      string
@@ -23,7 +23,7 @@ type Page struct {
 	Summary       string
 	Body          string
 	BodyRendered  string
-	FeaturedImage string // emty string means no image
+	FeaturedImage string `json:"featured_image"`
 }
 
 type CreatePageParams struct {

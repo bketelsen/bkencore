@@ -8,7 +8,7 @@ const BytesList: FC<{ bytes: bytes.Byte[] }> = ({ bytes }) => (
       const created = DateTime.fromISO(byte.Created)
       return (
         <div key={byte.ID} className="pt-8">
-          <a href={byte.URL} className="block hover-underline text-xl font-semibold text-neutral-900">
+          <a href={byte.URL} className="block text-xl font-semibold hover-underline text-neutral-900">
             {byte.Title}
           </a>
           <p className="mt-1 text-sm text-neutral-500">

@@ -2,13 +2,11 @@ import { bundleMDX } from 'mdx-bundler'
 import path from 'path'
 import readingTime from 'reading-time'
 import { visit } from 'unist-util-visit'
-import getAllFilesRecursively from './utils/files'
 // Remark packages
 import remarkGfm from 'remark-gfm'
 import remarkFootnotes from 'remark-footnotes'
 import remarkMath from 'remark-math'
 import remarkCodeTitles from './remark-code-title'
-import remarkTocHeadings from './remark-toc-headings'
 import remarkImgToJsx from './remark-img-to-jsx'
 // Rehype packages
 import rehypeSlug from 'rehype-slug'
@@ -18,13 +16,14 @@ import rehypeKatex from 'rehype-katex'
 import rehypePrismPlus from 'rehype-prism-plus'
 import rehypePresetMinify from 'rehype-preset-minify'
 import { blog } from '../client/client'
+import { DateTime } from 'luxon'
 
 const root = process.cwd()
 
 
 
 
-export async function getMdx(post: blog.BlogPost) {
+export async function getMdx(post: blog.BlogPost | blog.Page) {
 
   // https://github.com/kentcdodds/mdx-bundler#nextjs-esbuild-enoent
   if (process.platform === 'win32') {

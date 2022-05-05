@@ -62,6 +62,8 @@ export namespace blog {
     export interface GetBlogPostsParams {
         Limit: number
         Offset: number
+        Category: string
+        Tag: string
     }
 
     export interface GetBlogPostsResponse {
@@ -81,8 +83,8 @@ export namespace blog {
 
     export interface Page {
         Slug: string
-        CreatedAt: string
-        ModifiedAt: string
+        created_at: string
+        modified_at: string
         Published: boolean
         Title: string
         Subtitle: string
@@ -90,10 +92,7 @@ export namespace blog {
         Summary: string
         Body: string
         BodyRendered: string
-        /**
-         * emty string means no image
-         */
-        FeaturedImage: string
+        featured_image: string
     }
 
     export interface PromoteParams {
@@ -162,6 +161,8 @@ export namespace blog {
             const query: any[] = [
                 "limit", params.Limit,
                 "offset", params.Offset,
+                "category", params.Category,
+                "tag", params.Tag,
             ]
             return this.baseClient.do<GetBlogPostsResponse>("GET", `/blog?${encodeQuery(query)}`)
         }

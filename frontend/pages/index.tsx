@@ -61,7 +61,7 @@ function Home({ posts, page }: InferGetStaticPropsType<typeof getStaticProps>) {
   )
 }
 export const getStaticProps: GetStaticProps = async () => {
-  const res = await DefaultClient.blog.GetBlogPosts({ Limit: 6, Offset: 0 })
+  const res = await DefaultClient.blog.GetBlogPosts({ Limit: 6, Offset: 0, Category: '', Tag: '' })
   const posts = res.BlogPosts
   const pageRes = await DefaultClient.blog.GetPage('index')
   const page = pageRes

@@ -10,7 +10,7 @@ import Page from '../../components/Page'
 
 import { GetStaticPaths, GetStaticProps } from 'next'
 function BlogIndex({posts, page}: InferGetStaticPropsType<typeof getStaticProps>) {
-  
+
 
   return (
     <div>
@@ -35,7 +35,7 @@ function BlogIndex({posts, page}: InferGetStaticPropsType<typeof getStaticProps>
 }
 export  const getStaticProps: GetStaticProps = async()=>{
 
-  const res = await DefaultClient.blog.GetBlogPosts({Limit: 100, Offset:0})
+  const res = await DefaultClient.blog.GetBlogPosts({Limit: 100, Offset:0, Category:'',Tag:''})
   const posts = res.BlogPosts
       const pageRes = await DefaultClient.blog.GetPage("blog")
     const page = pageRes
