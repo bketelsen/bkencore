@@ -15,17 +15,27 @@ import (
 func TestPublishAndList(t *testing.T) {
 	c := qt.New(t)
 	ctx := auth.WithContext(context.Background(), "dummy", nil)
-	aWhileAgo := time.Now().Add(time.Hour * -46).String()
+
+	cat := &Category{
+		Category: "foo",
+		Summary:  "bar",
+	}
+	err := CreateCategory(ctx, cat)
+
+	c.Assert(err, qt.IsNil)
+	aWhileAgo := time.Now().Add(time.Hour * -46)
+	isoAgo := aWhileAgo.Format(time.RFC3339)
 	p := &CreateBlogPostParams{
-		Title:     "title",
-		Slug:      "newslug",
-		Summary:   "summary",
-		CreatedAt: aWhileAgo,
-		Published: false,
+		Title:      "title",
+		Slug:       "newslug",
+		Summary:    "summary",
+		CreatedAt:  isoAgo,
+		ModifiedAt: isoAgo,
+		Published:  false,
+		Category:   "foo",
 	}
 
-	err := CreateBlogPost(ctx, p)
-	fmt.Println(err)
+	err = CreateBlogPost(ctx, p)
 	c.Assert(err, qt.IsNil)
 
 	list, err := GetBlogPosts(ctx, &GetBlogPostsParams{Limit: 100})
