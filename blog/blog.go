@@ -23,6 +23,7 @@ type BlogPost struct {
 	Body          string
 	BodyRendered  string `qs:"body_rendered" yaml:"body_rendered"`
 	FeaturedImage string `qs:"featured_image" yaml:"featured_image"`
+	Tags          []*Tag
 }
 
 type CreateBlogPostParams struct {
@@ -34,6 +35,8 @@ type CreateBlogPostParams struct {
 	Summary       string
 	Body          string
 	FeaturedImage string
+	Category      string
+	Tags          []string
 }
 
 type GetBlogPostsParams struct {
@@ -44,6 +47,11 @@ type GetBlogPostsParams struct {
 type GetBlogPostsResponse struct {
 	Count     int
 	BlogPosts []*BlogPost
+}
+
+type Category struct {
+	Category string
+	Summary  string
 }
 
 // GetBlogPost retrieves a blog post by slug.
@@ -72,7 +80,6 @@ func GetBlogPost(ctx context.Context, slug string) (*BlogPost, error) {
 //encore:api auth
 func CreateBlogPost(ctx context.Context, params *CreateBlogPostParams) error {
 	img := sql.NullString{String: params.FeaturedImage, Valid: params.FeaturedImage != ""}
-	fmt.Println(params)
 	rendered := blackfriday.Run([]byte(params.Body))
 	_, err := sqldb.Exec(ctx, `
 		INSERT INTO "article" (slug, created_at, published, modified_at, title, summary,body, body_rendered, featured_image)
@@ -84,7 +91,18 @@ func CreateBlogPost(ctx context.Context, params *CreateBlogPostParams) error {
 	if err != nil {
 		return fmt.Errorf("insert article: %v", err)
 	}
+	// now insert tags
 
+	for _, t := range params.Tags {
+		_, err = sqldb.Exec(ctx, `
+		INSERT INTO "article_tag" (slug, tag)
+		VALUES ($1,  $2)
+		ON CONFLICT DO NOTHING
+	`, params.Slug, t)
+		if err != nil {
+			return fmt.Errorf("insert article_tag: %v", err)
+		}
+	}
 	return nil
 
 }

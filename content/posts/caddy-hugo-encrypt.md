@@ -5,10 +5,6 @@ categories:
 created_at: "2015-11-11T23:49:00Z"
 summary: Caddy is a lightning fast web server with built-in SSL/TLS certificate support
 featured_image: "/static/images/caddy-hugo-encrypt/markus-spiske-iar-afB0QQw-unsplash.jpg" # image path/url
-tags:
-  - "hugo"
-  - "caddy"
-  - "let's encrypt"
 title: "Caddy and Let's Encrypt"
 published: true
 ---

@@ -16,8 +16,8 @@ type Client struct {
 	Blog    BlogClient
 	Bytes   BytesClient
 	Email   EmailClient
-	Url     UrlClient
 	Twitter TwitterClient
+	Url     UrlClient
 }
 
 // BaseURL is the base URL for calling the Encore application's API.
@@ -46,7 +46,7 @@ func New(target BaseURL, options ...Option) (*Client, error) {
 	base := &baseClient{
 		baseURL:    baseURL,
 		httpClient: http.DefaultClient,
-		userAgent:  "devweek-k65i-Generated-Client (Encore/v1.0.2)",
+		userAgent:  "devweek-k65i-Generated-Client (Encore/)",
 	}
 
 	// Apply any given options
@@ -60,8 +60,8 @@ func New(target BaseURL, options ...Option) (*Client, error) {
 		Blog:    &blogClient{base},
 		Bytes:   &bytesClient{base},
 		Email:   &emailClient{base},
-		Url:     &urlClient{base},
 		Twitter: &twitterClient{base},
+		Url:     &urlClient{base},
 	}, nil
 }
 
@@ -103,7 +103,6 @@ type BlogBlogPost struct {
 	Body          string
 	BodyRendered  string `qs:"body_rendered"`
 	FeaturedImage string `qs:"featured_image" yaml:"featured_image"`
-	Tags          []BlogTag
 }
 
 type BlogCreateBlogPostParams struct {
@@ -115,8 +114,6 @@ type BlogCreateBlogPostParams struct {
 	Summary       string
 	Body          string
 	FeaturedImage string `qs:"featured_image" yaml:"featured_image"`
-	Category      string
-	Tags          []string
 }
 
 type BlogCreatePageParams struct {
@@ -137,11 +134,6 @@ type BlogGetBlogPostsParams struct {
 type BlogGetBlogPostsResponse struct {
 	Count     int
 	BlogPosts []BlogBlogPost `qs:"blog_posts"`
-}
-
-type BlogGetTagsResponse struct {
-	Count int
-	Tags  []BlogTag
 }
 
 type BlogPage struct {
@@ -168,11 +160,6 @@ type BlogPromoteParams struct {
 
 type BlogScheduleType = string
 
-type BlogTag struct {
-	Tag     string
-	Summary string
-}
-
 // BlogClient Provides you access to call public and authenticated APIs on blog. The concrete implementation is blogClient.
 // It is setup as an interface allowing you to use GoMock to create mock implementations during tests.
 type BlogClient interface {
@@ -181,9 +168,6 @@ type BlogClient interface {
 
 	// CreatePage creates a new page, or updates it if it already exists.
 	CreatePage(ctx context.Context, slug string, params BlogCreatePageParams) error
-
-	// CreateTag creates a new blog post.
-	CreateTag(ctx context.Context, params BlogTag) error
 
 	// GetBlogPost retrieves a blog post by slug.
 	GetBlogPost(ctx context.Context, slug string) (BlogBlogPost, error)
@@ -194,12 +178,6 @@ type BlogClient interface {
 
 	// GetPage retrieves a page by slug.
 	GetPage(ctx context.Context, slug string) (BlogPage, error)
-
-	// GetTag retrieves a tag by slug.
-	GetTag(ctx context.Context, tag string) (BlogTag, error)
-
-	// GetTags retrieves a list of tags
-	GetTags(ctx context.Context) (BlogGetTagsResponse, error)
 
 	// Promote schedules the promotion a blog post.
 	Promote(ctx context.Context, slug string, params BlogPromoteParams) error
@@ -219,11 +197,6 @@ func (c *blogClient) CreateBlogPost(ctx context.Context, params BlogCreateBlogPo
 // CreatePage creates a new page, or updates it if it already exists.
 func (c *blogClient) CreatePage(ctx context.Context, slug string, params BlogCreatePageParams) error {
 	return callAPI(ctx, c.base, "PUT", fmt.Sprintf("/page/%s", slug), params, nil)
-}
-
-// CreateTag creates a new blog post.
-func (c *blogClient) CreateTag(ctx context.Context, params BlogTag) error {
-	return callAPI(ctx, c.base, "POST", "/blog.CreateTag", params, nil)
 }
 
 // GetBlogPost retrieves a blog post by slug.
@@ -249,18 +222,6 @@ func (c *blogClient) GetPage(ctx context.Context, slug string) (resp BlogPage, e
 	return resp, err
 }
 
-// GetTag retrieves a tag by slug.
-func (c *blogClient) GetTag(ctx context.Context, tag string) (resp BlogTag, err error) {
-	err = callAPI(ctx, c.base, "GET", fmt.Sprintf("/tag/%s", tag), nil, &resp)
-	return resp, err
-}
-
-// GetTags retrieves a list of tags
-func (c *blogClient) GetTags(ctx context.Context) (resp BlogGetTagsResponse, err error) {
-	err = callAPI(ctx, c.base, "GET", "/tag", nil, &resp)
-	return resp, err
-}
-
 // Promote schedules the promotion a blog post.
 func (c *blogClient) Promote(ctx context.Context, slug string, params BlogPromoteParams) error {
 	return callAPI(ctx, c.base, "POST", fmt.Sprintf("/blog/%s/promote", slug), params, nil)
@@ -283,14 +244,6 @@ type BytesListResponse struct {
 	Bytes []BytesByte
 }
 
-type BytesPromoteParams struct {
-
-	// Schedule decides how the promotion should be scheduled.
-	// Valid values are "auto" for scheduling it at a suitable time
-	// based on the current posting schedule, and "now" to schedule it immediately.
-	Schedule BytesScheduleType
-}
-
 type BytesPublishParams struct {
 	Title   string
 	Summary string
@@ -301,19 +254,11 @@ type BytesPublishResponse struct {
 	ID int64
 }
 
-type BytesScheduleType = string
-
 // BytesClient Provides you access to call public and authenticated APIs on bytes. The concrete implementation is bytesClient.
 // It is setup as an interface allowing you to use GoMock to create mock implementations during tests.
 type BytesClient interface {
-	// Get retrieves a byte.
-	Get(ctx context.Context, id int64) (BytesByte, error)
-
 	// List lists published bytes.
 	List(ctx context.Context, params BytesListParams) (BytesListResponse, error)
-
-	// Promote schedules the promotion a byte.
-	Promote(ctx context.Context, id int64, params BytesPromoteParams) error
 
 	// Publish publishes a byte.
 	Publish(ctx context.Context, params BytesPublishParams) (BytesPublishResponse, error)
@@ -325,12 +270,6 @@ type bytesClient struct {
 
 var _ BytesClient = (*bytesClient)(nil)
 
-// Get retrieves a byte.
-func (c *bytesClient) Get(ctx context.Context, id int64) (resp BytesByte, err error) {
-	err = callAPI(ctx, c.base, "GET", fmt.Sprintf("/bytes/%d", id), nil, &resp)
-	return resp, err
-}
-
 // List lists published bytes.
 func (c *bytesClient) List(ctx context.Context, params BytesListParams) (resp BytesListResponse, err error) {
 	queryString := url.Values{
@@ -339,11 +278,6 @@ func (c *bytesClient) List(ctx context.Context, params BytesListParams) (resp By
 	}
 	err = callAPI(ctx, c.base, "GET", fmt.Sprintf("/bytes?%s", queryString.Encode()), nil, &resp)
 	return resp, err
-}
-
-// Promote schedules the promotion a byte.
-func (c *bytesClient) Promote(ctx context.Context, id int64, params BytesPromoteParams) error {
-	return callAPI(ctx, c.base, "POST", fmt.Sprintf("/bytes/%d/promote", id), params, nil)
 }
 
 // Publish publishes a byte.

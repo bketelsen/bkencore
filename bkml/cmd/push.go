@@ -23,6 +23,7 @@ package cmd
 
 import (
 	"context"
+	"fmt"
 	"os"
 	"path/filepath"
 	"strings"
@@ -53,7 +54,12 @@ func push() error {
 	cobra.CheckErr(err)
 	postsDir := filepath.Join(currentDirectory, "posts")
 	pagesDir := filepath.Join(currentDirectory, "pages")
+	tagsDir := filepath.Join(currentDirectory, "tags")
 
+	err = tags(tagsDir)
+	if err != nil {
+		return err
+	}
 	err = posts(postsDir)
 	if err != nil {
 		return err
@@ -65,6 +71,30 @@ func push() error {
 	return nil
 }
 
+func tags(tagsDir string) error {
+	err := filepath.Walk(tagsDir, func(path string, info os.FileInfo, err error) error {
+		cobra.CheckErr(err)
+		// slug will be the relative path minus the extension
+		cobra.CheckErr(err)
+		if !info.IsDir() {
+			// read the file
+			f, err := os.Open(path)
+			cobra.CheckErr(err)
+
+			// create a blogpost and populate frontmatter
+			var tag client.BlogTag
+			_, err = frontmatter.Parse(f, &tag)
+			cobra.CheckErr(err)
+
+			// submit to the API
+			err = backend.Blog.CreateTag(context.Background(), tag)
+			cobra.CheckErr(err)
+		}
+
+		return nil
+	})
+	return err
+}
 func posts(postsDir string) error {
 	err := filepath.Walk(postsDir, func(path string, info os.FileInfo, err error) error {
 		cobra.CheckErr(err)
@@ -80,6 +110,7 @@ func posts(postsDir string) error {
 			// create a blogpost and populate frontmatter
 			var post client.BlogCreateBlogPostParams
 			rest, err := frontmatter.Parse(f, &post)
+			fmt.Println(post)
 			cobra.CheckErr(err)
 			post.Body = string(rest)
 			post.Slug = slug[0]

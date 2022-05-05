@@ -3,11 +3,6 @@ title: "Windows for Open Source Development"
 created_at: "2020-02-24T15:04:05+04:00"
 featured_image: "/static/images/win-the-dev-box/h3GAGi5tXMU.jpg"
 sumary: "A Series on Using Windows for Open Source Development"
-tags:
-  - "windows"
-  - "linux"
-  - "open source"
-  - "30daywslchallenge"
 categories:
   - "Development"
   - "Open Source"
