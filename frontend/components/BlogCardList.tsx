@@ -22,8 +22,13 @@ const BlogCardList: FC<{ posts: blog.BlogPost[] }> = ({ posts }) => (
                 />
               )}
               <div className="card-body">
-                <div className="badge badge-lg">Article</div>
+                <div className="badge badge-lg badge-primary">{post.Category.Category.toUpperCase()}</div>
+                {post.Tags && post.Tags.map((tag) => {
+                    return (
+                      <div className="badge badge-accent">{'#' + tag.Tag.toUpperCase()}</div>
 
+                    )
+                  })}
                 <h2 className="card-title">{post.Title}</h2>
 
                 <p>{post.Summary}</p>
@@ -39,6 +44,8 @@ const BlogCardList: FC<{ posts: blog.BlogPost[] }> = ({ posts }) => (
                     <time dateTime={post.created_at}>{created.toFormat('d LLL yyyy')}</time> -
                     Reading Time {timeToRead(post.Body)}
                   </p>
+
+
                 </div>
               </div>
             </div>

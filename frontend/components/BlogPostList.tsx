@@ -15,11 +15,17 @@ const BlogPostList: FC<{ posts: blog.BlogPost[] }> = ({ posts }) => (
               {post.Title}
             </a>
           </Link>
+          <div className="my-2 badge badge-lg badge-secondary">{post.Category.Category.toUpperCase()}</div>
+
           <p className="mt-1 text-sm text-secondary">
             <time dateTime={post.created_at}>{created.toFormat("d LLL yyyy")}</time>
             <span className="px-2 text-primary">·</span>
             <span>{timeToRead(post.Body)}</span>
-
+            {post.Tags && post.Tags.map((tag) => {
+                    return (
+                      <div className="ml-4 badge badge-accent">{'#' + tag.Tag.toUpperCase()}</div>
+                    )
+                  })}
           </p>
           <p className="mt-2 text-base text-base-content ">{post.Summary}</p>
         </div>
