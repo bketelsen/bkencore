@@ -25,7 +25,7 @@ const BlogCardList: FC<{ posts: blog.BlogPost[] }> = ({ posts }) => (
                 <div className="badge badge-lg badge-primary">{post.Category.Category.toUpperCase()}</div>
                 {post.Tags && post.Tags.map((tag) => {
                     return (
-                      <div className="badge badge-accent">{'#' + tag.Tag.toUpperCase()}</div>
+                      <div key={tag.Tag} className="badge badge-accent">{'#' + tag.Tag.toUpperCase()}</div>
 
                     )
                   })}

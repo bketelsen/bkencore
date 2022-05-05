@@ -23,7 +23,7 @@ const BlogPostList: FC<{ posts: blog.BlogPost[] }> = ({ posts }) => (
             <span>{timeToRead(post.Body)}</span>
             {post.Tags && post.Tags.map((tag) => {
                     return (
-                      <div className="ml-4 badge badge-accent">{'#' + tag.Tag.toUpperCase()}</div>
+                      <div key={tag.Tag} className="ml-4 badge badge-accent">{'#' + tag.Tag.toUpperCase()}</div>
                     )
                   })}
           </p>
