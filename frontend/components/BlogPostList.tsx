@@ -6,8 +6,8 @@ import { blog } from "../client/client"
 const BlogPostList: FC<{ posts: blog.BlogPost[] }> = ({ posts }) => (
   <>
     {posts.map((post) => {
-      const created = DateTime.fromISO(post.CreatedAt)
-      const modified = DateTime.fromISO(post.ModifiedAt)
+      const created = DateTime.fromISO(post.created_at)
+      const modified = DateTime.fromISO(post.modified_at)
       return (
         <div key={post.Slug} className="pt-8">
           <Link href={"/blog/" + post.Slug}>
@@ -16,7 +16,7 @@ const BlogPostList: FC<{ posts: blog.BlogPost[] }> = ({ posts }) => (
             </a>
           </Link>
           <p className="mt-1 text-sm text-secondary">
-            <time dateTime={post.CreatedAt}>{created.toFormat("d LLL yyyy")}</time>
+            <time dateTime={post.created_at}>{created.toFormat("d LLL yyyy")}</time>
             <span className="px-2 text-primary">·</span>
             <span>{timeToRead(post.Body)}</span>
 

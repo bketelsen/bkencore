@@ -13,11 +13,10 @@ import (
 
 // Client is an API client for the devweek-k65i Encore application.
 type Client struct {
-	Blog    BlogClient
-	Bytes   BytesClient
-	Email   EmailClient
-	Url     UrlClient
-	Twitter TwitterClient
+	Blog  BlogClient
+	Bytes BytesClient
+	Email EmailClient
+	Url   UrlClient
 }
 
 // BaseURL is the base URL for calling the Encore application's API.
@@ -57,11 +56,10 @@ func New(target BaseURL, options ...Option) (*Client, error) {
 	}
 
 	return &Client{
-		Blog:    &blogClient{base},
-		Bytes:   &bytesClient{base},
-		Email:   &emailClient{base},
-		Url:     &urlClient{base},
-		Twitter: &twitterClient{base},
+		Blog:  &blogClient{base},
+		Bytes: &bytesClient{base},
+		Email: &emailClient{base},
+		Url:   &urlClient{base},
 	}, nil
 }
 
@@ -95,26 +93,32 @@ func WithAuthFunc(tokenGenerator func(ctx context.Context) (string, error)) Opti
 
 type BlogBlogPost struct {
 	Slug          string
-	CreatedAt     time.Time `qs:"created_at" yaml:"created_at"`
-	ModifiedAt    time.Time `qs:"modified_at" yaml:"modified_at"`
+	CreatedAt     time.Time `json:"created_at" yaml:"created_at" qs:"created_at"`
+	ModifiedAt    time.Time `json:"modified_at" qs:"modified_at"`
 	Published     bool
 	Title         string
 	Summary       string
 	Body          string
-	BodyRendered  string `qs:"body_rendered"`
-	FeaturedImage string `qs:"featured_image" yaml:"featured_image"`
+	BodyRendered  string `json:"body_rendered" qs:"body_rendered"`
+	FeaturedImage string `json:"featured_image" qs:"featured_image"`
+	Category      BlogCategory
 	Tags          []BlogTag
+}
+
+type BlogCategory struct {
+	Category string
+	Summary  string
 }
 
 type BlogCreateBlogPostParams struct {
 	Slug          string
-	CreatedAt     time.Time `qs:"created_at" yaml:"created_at"`
-	ModifiedAt    time.Time `qs:"modified_at" yaml:"modified_at"`
+	CreatedAt     string `json:"created_at" qs:"created_at"`
+	ModifiedAt    string `json:"modified_at" qs:"modified_at"`
 	Published     bool
 	Title         string
 	Summary       string
 	Body          string
-	FeaturedImage string `qs:"featured_image" yaml:"featured_image"`
+	FeaturedImage string `json:"featured_image" qs:"featured_image"`
 	Category      string
 	Tags          []string
 }
@@ -126,7 +130,7 @@ type BlogCreatePageParams struct {
 	HeroText      string `qs:"hero_text"`
 	Summary       string
 	Body          string
-	FeaturedImage string `qs:"featured_image" yaml:"featured_image"`
+	FeaturedImage string `qs:"featured_image"` // empty string means no image
 }
 
 type BlogGetBlogPostsParams struct {
@@ -139,6 +143,11 @@ type BlogGetBlogPostsResponse struct {
 	BlogPosts []BlogBlogPost `qs:"blog_posts"`
 }
 
+type BlogGetCategoriesResponse struct {
+	Count      int
+	Categories []BlogCategory
+}
+
 type BlogGetTagsResponse struct {
 	Count int
 	Tags  []BlogTag
@@ -146,16 +155,16 @@ type BlogGetTagsResponse struct {
 
 type BlogPage struct {
 	Slug          string
-	CreatedAt     time.Time `qs:"created_at" yaml:"created_at"`
-	ModifiedAt    time.Time `qs:"modified_at" yaml:"modified_at"`
+	CreatedAt     time.Time `qs:"created_at"`
+	ModifiedAt    time.Time `qs:"modified_at"`
 	Published     bool
 	Title         string
 	Subtitle      string
-	HeroText      string `qs:"hero_text" yaml:"hero_text"`
+	HeroText      string `qs:"hero_text"`
 	Summary       string
 	Body          string
 	BodyRendered  string `qs:"body_rendered"`
-	FeaturedImage string `qs:"featured_image" yaml:"featured_image"`
+	FeaturedImage string `qs:"featured_image"` // emty string means no image
 }
 
 type BlogPromoteParams struct {
@@ -179,6 +188,9 @@ type BlogClient interface {
 	// CreateBlogPost creates a new blog post.
 	CreateBlogPost(ctx context.Context, params BlogCreateBlogPostParams) error
 
+	// CreateTag creates a new blog post.
+	CreateCategory(ctx context.Context, params BlogCategory) error
+
 	// CreatePage creates a new page, or updates it if it already exists.
 	CreatePage(ctx context.Context, slug string, params BlogCreatePageParams) error
 
@@ -192,6 +204,12 @@ type BlogClient interface {
 	// optional limit and offset.
 	GetBlogPosts(ctx context.Context, params BlogGetBlogPostsParams) (BlogGetBlogPostsResponse, error)
 
+	// GetCategories retrieves a list of categories
+	GetCategories(ctx context.Context) (BlogGetCategoriesResponse, error)
+
+	// GetCategory retrieves a category by slug.
+	GetCategory(ctx context.Context, category string) (BlogCategory, error)
+
 	// GetPage retrieves a page by slug.
 	GetPage(ctx context.Context, slug string) (BlogPage, error)
 
@@ -200,6 +218,9 @@ type BlogClient interface {
 
 	// GetTags retrieves a list of tags
 	GetTags(ctx context.Context) (BlogGetTagsResponse, error)
+
+	// GetTagsBySlug retrieves a list of tags for a post
+	GetTagsBySlug(ctx context.Context, slug string) (BlogGetTagsResponse, error)
 
 	// Promote schedules the promotion a blog post.
 	Promote(ctx context.Context, slug string, params BlogPromoteParams) error
@@ -214,6 +235,11 @@ var _ BlogClient = (*blogClient)(nil)
 // CreateBlogPost creates a new blog post.
 func (c *blogClient) CreateBlogPost(ctx context.Context, params BlogCreateBlogPostParams) error {
 	return callAPI(ctx, c.base, "POST", "/blog.CreateBlogPost", params, nil)
+}
+
+// CreateTag creates a new blog post.
+func (c *blogClient) CreateCategory(ctx context.Context, params BlogCategory) error {
+	return callAPI(ctx, c.base, "POST", "/blog.CreateCategory", params, nil)
 }
 
 // CreatePage creates a new page, or updates it if it already exists.
@@ -243,6 +269,18 @@ func (c *blogClient) GetBlogPosts(ctx context.Context, params BlogGetBlogPostsPa
 	return resp, err
 }
 
+// GetCategories retrieves a list of categories
+func (c *blogClient) GetCategories(ctx context.Context) (resp BlogGetCategoriesResponse, err error) {
+	err = callAPI(ctx, c.base, "GET", "/category", nil, &resp)
+	return resp, err
+}
+
+// GetCategory retrieves a category by slug.
+func (c *blogClient) GetCategory(ctx context.Context, category string) (resp BlogCategory, err error) {
+	err = callAPI(ctx, c.base, "GET", fmt.Sprintf("/category/%s", category), nil, &resp)
+	return resp, err
+}
+
 // GetPage retrieves a page by slug.
 func (c *blogClient) GetPage(ctx context.Context, slug string) (resp BlogPage, err error) {
 	err = callAPI(ctx, c.base, "GET", fmt.Sprintf("/page/%s", slug), nil, &resp)
@@ -258,6 +296,12 @@ func (c *blogClient) GetTag(ctx context.Context, tag string) (resp BlogTag, err 
 // GetTags retrieves a list of tags
 func (c *blogClient) GetTags(ctx context.Context) (resp BlogGetTagsResponse, err error) {
 	err = callAPI(ctx, c.base, "GET", "/tag", nil, &resp)
+	return resp, err
+}
+
+// GetTagsBySlug retrieves a list of tags for a post
+func (c *blogClient) GetTagsBySlug(ctx context.Context, slug string) (resp BlogGetTagsResponse, err error) {
+	err = callAPI(ctx, c.base, "GET", fmt.Sprintf("/tagbyslug/%s", slug), nil, &resp)
 	return resp, err
 }
 
@@ -384,72 +428,6 @@ func (c *emailClient) Subscribe(ctx context.Context, params EmailSubscribeParams
 // Unsubscribe unsubscribes the user from the email list.
 func (c *emailClient) Unsubscribe(ctx context.Context, params EmailUnsubscribeParams) error {
 	return callAPI(ctx, c.base, "POST", "/email/unsubscribe", params, nil)
-}
-
-type TwitterTweetParams struct {
-	Text string // Text is the text to tweet.
-}
-
-type TwitterTweetResponse struct {
-	ID string // ID is the tweet id.
-}
-
-// TwitterClient Provides you access to call public and authenticated APIs on twitter. The concrete implementation is twitterClient.
-// It is setup as an interface allowing you to use GoMock to create mock implementations during tests.
-type TwitterClient interface {
-	// OAuthBegin begins an OAuth handshake.
-	OAuthBegin(ctx context.Context, request *http.Request) (*http.Response, error)
-
-	// OAuthToken retrieves an OAuth token.
-	OAuthToken(ctx context.Context, request *http.Request) (*http.Response, error)
-
-	// Tweet writes a mock tweet to the database.
-	Tweet(ctx context.Context, params TwitterTweetParams) (TwitterTweetResponse, error)
-
-	// Tweet sends a tweet using the Twitter API.
-	TweetForReal(ctx context.Context, params TwitterTweetParams) (TwitterTweetResponse, error)
-}
-
-type twitterClient struct {
-	base *baseClient
-}
-
-var _ TwitterClient = (*twitterClient)(nil)
-
-// OAuthBegin begins an OAuth handshake.
-func (c *twitterClient) OAuthBegin(ctx context.Context, request *http.Request) (*http.Response, error) {
-	path, err := url.Parse("/twitter/oauth/begin")
-	if err != nil {
-		return nil, fmt.Errorf("unable to parse api url: %w", err)
-	}
-	request = request.WithContext(ctx)
-	request.URL = path
-
-	return c.base.Do(request)
-}
-
-// OAuthToken retrieves an OAuth token.
-func (c *twitterClient) OAuthToken(ctx context.Context, request *http.Request) (*http.Response, error) {
-	path, err := url.Parse("/twitter/oauth/token")
-	if err != nil {
-		return nil, fmt.Errorf("unable to parse api url: %w", err)
-	}
-	request = request.WithContext(ctx)
-	request.URL = path
-
-	return c.base.Do(request)
-}
-
-// Tweet writes a mock tweet to the database.
-func (c *twitterClient) Tweet(ctx context.Context, params TwitterTweetParams) (resp TwitterTweetResponse, err error) {
-	err = callAPI(ctx, c.base, "POST", "/twitter/tweet", params, &resp)
-	return resp, err
-}
-
-// Tweet sends a tweet using the Twitter API.
-func (c *twitterClient) TweetForReal(ctx context.Context, params TwitterTweetParams) (resp TwitterTweetResponse, err error) {
-	err = callAPI(ctx, c.base, "POST", "/twitter/tweet/for-real", params, &resp)
-	return resp, err
 }
 
 type UrlGetListResponse struct {

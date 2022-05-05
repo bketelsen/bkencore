@@ -1,13 +1,14 @@
----
-categories:
-  - "Development"
-  - "Infrastructure"
-created_at: "2015-11-11T23:49:00Z"
-summary: Caddy is a lightning fast web server with built-in SSL/TLS certificate support
-featured_image: "/static/images/caddy-hugo-encrypt/markus-spiske-iar-afB0QQw-unsplash.jpg" # image path/url
-title: "Caddy and Let's Encrypt"
-published: true
----
+{
+  "categories": [
+    "Development",
+    "Infrastructure"
+  ],
+  "created_at": "2015-11-11T23:49:00Z",
+  "summary": "Caddy is a lightning fast web server with built-in SSL/TLS certificate support",
+  "featured_image": "/static/images/caddy-hugo-encrypt/markus-spiske-iar-afB0QQw-unsplash.jpg",
+  "title": "Caddy and Let's Encrypt",
+  "published": true
+}
 
 I spent all of 5 minutes configuring [Caddy](https://caddyserver.com) to automatically pull content from github, post-process it with [hugo](http://gohugo.io) and serve it up with fresh SSL/TLS certificates from Let's Encrypt.
 

@@ -8,15 +8,15 @@ const BlogCardList: FC<{ posts: blog.BlogPost[] }> = ({ posts }) => (
   <>
     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
       {posts.map((post) => {
-        const created = DateTime.fromISO(post.CreatedAt)
+        const created = DateTime.fromISO(post.created_at)
         return (
           <div key={post.Slug} className="p-4">
             <div className="shadow-xl hover:shadow-2xl card bg-base-100">
-              {post.FeaturedImage && (
+              {post.featured_image && (
                 <Image
                   className="rounded-xl"
                   alt={post.Title}
-                  src={post.FeaturedImage}
+                  src={post.featured_image}
                   height={225}
                   width={400}
                 />
@@ -36,7 +36,7 @@ const BlogCardList: FC<{ posts: blog.BlogPost[] }> = ({ posts }) => (
                 </div>
                 <div className="flex flex-col justify-between text-sm">
                   <p className="text-gray-400 dark:text-gray-300">
-                    <time dateTime={post.CreatedAt}>{created.toFormat('d LLL yyyy')}</time> -
+                    <time dateTime={post.created_at}>{created.toFormat('d LLL yyyy')}</time> -
                     Reading Time {timeToRead(post.Body)}
                   </p>
                 </div>

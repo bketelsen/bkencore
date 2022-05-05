@@ -1,13 +1,14 @@
----
-title: "Windows for Open Source Development"
-created_at: "2020-02-24T15:04:05+04:00"
-featured_image: "/static/images/win-the-dev-box/h3GAGi5tXMU.jpg"
-sumary: "A Series on Using Windows for Open Source Development"
-categories:
-  - "Development"
-  - "Open Source"
-published: true
----
+{
+  "title": "Windows for Open Source Development",
+  "created_at": "2020-02-24T15:04:05+04:00",
+  "featured_image": "/static/images/win-the-dev-box/h3GAGi5tXMU.jpg",
+  "sumary": "A Series on Using Windows for Open Source Development",
+  "categories": [
+    "Development",
+    "Open Source"
+  ],
+  "published": true
+}
 
 I've long used macOS or Linux when I make my Open Source contributions, but I think that the time is right to try Windows as a full-time development environment. If you want to jump on board, this article series is for you!
 
@@ -48,7 +49,7 @@ Go to `Start > Settings > System > About` and click the `Rename this PC` button.
 
 ![Rename PC](/static/images/win-the-dev-box/renamepc.jpg)
 
-- Move to Windows Insider to get beta builds.  
+- Move to Windows Insider to get beta builds.
   Update:
   -- This is no longer necessary, WSL2 is enabled in current and previous releases of Windows now --
 

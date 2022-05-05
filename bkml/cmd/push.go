@@ -55,8 +55,13 @@ func push() error {
 	postsDir := filepath.Join(currentDirectory, "posts")
 	pagesDir := filepath.Join(currentDirectory, "pages")
 	tagsDir := filepath.Join(currentDirectory, "tags")
+	categoriesDir := filepath.Join(currentDirectory, "categories")
 
 	err = tags(tagsDir)
+	if err != nil {
+		return err
+	}
+	err = categories(categoriesDir)
 	if err != nil {
 		return err
 	}
@@ -69,6 +74,31 @@ func push() error {
 		return err
 	}
 	return nil
+}
+
+func categories(categoriesDir string) error {
+	err := filepath.Walk(categoriesDir, func(path string, info os.FileInfo, err error) error {
+		cobra.CheckErr(err)
+		// slug will be the relative path minus the extension
+		cobra.CheckErr(err)
+		if !info.IsDir() {
+			// read the file
+			f, err := os.Open(path)
+			cobra.CheckErr(err)
+
+			// create a blogpost and populate frontmatter
+			var category client.BlogCategory
+			_, err = frontmatter.Parse(f, &category)
+			cobra.CheckErr(err)
+
+			// submit to the API
+			err = backend.Blog.CreateCategory(context.Background(), category)
+			cobra.CheckErr(err)
+		}
+
+		return nil
+	})
+	return err
 }
 
 func tags(tagsDir string) error {
@@ -114,13 +144,13 @@ func posts(postsDir string) error {
 			cobra.CheckErr(err)
 			post.Body = string(rest)
 			post.Slug = slug[0]
-			if (post.CreatedAt == time.Time{}) {
-				post.CreatedAt = time.Now()
+			fmt.Println("created", post.CreatedAt)
+			if post.CreatedAt == "" {
+				post.CreatedAt = time.Now().Format(time.RFC3339)
 			}
-			if (post.ModifiedAt == time.Time{}) {
+			if post.ModifiedAt == "" {
 				post.ModifiedAt = post.CreatedAt
 			}
-
 			// submit to the API
 			err = backend.Blog.CreateBlogPost(context.Background(), post)
 			cobra.CheckErr(err)

@@ -22,7 +22,7 @@ interface IParams extends ParsedUrlQuery {
 }
 function BlogPost({ post, mdx }: InferGetStaticPropsType<typeof getStaticProps>) {
   const Component = useMemo(() => getMDXComponent(mdx.mdxSource), [mdx.mdxSource])
-  const created = DateTime.fromISO(post.CreatedAt)
+  const created = DateTime.fromISO(post.created_at)
 
   return (
     <div className="max-w-3xl mx-auto">
@@ -41,7 +41,7 @@ function BlogPost({ post, mdx }: InferGetStaticPropsType<typeof getStaticProps>)
           <h1 className="text-4xl font-extrabold text-primary">{post.Title}</h1>
           <div className="mt-3 mb-3 text-base text-secondary">
             {' '}
-            <time dateTime={post.CreatedAt}>{created.toFormat('d LLL yyyy')}</time> -{' '}
+            <time dateTime={post.created_at}>{created.toFormat('d LLL yyyy')}</time> -{' '}
             {timeToRead(post.Body)}
           </div>
           {post.FeaturedImage && (

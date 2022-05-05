@@ -1,10 +1,11 @@
----
-title: Byobu on WSL
-summary: Make your life easier with Byobu, a helper for tmux and screen.
-created_at: "2019-10-09T15:04:05+07:00"
-featured_image: "/static/images/byobu-wsl/mbLr6NEatMI.jpg"
-published: true
----
+{
+  "title": "Byobu on WSL",
+  "summary": "Make your life easier with Byobu, a helper for tmux and screen.",
+  "created_at": "2019-10-09T15:04:05+07:00",
+  "featured_image": "/static/images/byobu-wsl/mbLr6NEatMI.jpg",
+  "published": true,
+  "category": "tools"
+}
 
 [Byobu](http://byobu.co/) is a frontend for `tmux` and `screen` that allows you to save your terminal sessions and reconnect to them easily. It's one of the biggest time-savers in my bag of tricks. Read along to learn how I use it. This article applies to any \*nix-like system, despite the "on WSL" in the title.
 

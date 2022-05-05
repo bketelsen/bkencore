@@ -1,10 +1,10 @@
----
-title: "About This Site"
-summary: "Meta Information about this blog - frontend and backend technologies."
-featured_image: "/static/images/time-machine.jpg"
-created_at: "2022-04-30T15:04:05+07:00"
-published: true
----
+{
+  "title": "About This Site",
+  "summary": "Meta Information about this blog - frontend and backend technologies.",
+  "featured_image": "/static/images/time-machine.jpg",
+  "created_at": "2022-04-30T15:04:05+07:00",
+  "published": true
+}
 
 ## Source Code
 

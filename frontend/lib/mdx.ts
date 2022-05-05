@@ -77,7 +77,7 @@ export async function getMdx(post: blog.BlogPost) {
     frontMatter: {
       readingTime: readingTime(code),
       slug: post.Slug,
-      date:  new Date(post.CreatedAt).toISOString(),
+      date:  new Date(post.created_at).toISOString(),
     },
   }
 }

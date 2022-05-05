@@ -2,15 +2,13 @@ export default class Client {
     blog: blog.ServiceClient
     bytes: bytes.ServiceClient
     email: email.ServiceClient
-    twitter: twitter.ServiceClient
     url: url.ServiceClient
 
-    constructor(environment: string = "staging", token?: string) {
+    constructor(environment: string = "prod", token?: string) {
         const base = new BaseClient(environment, token)
         this.blog = new blog.ServiceClient(base)
         this.bytes = new bytes.ServiceClient(base)
         this.email = new email.ServiceClient(base)
-        this.twitter = new twitter.ServiceClient(base)
         this.url = new url.ServiceClient(base)
     }
 }
@@ -18,23 +16,34 @@ export default class Client {
 export namespace blog {
     export interface BlogPost {
         Slug: string
-        CreatedAt: string
+        created_at: string
+        modified_at: string
         Published: boolean
-        ModifiedAt: string
         Title: string
         Summary: string
         Body: string
-        BodyRendered: string
-        FeaturedImage: string
+        body_rendered: string
+        featured_image: string
+        Category: Category
+        Tags: Tag[]
+    }
+
+    export interface Category {
+        Category: string
+        Summary: string
     }
 
     export interface CreateBlogPostParams {
         Slug: string
+        created_at: string
+        modified_at: string
         Published: boolean
         Title: string
         Summary: string
         Body: string
-        FeaturedImage: string
+        featured_image: string
+        Category: string
+        Tags: string[]
     }
 
     export interface CreatePageParams {
@@ -58,6 +67,16 @@ export namespace blog {
     export interface GetBlogPostsResponse {
         Count: number
         BlogPosts: BlogPost[]
+    }
+
+    export interface GetCategoriesResponse {
+        Count: number
+        Categories: Category[]
+    }
+
+    export interface GetTagsResponse {
+        Count: number
+        Tags: Tag[]
     }
 
     export interface Page {
@@ -88,6 +107,11 @@ export namespace blog {
 
     export type ScheduleType = string
 
+    export interface Tag {
+        Tag: string
+        Summary: string
+    }
+
     export class ServiceClient {
         private baseClient: BaseClient
 
@@ -103,10 +127,24 @@ export namespace blog {
         }
 
         /**
+         * CreateTag creates a new blog post.
+         */
+        public CreateCategory(params: Category): Promise<void> {
+            return this.baseClient.doVoid("POST", `/blog.CreateCategory`, params)
+        }
+
+        /**
          * CreatePage creates a new page, or updates it if it already exists.
          */
         public CreatePage(slug: string, params: CreatePageParams): Promise<void> {
             return this.baseClient.doVoid("PUT", `/page/${slug}`, params)
+        }
+
+        /**
+         * CreateTag creates a new blog post.
+         */
+        public CreateTag(params: Tag): Promise<void> {
+            return this.baseClient.doVoid("POST", `/blog.CreateTag`, params)
         }
 
         /**
@@ -129,10 +167,45 @@ export namespace blog {
         }
 
         /**
+         * GetCategories retrieves a list of categories
+         */
+        public GetCategories(): Promise<GetCategoriesResponse> {
+            return this.baseClient.do<GetCategoriesResponse>("GET", `/category`)
+        }
+
+        /**
+         * GetCategory retrieves a category by slug.
+         */
+        public GetCategory(category: string): Promise<Category> {
+            return this.baseClient.do<Category>("GET", `/category/${category}`)
+        }
+
+        /**
          * GetPage retrieves a page by slug.
          */
         public GetPage(slug: string): Promise<Page> {
             return this.baseClient.do<Page>("GET", `/page/${slug}`)
+        }
+
+        /**
+         * GetTag retrieves a tag by slug.
+         */
+        public GetTag(tag: string): Promise<Tag> {
+            return this.baseClient.do<Tag>("GET", `/tag/${tag}`)
+        }
+
+        /**
+         * GetTags retrieves a list of tags
+         */
+        public GetTags(): Promise<GetTagsResponse> {
+            return this.baseClient.do<GetTagsResponse>("GET", `/tag`)
+        }
+
+        /**
+         * GetTagsBySlug retrieves a list of tags for a post
+         */
+        public GetTagsBySlug(slug: string): Promise<GetTagsResponse> {
+            return this.baseClient.do<GetTagsResponse>("GET", `/tagbyslug/${slug}`)
         }
 
         /**
@@ -162,6 +235,15 @@ export namespace bytes {
         Bytes: Byte[]
     }
 
+    export interface PromoteParams {
+        /**
+         * Schedule decides how the promotion should be scheduled.
+         * Valid values are "auto" for scheduling it at a suitable time
+         * based on the current posting schedule, and "now" to schedule it immediately.
+         */
+        Schedule: ScheduleType
+    }
+
     export interface PublishParams {
         Title: string
         Summary: string
@@ -172,11 +254,20 @@ export namespace bytes {
         ID: number
     }
 
+    export type ScheduleType = string
+
     export class ServiceClient {
         private baseClient: BaseClient
 
         constructor(baseClient: BaseClient) {
             this.baseClient = baseClient
+        }
+
+        /**
+         * Get retrieves a byte.
+         */
+        public Get(id: number): Promise<Byte> {
+            return this.baseClient.do<Byte>("GET", `/bytes/${id}`)
         }
 
         /**
@@ -188,6 +279,13 @@ export namespace bytes {
                 "offset", params.Offset,
             ]
             return this.baseClient.do<ListResponse>("GET", `/bytes?${encodeQuery(query)}`)
+        }
+
+        /**
+         * Promote schedules the promotion a byte.
+         */
+        public Promote(id: number, params: PromoteParams): Promise<void> {
+            return this.baseClient.doVoid("POST", `/bytes/${id}/promote`, params)
         }
 
         /**
@@ -230,58 +328,6 @@ export namespace email {
          */
         public Unsubscribe(params: UnsubscribeParams): Promise<void> {
             return this.baseClient.doVoid("POST", `/email/unsubscribe`, params)
-        }
-    }
-}
-
-export namespace twitter {
-    export interface TweetParams {
-        /**
-         * Text is the text to tweet.
-         */
-        Text: string
-    }
-
-    export interface TweetResponse {
-        /**
-         * ID is the tweet id.
-         */
-        ID: string
-    }
-
-    export class ServiceClient {
-        private baseClient: BaseClient
-
-        constructor(baseClient: BaseClient) {
-            this.baseClient = baseClient
-        }
-
-        /**
-         * OAuthBegin begins an OAuth handshake.
-         */
-        public OAuthBegin(): Promise<void> {
-            return this.baseClient.doVoid("GET", `/twitter/oauth/begin`)
-        }
-
-        /**
-         * OAuthToken retrieves an OAuth token.
-         */
-        public OAuthToken(): Promise<void> {
-            return this.baseClient.doVoid("GET", `/twitter/oauth/token`)
-        }
-
-        /**
-         * Tweet writes a mock tweet to the database.
-         */
-        public Tweet(params: TweetParams): Promise<TweetResponse> {
-            return this.baseClient.do<TweetResponse>("POST", `/twitter/tweet`, params)
-        }
-
-        /**
-         * Tweet sends a tweet using the Twitter API.
-         */
-        public TweetForReal(params: TweetParams): Promise<TweetResponse> {
-            return this.baseClient.do<TweetResponse>("POST", `/twitter/tweet/for-real`, params)
         }
     }
 }
@@ -355,17 +401,16 @@ class BaseClient {
         if (token !== undefined) {
             this.headers["Authorization"] = "Bearer " + token
         }
-
         switch (environment) {
-        case "local":
-            this.baseURL = "http://localhost:4000"
-            break
-        case "staging":
-            this.baseURL = "https://api.brian.dev"
-            break
-        default:
-            this.baseURL = `https://devweek-k65i.encoreapi.com/${environment}`
-        }
+            case "local":
+                this.baseURL = "http://localhost:4000"
+                break
+            case "staging":
+                this.baseURL = "https://api.brian.dev"
+                break
+            default:
+                this.baseURL = `https://devweek-k65i.encoreapi.com/${environment}`
+            }
     }
 
     public async do<T>(method: string, path: string, req?: any): Promise<T> {

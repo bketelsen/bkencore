@@ -16,26 +16,32 @@ export default class Client {
 export namespace blog {
     export interface BlogPost {
         Slug: string
-        CreatedAt: string
-        ModifiedAt: string
+        created_at: string
+        modified_at: string
         Published: boolean
         Title: string
         Summary: string
         Body: string
-        BodyRendered: string
-        FeaturedImage: string
+        body_rendered: string
+        featured_image: string
+        Category: Category
         Tags: Tag[]
+    }
+
+    export interface Category {
+        Category: string
+        Summary: string
     }
 
     export interface CreateBlogPostParams {
         Slug: string
-        CreatedAt: string
-        ModifiedAt: string
+        created_at: string
+        modified_at: string
         Published: boolean
         Title: string
         Summary: string
         Body: string
-        FeaturedImage: string
+        featured_image: string
         Category: string
         Tags: string[]
     }
@@ -61,6 +67,11 @@ export namespace blog {
     export interface GetBlogPostsResponse {
         Count: number
         BlogPosts: BlogPost[]
+    }
+
+    export interface GetCategoriesResponse {
+        Count: number
+        Categories: Category[]
     }
 
     export interface GetTagsResponse {
@@ -116,6 +127,13 @@ export namespace blog {
         }
 
         /**
+         * CreateTag creates a new blog post.
+         */
+        public CreateCategory(params: Category): Promise<void> {
+            return this.baseClient.doVoid("POST", `/blog.CreateCategory`, params)
+        }
+
+        /**
          * CreatePage creates a new page, or updates it if it already exists.
          */
         public CreatePage(slug: string, params: CreatePageParams): Promise<void> {
@@ -149,6 +167,20 @@ export namespace blog {
         }
 
         /**
+         * GetCategories retrieves a list of categories
+         */
+        public GetCategories(): Promise<GetCategoriesResponse> {
+            return this.baseClient.do<GetCategoriesResponse>("GET", `/category`)
+        }
+
+        /**
+         * GetCategory retrieves a category by slug.
+         */
+        public GetCategory(category: string): Promise<Category> {
+            return this.baseClient.do<Category>("GET", `/category/${category}`)
+        }
+
+        /**
          * GetPage retrieves a page by slug.
          */
         public GetPage(slug: string): Promise<Page> {
@@ -167,6 +199,13 @@ export namespace blog {
          */
         public GetTags(): Promise<GetTagsResponse> {
             return this.baseClient.do<GetTagsResponse>("GET", `/tag`)
+        }
+
+        /**
+         * GetTagsBySlug retrieves a list of tags for a post
+         */
+        public GetTagsBySlug(slug: string): Promise<GetTagsResponse> {
+            return this.baseClient.do<GetTagsResponse>("GET", `/tagbyslug/${slug}`)
         }
 
         /**

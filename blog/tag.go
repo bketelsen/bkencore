@@ -24,7 +24,7 @@ func GetTag(ctx context.Context, tag string) (*Tag, error) {
 		t Tag
 	)
 	err := sqldb.QueryRow(ctx, `
-		SELECT tag , summary 
+		SELECT tag , summary
 		FROM "tag"
 		WHERE tag = $1
 	`, tag).Scan(&t.Tag, &t.Summary)
@@ -62,6 +62,44 @@ func GetTags(ctx context.Context) (*GetTagsResponse, error) {
 		SELECT tag, summary
 		FROM "tag"
 	`)
+	if err != nil {
+		return &GetTagsResponse{
+			Count: 0,
+			Tags:  []*Tag{},
+		}, err
+	}
+	defer rows.Close()
+
+	var q []*Tag
+	var i = 0
+	for rows.Next() {
+		var (
+			t Tag
+		)
+		err := rows.Scan(&t.Tag, &t.Summary)
+		if err != nil {
+			return &GetTagsResponse{
+				Count: 0,
+				Tags:  []*Tag{},
+			}, err
+		}
+		q = append(q, &t)
+		i = i + 1
+	}
+	return &GetTagsResponse{
+		Count: i,
+		Tags:  q,
+	}, rows.Err()
+}
+
+// GetTagsBySlug retrieves a list of tags for a post
+//encore:api public method=GET path=/tagbyslug/:slug
+func GetTagsBySlug(ctx context.Context, slug string) (*GetTagsResponse, error) {
+	rows, err := sqldb.Query(ctx, `
+		SELECT tag, summary
+		FROM "tag"
+		WHERE tag IN (select tag from article_tag where slug = $1)
+	`, slug)
 	if err != nil {
 		return &GetTagsResponse{
 			Count: 0,

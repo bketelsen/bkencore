@@ -15,7 +15,7 @@ import (
 func TestPublishAndList(t *testing.T) {
 	c := qt.New(t)
 	ctx := auth.WithContext(context.Background(), "dummy", nil)
-	aWhileAgo := time.Now().Add(time.Hour * -46)
+	aWhileAgo := time.Now().Add(time.Hour * -46).String()
 	p := &CreateBlogPostParams{
 		Title:     "title",
 		Slug:      "newslug",

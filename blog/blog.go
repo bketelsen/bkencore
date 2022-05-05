@@ -15,33 +15,36 @@ import (
 
 type BlogPost struct {
 	Slug          string
-	CreatedAt     time.Time `qs:"created_at" yaml:"created_at"`
-	ModifiedAt    time.Time `qs:"modified_at" yaml:"modified_at"`
+	CreatedAt     time.Time `json:"created_at" yaml:"created_at"`
+	ModifiedAt    time.Time `json:"modified_at"`
 	Published     bool
 	Title         string
 	Summary       string
 	Body          string
-	BodyRendered  string `qs:"body_rendered" yaml:"body_rendered"`
-	FeaturedImage string `qs:"featured_image" yaml:"featured_image"`
+	BodyRendered  string `json:"body_rendered"`
+	FeaturedImage string `json:"featured_image"`
+	Category      *Category
 	Tags          []*Tag
 }
 
 type CreateBlogPostParams struct {
 	Slug          string
-	CreatedAt     time.Time `qs:"created_at" yaml:"created_at"`
-	ModifiedAt    time.Time `qs:"modified_at" yaml:"modified_at"`
+	CreatedAt     string `json:"created_at"`
+	ModifiedAt    string `json:"modified_at"`
 	Published     bool
 	Title         string
 	Summary       string
 	Body          string
-	FeaturedImage string
+	FeaturedImage string `json:"featured_image"`
 	Category      string
 	Tags          []string
 }
 
 type GetBlogPostsParams struct {
-	Limit  int
-	Offset int
+	Limit    int
+	Offset   int
+	Category string
+	Tag      string
 }
 
 type GetBlogPostsResponse struct {
@@ -49,23 +52,19 @@ type GetBlogPostsResponse struct {
 	BlogPosts []*BlogPost
 }
 
-type Category struct {
-	Category string
-	Summary  string
-}
-
 // GetBlogPost retrieves a blog post by slug.
 //encore:api public method=GET path=/blog/:slug
 func GetBlogPost(ctx context.Context, slug string) (*BlogPost, error) {
 	var (
-		b   BlogPost
-		img sql.NullString
+		b        BlogPost
+		img      sql.NullString
+		category sql.NullString
 	)
 	err := sqldb.QueryRow(ctx, `
-		SELECT slug, created_at, published, modified_at, title, summary, body, body_rendered, featured_image
+		SELECT slug, created_at, published, modified_at, title, summary, body, body_rendered, featured_image, category
 		FROM "article"
 		WHERE slug = $1
-	`, slug).Scan(&b.Slug, &b.CreatedAt, &b.Published, &b.ModifiedAt, &b.Title, &b.Summary, &b.Body, &b.BodyRendered, &img)
+	`, slug).Scan(&b.Slug, &b.CreatedAt, &b.Published, &b.ModifiedAt, &b.Title, &b.Summary, &b.Body, &b.BodyRendered, &img, &category)
 	if err != nil {
 		return nil, &errs.Error{
 			Code:    errs.NotFound,
@@ -73,6 +72,18 @@ func GetBlogPost(ctx context.Context, slug string) (*BlogPost, error) {
 		}
 	}
 	b.FeaturedImage = img.String
+	tbsr, err := GetTagsBySlug(ctx, b.Slug)
+	b.Tags = tbsr.Tags
+	if category.Valid {
+		cat, err := GetCategory(ctx, category.String)
+		if err != nil {
+			return nil, &errs.Error{
+				Code:    errs.NotFound,
+				Message: "error finding category",
+			}
+		}
+		b.Category = cat
+	}
 	return &b, nil
 }
 
@@ -80,13 +91,16 @@ func GetBlogPost(ctx context.Context, slug string) (*BlogPost, error) {
 //encore:api auth
 func CreateBlogPost(ctx context.Context, params *CreateBlogPostParams) error {
 	img := sql.NullString{String: params.FeaturedImage, Valid: params.FeaturedImage != ""}
+	if params.Category == "" {
+		params.Category = "miscellaneous"
+	}
 	rendered := blackfriday.Run([]byte(params.Body))
 	_, err := sqldb.Exec(ctx, `
-		INSERT INTO "article" (slug, created_at, published, modified_at, title, summary,body, body_rendered, featured_image)
-		VALUES ($1,  $2, $3,  $4, $5,  $6, $7, $8, $9)
+		INSERT INTO "article" (slug, created_at, published, modified_at, title, summary,body, body_rendered, featured_image, category)
+		VALUES ($1,  $2, $3,  $4, $5,  $6, $7, $8, $9, $10)
 		ON CONFLICT (slug) DO UPDATE
-		SET published = $3, modified_at = $4, title = $5, summary = $6, body = $7, body_rendered = $8, featured_image = $9
-	`, params.Slug, params.CreatedAt, params.Published, params.ModifiedAt, params.Title, params.Summary, params.Body, string(rendered), img)
+		SET created_at = $2, published = $3, modified_at = $4, title = $5, summary = $6, body = $7, body_rendered = $8, featured_image = $9, category = $10
+	`, params.Slug, params.CreatedAt, params.Published, params.ModifiedAt, params.Title, params.Summary, params.Body, string(rendered), img, params.Category)
 
 	if err != nil {
 		return fmt.Errorf("insert article: %v", err)
@@ -112,7 +126,7 @@ func CreateBlogPost(ctx context.Context, params *CreateBlogPostParams) error {
 //encore:api public method=GET path=/blog
 func GetBlogPosts(ctx context.Context, params *GetBlogPostsParams) (*GetBlogPostsResponse, error) {
 	rows, err := sqldb.Query(ctx, `
-		SELECT slug, created_at, published, modified_at, title, summary, body, body_rendered, featured_image
+		SELECT slug, created_at, published, modified_at, title, summary, body, body_rendered, featured_image, category
 		FROM "article"
 		ORDER BY created_at DESC
 		LIMIT $1
@@ -130,10 +144,11 @@ func GetBlogPosts(ctx context.Context, params *GetBlogPostsParams) (*GetBlogPost
 	var i = 0
 	for rows.Next() {
 		var (
-			b   BlogPost
-			img sql.NullString
+			b        BlogPost
+			img      sql.NullString
+			category sql.NullString
 		)
-		err := rows.Scan(&b.Slug, &b.CreatedAt, &b.Published, &b.ModifiedAt, &b.Title, &b.Summary, &b.Body, &b.BodyRendered, &img)
+		err := rows.Scan(&b.Slug, &b.CreatedAt, &b.Published, &b.ModifiedAt, &b.Title, &b.Summary, &b.Body, &b.BodyRendered, &img, &category)
 		if err != nil {
 			return &GetBlogPostsResponse{
 				Count:     0,
@@ -141,6 +156,18 @@ func GetBlogPosts(ctx context.Context, params *GetBlogPostsParams) (*GetBlogPost
 			}, err
 		}
 		b.FeaturedImage = img.String
+		tbsr, err := GetTagsBySlug(ctx, b.Slug)
+		b.Tags = tbsr.Tags
+		if category.Valid {
+			cat, err := GetCategory(ctx, category.String)
+			if err != nil {
+				return &GetBlogPostsResponse{
+					Count:     0,
+					BlogPosts: []*BlogPost{},
+				}, err
+			}
+			b.Category = cat
+		}
 		q = append(q, &b)
 		i = i + 1
 	}

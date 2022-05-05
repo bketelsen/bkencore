@@ -1,12 +1,14 @@
----
-title: "Organizing Documents with Some AI, ML, and Elbow Grease"
-created_at: "2018-09-03T15:04:05+07:00"
-summary: "Organizing my loose documents with some machine learning, cognitive services, and elbow grease."
-featured_image: "/static/images/ai-ml-documents-one/IGa3Md8wP6g.jpg"
-published: true
-tags: 
-  - go
----
+{
+  "title": "Organizing Documents with Some AI, ML, and Elbow Grease",
+  "created_at": "2018-09-03T15:04:05+07:00",
+  "summary": "Organizing my loose documents with some machine learning, cognitive services, and elbow grease.",
+  "featured_image": "/static/images/ai-ml-documents-one/IGa3Md8wP6g.jpg",
+  "published": true,
+  "category": "programming",
+  "tags": [
+    "go"
+  ]
+}
 
 In this first post of (likely) a multi-part series I'm going to discuss how I am using machine learning, AI, and good old-fashioned elbow grease to make sense of the 3000 files in my `~/Documents/Unfiled` directory.
 
