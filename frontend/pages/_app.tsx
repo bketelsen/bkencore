@@ -17,7 +17,6 @@ switch (env) {
   default:
     baseURL = `https://devweek-k65i.encoreapi.com/${env}`
 }
-console.log(baseURL)
 function MyApp({ Component, pageProps }: AppProps) {
   return (
 

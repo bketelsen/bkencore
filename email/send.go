@@ -13,14 +13,14 @@ import (
 )
 
 type SendParams struct {
-	MessageID int64
+	MessageID int64 `json:"message_id,omitempty"`
 }
 
 type SendResponse struct {
 	// Sent reports whether the email was sent or not.
-	Sent bool
+	Sent bool `json:"sent,omitempty"`
 	// ProviderID is the unique id from the email provider for this send.
-	ProviderID string
+	ProviderID string `json:"provider_id,omitempty"`
 }
 
 //encore:api private method=POST path=/email/send/:messageID
@@ -95,15 +95,15 @@ var sendEmail = func(ctx context.Context, mg *mailgun.MailgunImpl, msg *mailgun.
 
 // message represents a single email message to be sent.
 type message struct {
-	ID           int64 // message id
-	EmailAddress string
-	ProviderID   *string // nil if not yet sent
+	ID           int64   `json:"id,omitempty"` // message id
+	EmailAddress string  `json:"email_address,omitempty"`
+	ProviderID   *string `json:"provider_id,omitempty"` // nil if not yet sent
 
 	// Inlined template data
-	Sender   string
-	Subject  string
-	BodyText string
-	BodyHTML string
+	Sender   string `json:"sender,omitempty"`
+	Subject  string `json:"subject,omitempty"`
+	BodyText string `json:"body_text,omitempty"`
+	BodyHTML string `json:"body_html,omitempty"`
 }
 
 // lockMessage reads a message from the database and locks it for the duration of the tx.

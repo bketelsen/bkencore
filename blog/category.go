@@ -9,12 +9,12 @@ import (
 )
 
 type GetCategoriesResponse struct {
-	Count      int
-	Categories []*Category
+	Count      int         `json:"count,omitempty"`
+	Categories []*Category `json:"categories,omitempty"`
 }
 type Category struct {
-	Category string
-	Summary  string
+	Category string `json:"category,omitempty"`
+	Summary  string `json:"summary,omitempty"`
 }
 
 // GetCategory retrieves a category by slug.

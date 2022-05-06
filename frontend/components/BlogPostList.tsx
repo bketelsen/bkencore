@@ -3,31 +3,30 @@ import Link from "next/link"
 import { FC } from "react"
 import { blog } from "../client/client"
 
-const BlogPostList: FC<{ posts: blog.BlogPost[] }> = ({ posts }) => (
+const BlogPostList: FC<{ posts: blog.BlogPost[]  }> = ({ posts }) => (
   <>
     {posts.map((post) => {
       const created = DateTime.fromISO(post.created_at)
       const modified = DateTime.fromISO(post.modified_at)
       return (
-        <div key={post.Slug} className="pt-8">
-          <Link href={"/blog/" + post.Slug}>
+        <div key={post.slug} className="pt-8">
+          <Link href={"/blog/" + post.slug}>
             <a className="block text-xl font-semibold text-base-content hover-underline ">
-              {post.Title}
+              {post.title}
             </a>
           </Link>
-          <div className="my-2 badge badge-lg badge-secondary">{post.Category.Category.toUpperCase()}</div>
-
+          <div className="my-2 badge badge-lg badge-secondary">{post.category.category.toUpperCase()}</div>
           <p className="mt-1 text-sm text-secondary">
             <time dateTime={post.created_at}>{created.toFormat("d LLL yyyy")}</time>
             <span className="px-2 text-primary">·</span>
-            <span>{timeToRead(post.Body)}</span>
-            {post.Tags && post.Tags.map((tag) => {
+            <span>{timeToRead(post.body)}</span>
+            {post.tags && post.tags.map((tag) => {
                     return (
-                      <div key={tag.Tag} className="ml-4 badge badge-accent">{'#' + tag.Tag.toUpperCase()}</div>
+                      <div key={tag.tag} className="ml-4 badge badge-accent">{'#' + tag.tag.toUpperCase()}</div>
                     )
                   })}
           </p>
-          <p className="mt-2 text-base text-base-content ">{post.Summary}</p>
+          <p className="mt-2 text-base text-base-content ">{post.summary}</p>
         </div>
       )
     })}

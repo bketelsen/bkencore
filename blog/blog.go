@@ -14,42 +14,42 @@ import (
 )
 
 type BlogPost struct {
-	Slug          string
-	CreatedAt     time.Time `json:"created_at" yaml:"created_at"`
-	ModifiedAt    time.Time `json:"modified_at"`
-	Published     bool
-	Title         string
-	Summary       string
-	Body          string
-	BodyRendered  string `json:"body_rendered"`
-	FeaturedImage string `json:"featured_image"`
-	Category      *Category
-	Tags          []*Tag
+	Slug          string    `json:"slug,omitempty"`
+	CreatedAt     time.Time `json:"created_at,omitempty" yaml:"created_at"`
+	ModifiedAt    time.Time `json:"modified_at,omitempty"`
+	Published     bool      `json:"published,omitempty"`
+	Title         string    `json:"title,omitempty"`
+	Summary       string    `json:"summary,omitempty"`
+	Body          string    `json:"body,omitempty"`
+	BodyRendered  string    `json:"body_rendered,omitempty"`
+	FeaturedImage string    `json:"featured_image,omitempty"`
+	Category      *Category `json:"category"`
+	Tags          []*Tag    `json:"tags"`
 }
 
 type CreateBlogPostParams struct {
-	Slug          string
-	CreatedAt     string `json:"created_at"`
-	ModifiedAt    string `json:"modified_at"`
-	Published     bool
-	Title         string
-	Summary       string
-	Body          string
-	FeaturedImage string `json:"featured_image"`
-	Category      string
-	Tags          []string
+	Slug          string   `json:"slug,omitempty"`
+	CreatedAt     string   `json:"created_at,omitempty"`
+	ModifiedAt    string   `json:"modified_at,omitempty"`
+	Published     bool     `json:"published,omitempty"`
+	Title         string   `json:"title,omitempty"`
+	Summary       string   `json:"summary,omitempty"`
+	Body          string   `json:"body,omitempty"`
+	FeaturedImage string   `json:"featured_image,omitempty"`
+	Category      string   `json:"category,omitempty"`
+	Tags          []string `json:"tags"`
 }
 
 type GetBlogPostsParams struct {
-	Limit    int
-	Offset   int
-	Category string
-	Tag      string
+	Limit    int    `json:"limit,omitempty"`
+	Offset   int    `json:"offset,omitempty"`
+	Category string `json:"category"`
+	Tag      string `json:"tag"`
 }
 
 type GetBlogPostsResponse struct {
-	Count     int
-	BlogPosts []*BlogPost
+	Count     int         `json:"count,omitempty"`
+	BlogPosts []*BlogPost `json:"blog_posts"`
 }
 
 // GetBlogPost retrieves a blog post by slug.

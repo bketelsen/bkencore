@@ -26,7 +26,7 @@ function BlogPost({ post, mdx }: InferGetStaticPropsType<typeof getStaticProps>)
 
   return (
     <div className="max-w-3xl mx-auto">
-      <SEO title={post?.Title} description={post?.Summary} />
+      <SEO title={post?.title} description={post?.summary} />
 
       {!post ? (
         'Loading...'
@@ -38,20 +38,20 @@ function BlogPost({ post, mdx }: InferGetStaticPropsType<typeof getStaticProps>)
             </Link>{' '}
             /
           </div>
-          <h1 className="text-4xl font-extrabold text-primary">{post.Title}</h1>
+          <h1 className="text-4xl font-extrabold text-primary">{post.title}</h1>
           <div className="mt-3 mb-3 text-base text-secondary">
             {' '}
             <time dateTime={post.created_at}>{created.toFormat('d LLL yyyy')}</time> -{' '}
-            {timeToRead(post.Body)}
+            {timeToRead(post.body)}
           </div>
-          {post.FeaturedImage && (
+          {post.featured_image && (
             <div>
               <Image
                 className="object-fill w-full h-auto max-w-3xl mt-6 mb-6 rounded-md"
-                src={post.FeaturedImage}
+                src={post.featured_image}
                 height={'500'}
                 width={'800'}
-                alt={post.Title}
+                alt={post.title}
               />
             </div>
           )}
@@ -86,8 +86,8 @@ export const getStaticProps: GetStaticProps = async (context) => {
   }
 }
 export async function getStaticPaths() {
-  const posts = await DefaultClient.blog.GetBlogPosts({ Limit: 10, Offset: 0 , Category:'', Tag:''})
-  const slugs = posts.BlogPosts.map((post) => ({ params: { slug: post.Slug } }))
+  const posts = await DefaultClient.blog.GetBlogPosts({ limit: 10, offset: 0 , category:'', tag:''})
+  const slugs = posts.blog_posts.map((post) => ({ params: { slug: post.slug } }))
   return {
     paths: slugs,
     fallback: 'blocking', // See the "fallback" section below

@@ -32,9 +32,10 @@ function BytesIndex({bytes, page}: InferGetStaticPropsType<typeof getStaticProps
 }
 export  const getStaticProps: GetStaticProps = async()=>{
 
-  const res = await DefaultClient.bytes.List({Offset:0, Limit: 20})
-  const bytes = res.Bytes
-        const pageRes = await DefaultClient.blog.GetPage("bytes")
+  const res = await DefaultClient.bytes.List({ offset: 0, limit: 20 })
+  console.log(res)
+  const bytes = res.bytes
+  const pageRes = await DefaultClient.blog.GetPage("bytes")
     const page = pageRes
   return {
     props: {

@@ -10,13 +10,13 @@ import (
 )
 
 type PublishParams struct {
-	Title   string
-	Summary string
-	URL     string
+	Title   string `json:"title,omitempty"`
+	Summary string `json:"summary,omitempty"`
+	URL     string `json:"url,omitempty"`
 }
 
 type PublishResponse struct {
-	ID int64
+	ID int64 `json:"id,omitempty"`
 }
 
 // Publish publishes a byte.
@@ -34,20 +34,20 @@ func Publish(ctx context.Context, p *PublishParams) (*PublishResponse, error) {
 }
 
 type ListParams struct {
-	Limit  int
-	Offset int
+	Limit  int `json:"limit,omitempty"`
+	Offset int `json:"offset,omitempty"`
 }
 
 type Byte struct {
-	ID      int64
-	Title   string
-	Summary string
-	URL     string
-	Created time.Time
+	ID      int64     `json:"id,omitempty"`
+	Title   string    `json:"title,omitempty"`
+	Summary string    `json:"summary,omitempty"`
+	URL     string    `json:"url,omitempty"`
+	Created time.Time `json:"created,omitempty"`
 }
 
 type ListResponse struct {
-	Bytes []Byte
+	Bytes []Byte `json:"bytes"`
 }
 
 // Get retrieves a byte.
@@ -55,7 +55,7 @@ type ListResponse struct {
 func Get(ctx context.Context, id int64) (*Byte, error) {
 	var b Byte
 	err := sqldb.QueryRow(ctx, `
-		SELECT id, title, summary, url, created_at	
+		SELECT id, title, summary, url, created_at
 		FROM "byte"
 		WHERE id = $1
 	`, id).Scan(&b.ID, &b.Title, &b.Summary, &b.URL, &b.Created)
@@ -76,7 +76,7 @@ func List(ctx context.Context, p *ListParams) (*ListResponse, error) {
 	limit := getOrDefault(p.Limit, 100)
 	rows, err := sqldb.Query(ctx, `
 		SELECT id, title, summary, url, created_at
-		FROM byte 
+		FROM byte
 		ORDER BY id desc
 		OFFSET $1
 		LIMIT $2

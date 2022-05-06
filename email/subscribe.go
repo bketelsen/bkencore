@@ -12,7 +12,7 @@ import (
 )
 
 type SubscribeParams struct {
-	Email string
+	Email string `json:"email,omitempty"`
 }
 
 // Subscribe subscribes to the email newsletter for a given email.
@@ -50,7 +50,7 @@ func getAllSubscribers(ctx context.Context) (emails []string, err error) {
 
 type UnsubscribeParams struct {
 	// Token is the unsubscribe token in to the email.
-	Token string
+	Token string `json:"token,omitempty"`
 }
 
 // Unsubscribe unsubscribes the user from the email list.
@@ -91,8 +91,8 @@ func isOptedIn(ctx context.Context, email string) (bool, error) {
 
 // unsubscribeTokenData is the unencoded data that makes up the unsubscribe token.
 type unsubscribeTokenData struct {
-	Email     string
-	MessageID int64
+	Email     string `json:"email,omitempty"`
+	MessageID int64  `json:"message_id,omitempty"`
 }
 
 // encodeUnsubscribeToken encodes an email address and message id as a token using HMAC.

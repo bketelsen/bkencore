@@ -33,7 +33,7 @@ export async function getMdx(post: blog.BlogPost | blog.Page) {
   }
 
   let toc = []
-  const source = post.Body
+  const source = post.body
   // Parsing frontmatter here to pass it in as options to rehype plugin
   const { code } = await bundleMDX({
     source,
@@ -65,6 +65,7 @@ export async function getMdx(post: blog.BlogPost | blog.Page) {
       options.loader = {
         ...options.loader,
         '.js': 'jsx',
+        '.ts': 'tsx',
       }
       return options
     },
@@ -75,7 +76,7 @@ export async function getMdx(post: blog.BlogPost | blog.Page) {
     toc,
     frontMatter: {
       readingTime: readingTime(code),
-      slug: post.Slug,
+      slug: post.slug,
       date:  new Date(post.created_at).toISOString(),
     },
   }

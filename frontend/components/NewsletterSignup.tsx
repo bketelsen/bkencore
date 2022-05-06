@@ -27,7 +27,7 @@ const NewsletterSignup: FC = () => {
 
     setResult({ result: 'loading' })
     try {
-      await DefaultClient.email.Subscribe({ Email: email })
+      await DefaultClient.email.Subscribe({ email: email })
       setResult({ result: 'success' })
     } catch (err) {
       setResult({ result: 'error', err: err as Error })

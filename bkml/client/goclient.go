@@ -92,81 +92,81 @@ func WithAuthFunc(tokenGenerator func(ctx context.Context) (string, error)) Opti
 }
 
 type BlogBlogPost struct {
-	Slug          string
-	CreatedAt     time.Time `json:"created_at" qs:"created_at"`
-	ModifiedAt    time.Time `json:"modified_at" qs:"modified_at"`
-	Published     bool
-	Title         string
-	Summary       string
-	Body          string
-	BodyRendered  string `json:"body_rendered" qs:"body_rendered"`
-	FeaturedImage string `json:"featured_image" qs:"featured_image"`
-	Category      BlogCategory
-	Tags          []BlogTag
+	Slug          string       `json:"slug"`
+	CreatedAt     time.Time    `json:"created_at" qs:"created_at"`
+	ModifiedAt    time.Time    `json:"modified_at" qs:"modified_at"`
+	Published     bool         `json:"published"`
+	Title         string       `json:"title"`
+	Summary       string       `json:"summary"`
+	Body          string       `json:"body"`
+	BodyRendered  string       `json:"body_rendered" qs:"body_rendered"`
+	FeaturedImage string       `json:"featured_image" qs:"featured_image"`
+	Category      BlogCategory `json:"category"`
+	Tags          []BlogTag    `json:"tags"`
 }
 
 type BlogCategory struct {
-	Category string
-	Summary  string
+	Category string `json:"category"`
+	Summary  string `json:"summary"`
 }
 
 type BlogCreateBlogPostParams struct {
-	Slug          string
-	CreatedAt     string `json:"created_at" qs:"created_at"`
-	ModifiedAt    string `json:"modified_at" qs:"modified_at"`
-	Published     bool
-	Title         string
-	Summary       string
-	Body          string
-	FeaturedImage string `json:"featured_image" qs:"featured_image"`
-	Category      string
-	Tags          []string
+	Slug          string   `json:"slug"`
+	CreatedAt     string   `json:"created_at" qs:"created_at"`
+	ModifiedAt    string   `json:"modified_at" qs:"modified_at"`
+	Published     bool     `json:"published"`
+	Title         string   `json:"title"`
+	Summary       string   `json:"summary"`
+	Body          string   `json:"body"`
+	FeaturedImage string   `json:"featured_image" qs:"featured_image"`
+	Category      string   `json:"category"`
+	Tags          []string `json:"tags"`
 }
 
 type BlogCreatePageParams struct {
-	Published     bool
-	Title         string
-	Subtitle      string
-	HeroText      string `qs:"hero_text"`
-	Summary       string
-	Body          string
-	FeaturedImage string `qs:"featured_image"` // empty string means no image
+	Published     bool   `json:"published"`
+	Title         string `json:"title"`
+	Subtitle      string `json:"subtitle"`
+	HeroText      string `json:"hero_text" qs:"hero_text"`
+	Summary       string `json:"summary"`
+	Body          string `json:"body"`
+	FeaturedImage string `json:"featured_image" qs:"featured_image"` // empty string means no image
 }
 
 type BlogGetBlogPostsParams struct {
-	Limit    int
-	Offset   int
-	Category string
-	Tag      string
+	Limit    int    `json:"limit"`
+	Offset   int    `json:"offset"`
+	Category string `json:"category"`
+	Tag      string `json:"tag"`
 }
 
 type BlogGetBlogPostsResponse struct {
-	Count     int
-	BlogPosts []BlogBlogPost `qs:"blog_posts"`
+	Count     int            `json:"count"`
+	BlogPosts []BlogBlogPost `json:"blog_posts" qs:"blog_posts"`
 }
 
 type BlogGetCategoriesResponse struct {
-	Count      int
-	Categories []BlogCategory
+	Count      int            `json:"count"`
+	Categories []BlogCategory `json:"categories"`
 }
 
 type BlogGetTagsResponse struct {
-	Count int
-	Tags  []BlogTag
+	Count int       `json:"count"`
+	Tags  []BlogTag `json:"tags"`
 }
 
 type BlogPage struct {
-	Slug          string
+	Slug          string    `json:"slug"`
 	CreatedAt     time.Time `json:"created_at" qs:"created_at"`
 	ModifiedAt    time.Time `json:"modified_at" qs:"modified_at"`
-	Published     bool
-	Title         string
-	Subtitle      string
-	HeroText      string `qs:"hero_text"`
-	Summary       string
-	Body          string
-	BodyRendered  string `qs:"body_rendered"`
-	FeaturedImage string `json:"featured_image" qs:"featured_image"`
+	Published     bool      `json:"published"`
+	Title         string    `json:"title"`
+	Subtitle      string    `json:"subtitle"`
+	HeroText      string    `json:"hero_text" qs:"hero_text"`
+	Summary       string    `json:"summary"`
+	Body          string    `json:"body"`
+	BodyRendered  string    `json:"body_rendered" qs:"body_rendered"`
+	FeaturedImage string    `json:"featured_image" qs:"featured_image"`
 }
 
 type BlogPromoteParams struct {
@@ -180,8 +180,8 @@ type BlogPromoteParams struct {
 type BlogScheduleType = string
 
 type BlogTag struct {
-	Tag     string
-	Summary string
+	Tag     string `json:"tag"`
+	Summary string `json:"summary"`
 }
 
 // BlogClient Provides you access to call public and authenticated APIs on blog. The concrete implementation is blogClient.
@@ -315,20 +315,20 @@ func (c *blogClient) Promote(ctx context.Context, slug string, params BlogPromot
 }
 
 type BytesByte struct {
-	ID      int64
-	Title   string
-	Summary string
-	URL     string
-	Created time.Time
+	ID      int64     `json:"id"`
+	Title   string    `json:"title"`
+	Summary string    `json:"summary"`
+	URL     string    `json:"url"`
+	Created time.Time `json:"created"`
 }
 
 type BytesListParams struct {
-	Limit  int
-	Offset int
+	Limit  int `json:"limit"`
+	Offset int `json:"offset"`
 }
 
 type BytesListResponse struct {
-	Bytes []BytesByte
+	Bytes []BytesByte `json:"bytes"`
 }
 
 type BytesPromoteParams struct {
@@ -340,13 +340,13 @@ type BytesPromoteParams struct {
 }
 
 type BytesPublishParams struct {
-	Title   string
-	Summary string
-	URL     string
+	Title   string `json:"title"`
+	Summary string `json:"summary"`
+	URL     string `json:"url"`
 }
 
 type BytesPublishResponse struct {
-	ID int64
+	ID int64 `json:"id"`
 }
 
 type BytesScheduleType = string
@@ -401,11 +401,11 @@ func (c *bytesClient) Publish(ctx context.Context, params BytesPublishParams) (r
 }
 
 type EmailSubscribeParams struct {
-	Email string
+	Email string `json:"email"`
 }
 
 type EmailUnsubscribeParams struct {
-	Token string // Token is the unsubscribe token in to the email.
+	Token string `json:"token"` // Token is the unsubscribe token in to the email.
 }
 
 // EmailClient Provides you access to call public and authenticated APIs on email. The concrete implementation is emailClient.
@@ -435,18 +435,18 @@ func (c *emailClient) Unsubscribe(ctx context.Context, params EmailUnsubscribePa
 }
 
 type UrlGetListResponse struct {
-	Count int
-	URLS  []UrlURL
+	Count int      `json:"count"`
+	URLS  []UrlURL `json:"urls"`
 }
 
 type UrlShortenParams struct {
-	URL string // the URL to shorten
+	URL string `json:"url"` // the URL to shorten
 }
 
 type UrlURL struct {
-	ID       string // short-form URL id
-	URL      string // original URL, in long form
-	ShortURL string `qs:"short_url"` // short URL
+	ID       string `json:"id"`                       // short-form URL id
+	URL      string `json:"url"`                      // original URL, in long form
+	ShortURL string `json:"short_url" qs:"short_url"` // short URL
 }
 
 // UrlClient Provides you access to call public and authenticated APIs on url. The concrete implementation is urlClient.

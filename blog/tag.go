@@ -9,12 +9,12 @@ import (
 )
 
 type Tag struct {
-	Tag     string
-	Summary string
+	Tag     string `json:"tag,omitempty"`
+	Summary string `json:"summary,omitempty"`
 }
 type GetTagsResponse struct {
-	Count int
-	Tags  []*Tag
+	Count int    `json:"count,omitempty"`
+	Tags  []*Tag `json:"tags,omitempty"`
 }
 
 // GetTag retrieves a tag by slug.

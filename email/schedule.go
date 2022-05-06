@@ -13,19 +13,19 @@ import (
 
 type ScheduleParams struct {
 	// TemplateID is the email template to use.
-	TemplateID string
+	TemplateID string `json:"template_id,omitempty"`
 
 	// EmailAddresses are the email addresses to send to.
-	EmailAddresses []string
+	EmailAddresses []string `json:"email_addresses,omitempty"`
 
 	// SendAt is the time to send the email.
 	// If nil it defaults to the current time.
-	SendAt *time.Time
+	SendAt *time.Time `json:"send_at,omitempty"`
 }
 
 type ScheduleResponse struct {
 	// MessageIDs are the ids for the messages that were scheduled.
-	MessageIDs []int64
+	MessageIDs []int64 `json:"message_i_ds,omitempty"`
 }
 
 // Schedule schedules emails to be sent.
@@ -73,11 +73,11 @@ func Schedule(ctx context.Context, p *ScheduleParams) (*ScheduleResponse, error)
 
 type ScheduleAllParams struct {
 	// TemplateID is the email template to use.
-	TemplateID string
+	TemplateID string `json:"template_id,omitempty"`
 
 	// SendAt is the time to send the email.
 	// If nil it defaults to the current time.
-	SendAt *time.Time
+	SendAt *time.Time `json:"send_at,omitempty"`
 }
 
 // ScheduleAll schedules emails to be sent to all subscribers.
@@ -117,10 +117,10 @@ func ScheduleAll(ctx context.Context, p *ScheduleAllParams) (*ScheduleResponse, 
 }
 
 type CreateTemplateParams struct {
-	Sender   string // sender email
-	Subject  string // subject line to use
-	BodyText string // plaintext body
-	BodyHTML string // html body
+	Sender   string `json:"sender,omitempty"`    // sender email
+	Subject  string `json:"subject,omitempty"`   // subject line to use
+	BodyText string `json:"body_text,omitempty"` // plaintext body
+	BodyHTML string `json:"body_html,omitempty"` // html body
 }
 
 // CreateTemplate creates an email template.

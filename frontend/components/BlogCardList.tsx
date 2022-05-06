@@ -10,30 +10,30 @@ const BlogCardList: FC<{ posts: blog.BlogPost[] }> = ({ posts }) => (
       {posts.map((post) => {
         const created = DateTime.fromISO(post.created_at)
         return (
-          <div key={post.Slug} className="p-4">
+          <div key={post.slug} className="p-4">
             <div className="shadow-xl hover:shadow-2xl card bg-base-100">
               {post.featured_image && (
                 <Image
                   className="rounded-xl"
-                  alt={post.Title}
+                  alt={post.title}
                   src={post.featured_image}
                   height={225}
                   width={400}
                 />
               )}
               <div className="card-body">
-                <div className="badge badge-lg badge-primary">{post.Category.Category.toUpperCase()}</div>
-                {post.Tags && post.Tags.map((tag) => {
+                <div className="badge badge-lg badge-primary">{post.category.category.toUpperCase()}</div>
+                {post.tags && post.tags.map((tag) => {
                     return (
-                      <div key={tag.Tag} className="badge badge-accent">{'#' + tag.Tag.toUpperCase()}</div>
+                      <div key={tag.tag} className="badge badge-accent">{'#' + tag.tag.toUpperCase()}</div>
 
                     )
                   })}
-                <h2 className="card-title">{post.Title}</h2>
+                <h2 className="card-title">{post.title}</h2>
 
-                <p>{post.Summary}</p>
+                <p>{post.summary}</p>
                 <div className="justify-center py-4 card-actions">
-                  <Link href={'/blog/' + post.Slug}>
+                  <Link href={'/blog/' + post.slug}>
                     <a role="button" className="btn btn-secondary">
                       Read More
                     </a>
@@ -42,10 +42,8 @@ const BlogCardList: FC<{ posts: blog.BlogPost[] }> = ({ posts }) => (
                 <div className="flex flex-col justify-between text-sm">
                   <p className="text-gray-400 dark:text-gray-300">
                     <time dateTime={post.created_at}>{created.toFormat('d LLL yyyy')}</time> -
-                    Reading Time {timeToRead(post.Body)}
+                    Reading Time {timeToRead(post.body)}
                   </p>
-
-
                 </div>
               </div>
             </div>

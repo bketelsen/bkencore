@@ -16,12 +16,12 @@ import (
 
 type TweetParams struct {
 	// Text is the text to tweet.
-	Text string
+	Text string `json:"text,omitempty"`
 }
 
 type TweetResponse struct {
 	// ID is the tweet id.
-	ID string
+	ID string `json:"id,omitempty"`
 }
 
 // Tweet writes a mock tweet to the database.
@@ -52,15 +52,15 @@ func TweetForReal(ctx context.Context, p *TweetParams) (*TweetResponse, error) {
 
 type ScheduleParams struct {
 	// Tweet is the tweet to schedule.
-	Tweet *TweetParams
+	Tweet *TweetParams `json:"tweet,omitempty"`
 
 	// SendAt is the time to send it at.
-	SendAt time.Time
+	SendAt time.Time `json:"send_at,omitempty"`
 }
 
 type ScheduleResponse struct {
 	// ID is the unique id of the scheduled tweet.
-	ID int64
+	ID int64 `json:"id,omitempty"`
 }
 
 // Schedule schedules a tweet to be posted at a certain time.
@@ -111,11 +111,11 @@ func SendDue(ctx context.Context) error {
 
 // scheduledTweet represents a database row for scheduled tweets.
 type scheduledTweet struct {
-	ID          int64
-	Tweet       *TweetParams
-	TweetID     *string
-	ScheduledAt time.Time
-	SentAt      *time.Time
+	ID          int64        `json:"id,omitempty"`
+	Tweet       *TweetParams `json:"tweet,omitempty"`
+	TweetID     *string      `json:"tweet_id,omitempty"`
+	ScheduledAt time.Time    `json:"scheduled_at,omitempty"`
+	SentAt      *time.Time   `json:"sent_at,omitempty"`
 }
 
 // queryDueTweet reports a tweet that is due to be sent at time t.

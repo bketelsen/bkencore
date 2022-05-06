@@ -10,17 +10,17 @@ import (
 )
 
 type URL struct {
-	ID       string // short-form URL id
-	URL      string // original URL, in long form
-	ShortURL string // short URL
+	ID       string `json:"id,omitempty"`        // short-form URL id
+	URL      string `json:"url,omitempty"`       // original URL, in long form
+	ShortURL string `json:"short_url,omitempty"` // short URL
 }
 type GetListResponse struct {
-	Count int
-	URLS  []*URL
+	Count int    `json:"count,omitempty"`
+	URLS  []*URL `json:"urls,omitempty"`
 }
 
 type ShortenParams struct {
-	URL string // the URL to shorten
+	URL string `json:"url,omitempty"` // the URL to shorten
 }
 
 // Shorten shortens a URL.

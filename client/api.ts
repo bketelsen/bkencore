@@ -15,83 +15,83 @@ export default class Client {
 
 export namespace blog {
     export interface BlogPost {
-        Slug: string
+        slug: string
         created_at: string
         modified_at: string
-        Published: boolean
-        Title: string
-        Summary: string
-        Body: string
+        published: boolean
+        title: string
+        summary: string
+        body: string
         body_rendered: string
         featured_image: string
-        Category: Category
-        Tags: Tag[]
+        category: Category
+        tags: Tag[]
     }
 
     export interface Category {
-        Category: string
-        Summary: string
+        category: string
+        summary: string
     }
 
     export interface CreateBlogPostParams {
-        Slug: string
+        slug: string
         created_at: string
         modified_at: string
-        Published: boolean
-        Title: string
-        Summary: string
-        Body: string
+        published: boolean
+        title: string
+        summary: string
+        body: string
         featured_image: string
-        Category: string
-        Tags: string[]
+        category: string
+        tags: string[]
     }
 
     export interface CreatePageParams {
-        Published: boolean
-        Title: string
-        Subtitle: string
-        HeroText: string
-        Summary: string
-        Body: string
+        published: boolean
+        title: string
+        subtitle: string
+        hero_text: string
+        summary: string
+        body: string
         /**
          * empty string means no image
          */
-        FeaturedImage: string
+        featured_image: string
     }
 
     export interface GetBlogPostsParams {
-        Limit: number
-        Offset: number
-        Category: string
-        Tag: string
+        limit: number
+        offset: number
+        category: string
+        tag: string
     }
 
     export interface GetBlogPostsResponse {
-        Count: number
-        BlogPosts: BlogPost[]
+        count: number
+        blog_posts: BlogPost[]
     }
 
     export interface GetCategoriesResponse {
-        Count: number
-        Categories: Category[]
+        count: number
+        categories: Category[]
     }
 
     export interface GetTagsResponse {
-        Count: number
-        Tags: Tag[]
+        count: number
+        tags: Tag[]
     }
 
     export interface Page {
-        Slug: string
+        slug: string
         created_at: string
         modified_at: string
-        Published: boolean
-        Title: string
-        Subtitle: string
-        HeroText: string
-        Summary: string
-        Body: string
-        BodyRendered: string
+        published: boolean
+        title: string
+        subtitle: string
+        hero_text: string
+        summary: string
+        body: string
+        body_rendered: string
         featured_image: string
     }
 
@@ -107,8 +107,8 @@ export namespace blog {
     export type ScheduleType = string
 
     export interface Tag {
-        Tag: string
-        Summary: string
+        tag: string
+        summary: string
     }
 
     export class ServiceClient {
@@ -159,10 +159,10 @@ export namespace blog {
          */
         public GetBlogPosts(params: GetBlogPostsParams): Promise<GetBlogPostsResponse> {
             const query: any[] = [
-                "limit", params.Limit,
-                "offset", params.Offset,
-                "category", params.Category,
-                "tag", params.Tag,
+                "limit", params.limit,
+                "offset", params.offset,
+                "category", params.category,
+                "tag", params.tag,
             ]
             return this.baseClient.do<GetBlogPostsResponse>("GET", `/blog?${encodeQuery(query)}`)
         }
@@ -220,20 +220,20 @@ export namespace blog {
 
 export namespace bytes {
     export interface Byte {
-        ID: number
-        Title: string
-        Summary: string
-        URL: string
-        Created: string
+        id: number
+        title: string
+        summary: string
+        url: string
+        created: string
     }
 
     export interface ListParams {
-        Limit: number
-        Offset: number
+        limit: number
+        offset: number
     }
 
     export interface ListResponse {
-        Bytes: Byte[]
+        bytes: Byte[]
     }
 
     export interface PromoteParams {
@@ -246,13 +246,13 @@ export namespace bytes {
     }
 
     export interface PublishParams {
-        Title: string
-        Summary: string
-        URL: string
+        title: string
+        summary: string
+        url: string
     }
 
     export interface PublishResponse {
-        ID: number
+        id: number
     }
 
     export type ScheduleType = string
@@ -276,8 +276,8 @@ export namespace bytes {
          */
         public List(params: ListParams): Promise<ListResponse> {
             const query: any[] = [
-                "limit", params.Limit,
-                "offset", params.Offset,
+                "limit", params.limit,
+                "offset", params.offset,
             ]
             return this.baseClient.do<ListResponse>("GET", `/bytes?${encodeQuery(query)}`)
         }
@@ -300,14 +300,14 @@ export namespace bytes {
 
 export namespace email {
     export interface SubscribeParams {
-        Email: string
+        email: string
     }
 
     export interface UnsubscribeParams {
         /**
          * Token is the unsubscribe token in to the email.
          */
-        Token: string
+        token: string
     }
 
     export class ServiceClient {
@@ -335,32 +335,32 @@ export namespace email {
 
 export namespace url {
     export interface GetListResponse {
-        Count: number
-        URLS: URL[]
+        count: number
+        urls: URL[]
     }
 
     export interface ShortenParams {
         /**
          * the URL to shorten
          */
-        URL: string
+        url: string
     }
 
     export interface URL {
         /**
          * short-form URL id
          */
-        ID: string
+        id: string
 
         /**
          * original URL, in long form
          */
-        URL: string
+        url: string
 
         /**
          * short URL
          */
-        ShortURL: string
+        short_url: string
     }
 
     export class ServiceClient {

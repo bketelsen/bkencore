@@ -13,27 +13,27 @@ import (
 )
 
 type Page struct {
-	Slug          string
-	CreatedAt     time.Time `json:"created_at" yaml:"created_at"`
-	ModifiedAt    time.Time `json:"modified_at"`
-	Published     bool
-	Title         string
-	Subtitle      string
-	HeroText      string
-	Summary       string
-	Body          string
-	BodyRendered  string
-	FeaturedImage string `json:"featured_image"`
+	Slug          string    `json:"slug,omitempty"`
+	CreatedAt     time.Time `json:"created_at,omitempty" yaml:"created_at"`
+	ModifiedAt    time.Time `json:"modified_at,omitempty"`
+	Published     bool      `json:"published,omitempty"`
+	Title         string    `json:"title,omitempty"`
+	Subtitle      string    `json:"subtitle,omitempty"`
+	HeroText      string    `json:"hero_text,omitempty"`
+	Summary       string    `json:"summary,omitempty"`
+	Body          string    `json:"body,omitempty"`
+	BodyRendered  string    `json:"body_rendered,omitempty"`
+	FeaturedImage string    `json:"featured_image,omitempty"`
 }
 
 type CreatePageParams struct {
-	Published     bool
-	Title         string
-	Subtitle      string
-	HeroText      string
-	Summary       string
-	Body          string
-	FeaturedImage string // empty string means no image
+	Published     bool   `json:"published,omitempty"`
+	Title         string `json:"title,omitempty"`
+	Subtitle      string `json:"subtitle,omitempty"`
+	HeroText      string `json:"hero_text,omitempty"`
+	Summary       string `json:"summary,omitempty"`
+	Body          string `json:"body,omitempty"`
+	FeaturedImage string `json:"featured_image,omitempty"` // empty string means no image
 }
 
 // GetPage retrieves a page by slug.

@@ -35,8 +35,8 @@ function BlogIndex({posts, page}: InferGetStaticPropsType<typeof getStaticProps>
 }
 export  const getStaticProps: GetStaticProps = async()=>{
 
-  const res = await DefaultClient.blog.GetBlogPosts({Limit: 100, Offset:0, Category:'',Tag:''})
-  const posts = res.BlogPosts
+  const res = await DefaultClient.blog.GetBlogPosts({limit: 100, offset:0, category:'',tag:''})
+  const posts = res.blog_posts
       const pageRes = await DefaultClient.blog.GetPage("blog")
     const page = pageRes
   return {
