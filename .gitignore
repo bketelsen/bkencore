@@ -35,4 +35,5 @@ yarn-error.log*
 *.tsbuildinfo
 /.encore
 bkml/bkml
-.envrc 
+.envrc
+.vscode/
