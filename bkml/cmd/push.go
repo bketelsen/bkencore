@@ -22,15 +22,7 @@ THE SOFTWARE.
 package cmd
 
 import (
-	"context"
-	"os"
-	"path/filepath"
-	"strings"
-
-	"github.com/adrg/frontmatter"
 	"github.com/spf13/cobra"
-
-	"encore.app/bkml/client"
 )
 
 // pushCmd represents the push command
@@ -48,10 +40,10 @@ func init() {
 }
 
 func push() error {
-	currentDirectory, err := os.Getwd() // todo
-	cobra.CheckErr(err)
+	//currentDirectory, err := os.Getwd() // todo
+	//cobra.CheckErr(err)
 	//	postsDir := filepath.Join(currentDirectory, "posts")
-	pagesDir := filepath.Join(currentDirectory, "pages")
+	//pagesDir := filepath.Join(currentDirectory, "pages")
 	//	tagsDir := filepath.Join(currentDirectory, "tags")
 	//	categoriesDir := filepath.Join(currentDirectory, "categories")
 
@@ -69,10 +61,13 @@ func push() error {
 			return err
 		}
 	*/
-	err = pages(pagesDir)
-	if err != nil {
-		return err
-	}
+	/*
+		err = pages(pagesDir)
+		if err != nil {
+			return err
+		}
+		return nil
+	*/
 	return nil
 }
 
@@ -163,6 +158,7 @@ func posts(postsDir string) error {
 	return err
 }
 */
+/*
 func pages(pagesDir string) error {
 	err := filepath.Walk(pagesDir, func(path string, info os.FileInfo, err error) error {
 		cobra.CheckErr(err)
@@ -190,3 +186,4 @@ func pages(pagesDir string) error {
 	})
 	return err
 }
+*/
