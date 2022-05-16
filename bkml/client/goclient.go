@@ -45,7 +45,7 @@ func New(target BaseURL, options ...Option) (*Client, error) {
 	base := &baseClient{
 		baseURL:    baseURL,
 		httpClient: http.DefaultClient,
-		userAgent:  "devweek-k65i-Generated-Client (Encore/v1.0.2)",
+		userAgent:  "devweek-k65i-Generated-Client (Encore/v1.1.0)",
 	}
 
 	// Apply any given options
@@ -91,18 +91,38 @@ func WithAuthFunc(tokenGenerator func(ctx context.Context) (string, error)) Opti
 	}
 }
 
-type BlogBlogPost struct {
-	Slug          string       `json:"slug"`
-	CreatedAt     time.Time    `json:"created_at" qs:"created_at"`
-	ModifiedAt    time.Time    `json:"modified_at" qs:"modified_at"`
-	Published     bool         `json:"published"`
-	Title         string       `json:"title"`
-	Summary       string       `json:"summary"`
-	Body          string       `json:"body"`
-	BodyRendered  string       `json:"body_rendered" qs:"body_rendered"`
-	FeaturedImage string       `json:"featured_image" qs:"featured_image"`
-	Category      BlogCategory `json:"category"`
-	Tags          []BlogTag    `json:"tags"`
+type BlogBlogPostFull struct {
+	ID                   string    `json:"id"`
+	UUID                 string    `json:"uuid"`
+	Title                string    `json:"title"`
+	Slug                 string    `json:"slug"`
+	HTML                 string    `json:"html"`
+	Plaintext            string    `json:"plaintext"`
+	FeatureImage         string    `json:"feature_image" qs:"feature_image"`
+	Featured             bool      `json:"featured"`
+	Status               string    `json:"status"`
+	Visibility           string    `json:"visibility"`
+	EmailRecipientFilter string    `json:"email_recipient_filter" qs:"email_recipient_filter"`
+	CreatedAt            time.Time `json:"created_at" qs:"created_at"`
+	UpdatedAt            time.Time `json:"updated_at" qs:"updated_at"`
+	PublishedAt          time.Time `json:"published_at" qs:"published_at"`
+	CustomExcerpt        string    `json:"custom_excerpt" qs:"custom_excerpt"`
+	CanonicalURL         string    `json:"canonical_url" qs:"canonical_url"`
+	URL                  string    `json:"url"`
+	Excerpt              string    `json:"excerpt"`
+	ReadingTime          int       `json:"reading_time" qs:"reading_time"`
+	OgImage              string    `json:"og_image" qs:"og_image"`
+	OgTitle              string    `json:"og_title" qs:"og_title"`
+	OgDescription        string    `json:"og_description" qs:"og_description"`
+	TwitterImage         string    `json:"twitter_image" qs:"twitter_image"`
+	TwitterTitle         string    `json:"twitter_title" qs:"twitter_title"`
+	TwitterDescription   string    `json:"twitter_description" qs:"twitter_description"`
+	MetaTitle            string    `json:"meta_title" qs:"meta_title"`
+	MetaDescription      string    `json:"meta_description" qs:"meta_description"`
+	FeatureImageAlt      string    `json:"feature_image_alt" qs:"feature_image_alt"`
+	FeatureImageCaption  string    `json:"feature_image_caption" qs:"feature_image_caption"`
+	PrimaryTag           BlogTag   `json:"primary_tag" qs:"primary_tag"`
+	Tags                 []BlogTag `json:"tags"`
 }
 
 type BlogCategory struct {
@@ -110,39 +130,14 @@ type BlogCategory struct {
 	Summary  string `json:"summary"`
 }
 
-type BlogCreateBlogPostParams struct {
-	Slug          string   `json:"slug"`
-	CreatedAt     string   `json:"created_at" qs:"created_at"`
-	ModifiedAt    string   `json:"modified_at" qs:"modified_at"`
-	Published     bool     `json:"published"`
-	Title         string   `json:"title"`
-	Summary       string   `json:"summary"`
-	Body          string   `json:"body"`
-	FeaturedImage string   `json:"featured_image" qs:"featured_image"`
-	Category      string   `json:"category"`
-	Tags          []string `json:"tags"`
-}
-
-type BlogCreatePageParams struct {
-	Published     bool   `json:"published"`
-	Title         string `json:"title"`
-	Subtitle      string `json:"subtitle"`
-	HeroText      string `json:"hero_text" qs:"hero_text"`
-	Summary       string `json:"summary"`
-	Body          string `json:"body"`
-	FeaturedImage string `json:"featured_image" qs:"featured_image"` // empty string means no image
-}
-
 type BlogGetBlogPostsParams struct {
-	Limit    int    `json:"limit"`
-	Offset   int    `json:"offset"`
-	Category string `json:"category"`
-	Tag      string `json:"tag"`
+	Limit  int `json:"limit"`
+	Offset int `json:"offset"`
 }
 
 type BlogGetBlogPostsResponse struct {
-	Count     int            `json:"count"`
-	BlogPosts []BlogBlogPost `json:"blog_posts" qs:"blog_posts"`
+	Count     int                `json:"count"`
+	BlogPosts []BlogBlogPostFull `json:"blog_posts" qs:"blog_posts"`
 }
 
 type BlogGetCategoriesResponse struct {
@@ -155,52 +150,68 @@ type BlogGetTagsResponse struct {
 	Tags  []BlogTag `json:"tags"`
 }
 
-type BlogPage struct {
-	Slug          string    `json:"slug"`
-	CreatedAt     time.Time `json:"created_at" qs:"created_at"`
-	ModifiedAt    time.Time `json:"modified_at" qs:"modified_at"`
-	Published     bool      `json:"published"`
-	Title         string    `json:"title"`
-	Subtitle      string    `json:"subtitle"`
-	HeroText      string    `json:"hero_text" qs:"hero_text"`
-	Summary       string    `json:"summary"`
-	Body          string    `json:"body"`
-	BodyRendered  string    `json:"body_rendered" qs:"body_rendered"`
-	FeaturedImage string    `json:"featured_image" qs:"featured_image"`
+type BlogPageFull struct {
+	ID                   string    `json:"id"`
+	UUID                 string    `json:"uuid"`
+	Title                string    `json:"title"`
+	Slug                 string    `json:"slug"`
+	HTML                 string    `json:"html"`
+	Plaintext            string    `json:"plaintext"`
+	FeatureImage         string    `json:"feature_image" qs:"feature_image"`
+	Featured             bool      `json:"featured"`
+	Status               string    `json:"status"`
+	Visibility           string    `json:"visibility"`
+	EmailRecipientFilter string    `json:"email_recipient_filter" qs:"email_recipient_filter"`
+	CreatedAt            time.Time `json:"created_at" qs:"created_at"`
+	UpdatedAt            time.Time `json:"updated_at" qs:"updated_at"`
+	PublishedAt          time.Time `json:"published_at" qs:"published_at"`
+	CustomExcerpt        string    `json:"custom_excerpt" qs:"custom_excerpt"`
+	CanonicalURL         string    `json:"canonical_url" qs:"canonical_url"`
+	URL                  string    `json:"url"`
+	Excerpt              string    `json:"excerpt"`
+	ReadingTime          int       `json:"reading_time" qs:"reading_time"`
+	OgImage              string    `json:"og_image" qs:"og_image"`
+	OgTitle              string    `json:"og_title" qs:"og_title"`
+	OgDescription        string    `json:"og_description" qs:"og_description"`
+	TwitterImage         string    `json:"twitter_image" qs:"twitter_image"`
+	TwitterTitle         string    `json:"twitter_title" qs:"twitter_title"`
+	TwitterDescription   string    `json:"twitter_description" qs:"twitter_description"`
+	MetaTitle            string    `json:"meta_title" qs:"meta_title"`
+	MetaDescription      string    `json:"meta_description" qs:"meta_description"`
+	FeatureImageAlt      string    `json:"feature_image_alt" qs:"feature_image_alt"`
+	FeatureImageCaption  string    `json:"feature_image_caption" qs:"feature_image_caption"`
+	PrimaryTag           BlogTag   `json:"primary_tag" qs:"primary_tag"`
+	Tags                 []BlogTag `json:"tags"`
 }
-
-type BlogPromoteParams struct {
-
-	// Schedule decides how the promotion should be scheduled.
-	// Valid values are "auto" for scheduling it at a suitable time
-	// based on the current posting schedule, and "now" to schedule it immediately.
-	Schedule BlogScheduleType
-}
-
-type BlogScheduleType = string
 
 type BlogTag struct {
-	Tag     string `json:"tag"`
-	Summary string `json:"summary"`
+	Name               string    `json:"slug_name"`
+	Slug               string    `json:"slug"`
+	Description        string    `json:"slug_description"`
+	FeatureImage       string    `json:"feature_image" qs:"feature_image"`
+	Visibility         string    `json:"visibility"`
+	OgImage            string    `json:"og_image" qs:"og_image"`
+	OgTitle            string    `json:"og_title" qs:"og_title"`
+	OgDescription      string    `json:"og_description" qs:"og_description"`
+	TwitterImage       string    `json:"twitter_image" qs:"twitter_image"`
+	TwitterTitle       string    `json:"twitter_title" qs:"twitter_title"`
+	TwitterDescription string    `json:"twitter_description" qs:"twitter_description"`
+	MetaTitle          string    `json:"meta_title" qs:"meta_title"`
+	MetaDescription    string    `json:"meta_description" qs:"meta_description"`
+	AccentColor        string    `json:"accent_color" qs:"accent_color"`
+	CreatedAt          time.Time `json:"created_at" qs:"created_at"`
+	UpdatedAt          time.Time `json:"updated_at" qs:"updated_at"`
+	URL                string    `json:"slug_url"`
 }
 
 // BlogClient Provides you access to call public and authenticated APIs on blog. The concrete implementation is blogClient.
 // It is setup as an interface allowing you to use GoMock to create mock implementations during tests.
 type BlogClient interface {
-	// CreateBlogPost creates a new blog post.
-	CreateBlogPost(ctx context.Context, params BlogCreateBlogPostParams) error
-
 	// CreateTag creates a new blog post.
 	CreateCategory(ctx context.Context, params BlogCategory) error
 
-	// CreatePage creates a new page, or updates it if it already exists.
-	CreatePage(ctx context.Context, slug string, params BlogCreatePageParams) error
-
-	// CreateTag creates a new blog post.
-	CreateTag(ctx context.Context, params BlogTag) error
-
 	// GetBlogPost retrieves a blog post by slug.
-	GetBlogPost(ctx context.Context, slug string) (BlogBlogPost, error)
+	GetBlogPost(ctx context.Context, slug string) (BlogBlogPostFull, error)
 
 	// GetBlogPosts retrieves a list of blog posts with
 	// optional limit and offset.
@@ -213,19 +224,28 @@ type BlogClient interface {
 	GetCategory(ctx context.Context, category string) (BlogCategory, error)
 
 	// GetPage retrieves a page by slug.
-	GetPage(ctx context.Context, slug string) (BlogPage, error)
+	GetPage(ctx context.Context, slug string) (BlogPageFull, error)
 
 	// GetTag retrieves a tag by slug.
-	GetTag(ctx context.Context, tag string) (BlogTag, error)
+	GetTag(ctx context.Context, slug string) (BlogTag, error)
 
 	// GetTags retrieves a list of tags
 	GetTags(ctx context.Context) (BlogGetTagsResponse, error)
 
 	// GetTagsBySlug retrieves a list of tags for a post
-	GetTagsBySlug(ctx context.Context, slug string) (BlogGetTagsResponse, error)
+	GetTagsByPage(ctx context.Context, slug string) (BlogGetTagsResponse, error)
 
-	// Promote schedules the promotion a blog post.
-	Promote(ctx context.Context, slug string, params BlogPromoteParams) error
+	// GetTagsBySlug retrieves a list of tags for a post
+	GetTagsByPost(ctx context.Context, slug string) (BlogGetTagsResponse, error)
+
+	// Post receives incoming post CRUD webhooks from ghost.
+	PageHook(ctx context.Context, request *http.Request) (*http.Response, error)
+
+	// Post receives incoming post CRUD webhooks from ghost.
+	PostHook(ctx context.Context, request *http.Request) (*http.Response, error)
+
+	// Post receives incoming post CRUD webhooks from ghost.
+	TagHook(ctx context.Context, request *http.Request) (*http.Response, error)
 }
 
 type blogClient struct {
@@ -234,28 +254,13 @@ type blogClient struct {
 
 var _ BlogClient = (*blogClient)(nil)
 
-// CreateBlogPost creates a new blog post.
-func (c *blogClient) CreateBlogPost(ctx context.Context, params BlogCreateBlogPostParams) error {
-	return callAPI(ctx, c.base, "POST", "/blog.CreateBlogPost", params, nil)
-}
-
 // CreateTag creates a new blog post.
 func (c *blogClient) CreateCategory(ctx context.Context, params BlogCategory) error {
 	return callAPI(ctx, c.base, "POST", "/blog.CreateCategory", params, nil)
 }
 
-// CreatePage creates a new page, or updates it if it already exists.
-func (c *blogClient) CreatePage(ctx context.Context, slug string, params BlogCreatePageParams) error {
-	return callAPI(ctx, c.base, "PUT", fmt.Sprintf("/page/%s", slug), params, nil)
-}
-
-// CreateTag creates a new blog post.
-func (c *blogClient) CreateTag(ctx context.Context, params BlogTag) error {
-	return callAPI(ctx, c.base, "POST", "/blog.CreateTag", params, nil)
-}
-
 // GetBlogPost retrieves a blog post by slug.
-func (c *blogClient) GetBlogPost(ctx context.Context, slug string) (resp BlogBlogPost, err error) {
+func (c *blogClient) GetBlogPost(ctx context.Context, slug string) (resp BlogBlogPostFull, err error) {
 	err = callAPI(ctx, c.base, "GET", fmt.Sprintf("/blog/%s", slug), nil, &resp)
 	return resp, err
 }
@@ -264,10 +269,8 @@ func (c *blogClient) GetBlogPost(ctx context.Context, slug string) (resp BlogBlo
 // optional limit and offset.
 func (c *blogClient) GetBlogPosts(ctx context.Context, params BlogGetBlogPostsParams) (resp BlogGetBlogPostsResponse, err error) {
 	queryString := url.Values{
-		"category": []string{fmt.Sprint(params.Category)},
-		"limit":    []string{fmt.Sprint(params.Limit)},
-		"offset":   []string{fmt.Sprint(params.Offset)},
-		"tag":      []string{fmt.Sprint(params.Tag)},
+		"limit":  []string{fmt.Sprint(params.Limit)},
+		"offset": []string{fmt.Sprint(params.Offset)},
 	}
 	err = callAPI(ctx, c.base, "GET", fmt.Sprintf("/blog?%s", queryString.Encode()), nil, &resp)
 	return resp, err
@@ -286,14 +289,14 @@ func (c *blogClient) GetCategory(ctx context.Context, category string) (resp Blo
 }
 
 // GetPage retrieves a page by slug.
-func (c *blogClient) GetPage(ctx context.Context, slug string) (resp BlogPage, err error) {
+func (c *blogClient) GetPage(ctx context.Context, slug string) (resp BlogPageFull, err error) {
 	err = callAPI(ctx, c.base, "GET", fmt.Sprintf("/page/%s", slug), nil, &resp)
 	return resp, err
 }
 
 // GetTag retrieves a tag by slug.
-func (c *blogClient) GetTag(ctx context.Context, tag string) (resp BlogTag, err error) {
-	err = callAPI(ctx, c.base, "GET", fmt.Sprintf("/tag/%s", tag), nil, &resp)
+func (c *blogClient) GetTag(ctx context.Context, slug string) (resp BlogTag, err error) {
+	err = callAPI(ctx, c.base, "GET", fmt.Sprintf("/tag/%s", slug), nil, &resp)
 	return resp, err
 }
 
@@ -304,14 +307,51 @@ func (c *blogClient) GetTags(ctx context.Context) (resp BlogGetTagsResponse, err
 }
 
 // GetTagsBySlug retrieves a list of tags for a post
-func (c *blogClient) GetTagsBySlug(ctx context.Context, slug string) (resp BlogGetTagsResponse, err error) {
-	err = callAPI(ctx, c.base, "GET", fmt.Sprintf("/tagbyslug/%s", slug), nil, &resp)
+func (c *blogClient) GetTagsByPage(ctx context.Context, slug string) (resp BlogGetTagsResponse, err error) {
+	err = callAPI(ctx, c.base, "GET", fmt.Sprintf("/tagsbypage/%s", slug), nil, &resp)
 	return resp, err
 }
 
-// Promote schedules the promotion a blog post.
-func (c *blogClient) Promote(ctx context.Context, slug string, params BlogPromoteParams) error {
-	return callAPI(ctx, c.base, "POST", fmt.Sprintf("/blog/%s/promote", slug), params, nil)
+// GetTagsBySlug retrieves a list of tags for a post
+func (c *blogClient) GetTagsByPost(ctx context.Context, slug string) (resp BlogGetTagsResponse, err error) {
+	err = callAPI(ctx, c.base, "GET", fmt.Sprintf("/tagsbypost/%s", slug), nil, &resp)
+	return resp, err
+}
+
+// Post receives incoming post CRUD webhooks from ghost.
+func (c *blogClient) PageHook(ctx context.Context, request *http.Request) (*http.Response, error) {
+	path, err := url.Parse("/blog.PageHook")
+	if err != nil {
+		return nil, fmt.Errorf("unable to parse api url: %w", err)
+	}
+	request = request.WithContext(ctx)
+	request.URL = path
+
+	return c.base.Do(request)
+}
+
+// Post receives incoming post CRUD webhooks from ghost.
+func (c *blogClient) PostHook(ctx context.Context, request *http.Request) (*http.Response, error) {
+	path, err := url.Parse("/blog.PostHook")
+	if err != nil {
+		return nil, fmt.Errorf("unable to parse api url: %w", err)
+	}
+	request = request.WithContext(ctx)
+	request.URL = path
+
+	return c.base.Do(request)
+}
+
+// Post receives incoming post CRUD webhooks from ghost.
+func (c *blogClient) TagHook(ctx context.Context, request *http.Request) (*http.Response, error) {
+	path, err := url.Parse("/blog.TagHook")
+	if err != nil {
+		return nil, fmt.Errorf("unable to parse api url: %w", err)
+	}
+	request = request.WithContext(ctx)
+	request.URL = path
+
+	return c.base.Do(request)
 }
 
 type BytesByte struct {

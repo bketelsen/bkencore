@@ -1,10 +1,9 @@
 import Document, { Html, Head, Main, NextScript } from 'next/document'
 
-
 class MyDocument extends Document {
   render() {
     return (
-      <Html lang="en" className="scroll-smooth" data-theme="dracula">
+      <Html lang="en" className="scroll-smooth" data-theme="night">
         <Head>
           <link rel="apple-touch-icon" sizes="76x76" href="/static/favicons/apple-touch-icon.png" />
           <link
@@ -28,7 +27,7 @@ class MyDocument extends Document {
             id="pirschjs"
             data-code="vWhcy7gh61Rp6p292VnP1SdSSBiwvkij"></script>
         </Head>
-        <body className="bg-base-300">
+        <body className="h-full bg-base-100">
           <Main />
           <NextScript />
         </body>

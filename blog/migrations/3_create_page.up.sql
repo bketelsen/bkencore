@@ -1,24 +1,4 @@
-CREATE TABLE "tag" (
-    slug TEXT NOT NULL PRIMARY KEY,
-    slug_name TEXT NOT NULL,
-    slug_description TEXT,
-    feature_image TEXT,
-    visibility TEXT,
-    og_image TEXT,
-    og_title TEXT,
-    og_description TEXT,
-    twitter_image TEXT,
-    twitter_title TEXT,
-    twitter_description TEXT,
-    meta_title TEXT,
-    meta_description TEXT,
-    accent_color TEXT,
-    created_at TIMESTAMP NOT NULL,
-    updated_at TIMESTAMP NOT NULL,
-    slug_url TEXT NOT NULL
-);
-
-CREATE TABLE "article" (
+CREATE TABLE "page" (
     slug TEXT NOT NULL PRIMARY KEY,
     id TEXT NOT NULL,
     uuid TEXT NOT NULL,

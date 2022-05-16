@@ -3,6 +3,7 @@ import { FC } from 'react'
 import NewsletterSignup from './NewsletterSignup'
 import { social } from './social'
 import Link from 'next/link'
+import Pi from './Pi'
 
 const Footer: FC = (props) => {
   return (
@@ -47,7 +48,12 @@ const Footer: FC = (props) => {
             >
               @bketelsen
             </a>
+            <div>
+              <Pi />
+            </div>
+
           </p>
+
         </div>
       </footer>
     </>

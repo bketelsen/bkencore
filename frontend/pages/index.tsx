@@ -6,7 +6,7 @@ import { social } from '../components/social'
 import Page from '../components/Page'
 import { InferGetStaticPropsType } from 'next'
 
-import { GetStaticPaths, GetStaticProps } from 'next'
+import {  GetStaticProps } from 'next'
 const links = [
   {
     name: 'Blog',
@@ -28,20 +28,21 @@ const links = [
   },
 ]
 
-function Home({ posts, page }: InferGetStaticPropsType<typeof getStaticProps>) {
+function Home({ posts }: InferGetStaticPropsType<typeof getStaticProps>) {
   return (
     <div>
       <SEO title={undefined /* defaults to "Brian Ketelsen" */} description="Head in the clouds" />
 
       {/* Profile section */}
-      <Page page={page} />
+      <Page title='Brian Ketelsen' hero_text="Howdy! Thanks for stopping by. Inside you'll find articles, tutorials, technical reference material and maybe even a rant or two :)" subtitle='Head in the clouds'/>
+
       <div className="flex justify-center space-x-6">
         {social.map((item) => (
           <a
             key={item.name}
             rel="nofollow"
             href={item.href}
-            className="text-secondary hover:text-primary"
+            className="text-primary hover:text-secondary"
           >
             <span className="sr-only">{item.name}</span>
             <item.icon className="w-6 h-6" aria-hidden="true" />
@@ -61,14 +62,14 @@ function Home({ posts, page }: InferGetStaticPropsType<typeof getStaticProps>) {
   )
 }
 export const getStaticProps: GetStaticProps = async () => {
-  const res = await DefaultClient.blog.GetBlogPosts({ limit: 6, offset: 0, category: '', tag: '' })
+  const res = await DefaultClient.blog.GetBlogPosts({ limit: 6, offset: 0  })
   const posts = res.blog_posts
-  const pageRes = await DefaultClient.blog.GetPage('index')
-  const page = pageRes
+  //const pageRes = await DefaultClient.blog.GetPage('index')
+  //const page = pageRes
   return {
     props: {
       posts,
-      page,
+     // page,
     },
     // Next.js will attempt to re-generate the page:
     // - When a request comes in

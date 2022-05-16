@@ -23,11 +23,9 @@ package cmd
 
 import (
 	"context"
-	"fmt"
 	"os"
 	"path/filepath"
 	"strings"
-	"time"
 
 	"github.com/adrg/frontmatter"
 	"github.com/spf13/cobra"
@@ -52,23 +50,25 @@ func init() {
 func push() error {
 	currentDirectory, err := os.Getwd() // todo
 	cobra.CheckErr(err)
-	postsDir := filepath.Join(currentDirectory, "posts")
+	//	postsDir := filepath.Join(currentDirectory, "posts")
 	pagesDir := filepath.Join(currentDirectory, "pages")
-	tagsDir := filepath.Join(currentDirectory, "tags")
-	categoriesDir := filepath.Join(currentDirectory, "categories")
+	//	tagsDir := filepath.Join(currentDirectory, "tags")
+	//	categoriesDir := filepath.Join(currentDirectory, "categories")
 
-	err = tags(tagsDir)
-	if err != nil {
-		return err
-	}
-	err = categories(categoriesDir)
-	if err != nil {
-		return err
-	}
-	err = posts(postsDir)
-	if err != nil {
-		return err
-	}
+	/*
+		err = tags(tagsDir)
+		if err != nil {
+			return err
+		}
+		err = categories(categoriesDir)
+		if err != nil {
+			return err
+		}
+		err = posts(postsDir)
+		if err != nil {
+			return err
+		}
+	*/
 	err = pages(pagesDir)
 	if err != nil {
 		return err
@@ -76,6 +76,7 @@ func push() error {
 	return nil
 }
 
+/*
 func categories(categoriesDir string) error {
 	err := filepath.Walk(categoriesDir, func(path string, info os.FileInfo, err error) error {
 		cobra.CheckErr(err)
@@ -125,6 +126,7 @@ func tags(tagsDir string) error {
 	})
 	return err
 }
+
 func posts(postsDir string) error {
 	err := filepath.Walk(postsDir, func(path string, info os.FileInfo, err error) error {
 		cobra.CheckErr(err)
@@ -160,6 +162,7 @@ func posts(postsDir string) error {
 	})
 	return err
 }
+*/
 func pages(pagesDir string) error {
 	err := filepath.Walk(pagesDir, func(path string, info os.FileInfo, err error) error {
 		cobra.CheckErr(err)

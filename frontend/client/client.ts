@@ -4,7 +4,7 @@ export default class Client {
     email: email.ServiceClient
     url: url.ServiceClient
 
-    constructor(environment: string = "prod", token?: string) {
+    constructor(environment: string = "staging", token?: string) {
         const base = new BaseClient(environment, token)
         this.blog = new blog.ServiceClient(base)
         this.bytes = new bytes.ServiceClient(base)
@@ -14,17 +14,37 @@ export default class Client {
 }
 
 export namespace blog {
-    export interface BlogPost {
-        slug: string
-        created_at: string
-        modified_at: string
-        published: boolean
+    export interface BlogPostFull {
+        id: string
+        uuid: string
         title: string
-        summary: string
-        body: string
-        body_rendered: string
-        featured_image: string
-        category: Category
+        slug: string
+        html: string
+        plaintext: string
+        feature_image: string
+        featured: boolean
+        status: string
+        visibility: string
+        email_recipient_filter: string
+        created_at: string
+        updated_at: string
+        published_at: string
+        custom_excerpt: string
+        canonical_url: string
+        url: string
+        excerpt: string
+        reading_time: number
+        og_image: string
+        og_title: string
+        og_description: string
+        twitter_image: string
+        twitter_title: string
+        twitter_description: string
+        meta_title: string
+        meta_description: string
+        feature_image_alt: string
+        feature_image_caption: string
+        primary_tag: Tag
         tags: Tag[]
     }
 
@@ -33,42 +53,14 @@ export namespace blog {
         summary: string
     }
 
-    export interface CreateBlogPostParams {
-        slug: string
-        created_at: string
-        modified_at: string
-        published: boolean
-        title: string
-        summary: string
-        body: string
-        featured_image: string
-        category: string
-        tags: string[]
-    }
-
-    export interface CreatePageParams {
-        published: boolean
-        title: string
-        subtitle: string
-        hero_text: string
-        summary: string
-        body: string
-        /**
-         * empty string means no image
-         */
-        featured_image: string
-    }
-
     export interface GetBlogPostsParams {
         limit: number
         offset: number
-        category: string
-        tag: string
     }
 
     export interface GetBlogPostsResponse {
         count: number
-        blog_posts: BlogPost[]
+        blog_posts: BlogPostFull[]
     }
 
     export interface GetCategoriesResponse {
@@ -81,34 +73,58 @@ export namespace blog {
         tags: Tag[]
     }
 
-    export interface Page {
-        slug: string
-        created_at: string
-        modified_at: string
-        published: boolean
+    export interface PageFull {
+        id: string
+        uuid: string
         title: string
-        subtitle: string
-        hero_text: string
-        summary: string
-        body: string
-        body_rendered: string
-        featured_image: string
+        slug: string
+        html: string
+        plaintext: string
+        feature_image: string
+        featured: boolean
+        status: string
+        visibility: string
+        email_recipient_filter: string
+        created_at: string
+        updated_at: string
+        published_at: string
+        custom_excerpt: string
+        canonical_url: string
+        url: string
+        excerpt: string
+        reading_time: number
+        og_image: string
+        og_title: string
+        og_description: string
+        twitter_image: string
+        twitter_title: string
+        twitter_description: string
+        meta_title: string
+        meta_description: string
+        feature_image_alt: string
+        feature_image_caption: string
+        primary_tag: Tag
+        tags: Tag[]
     }
-
-    export interface PromoteParams {
-        /**
-         * Schedule decides how the promotion should be scheduled.
-         * Valid values are "auto" for scheduling it at a suitable time
-         * based on the current posting schedule, and "now" to schedule it immediately.
-         */
-        Schedule: ScheduleType
-    }
-
-    export type ScheduleType = string
 
     export interface Tag {
-        tag: string
-        summary: string
+        slug_name: string
+        slug: string
+        slug_description: string
+        feature_image: string
+        visibility: string
+        og_image: string
+        og_title: string
+        og_description: string
+        twitter_image: string
+        twitter_title: string
+        twitter_description: string
+        meta_title: string
+        meta_description: string
+        accent_color: string
+        created_at: string
+        updated_at: string
+        slug_url: string
     }
 
     export class ServiceClient {
@@ -119,13 +135,6 @@ export namespace blog {
         }
 
         /**
-         * CreateBlogPost creates a new blog post.
-         */
-        public CreateBlogPost(params: CreateBlogPostParams): Promise<void> {
-            return this.baseClient.doVoid("POST", `/blog.CreateBlogPost`, params)
-        }
-
-        /**
          * CreateTag creates a new blog post.
          */
         public CreateCategory(params: Category): Promise<void> {
@@ -133,24 +142,10 @@ export namespace blog {
         }
 
         /**
-         * CreatePage creates a new page, or updates it if it already exists.
-         */
-        public CreatePage(slug: string, params: CreatePageParams): Promise<void> {
-            return this.baseClient.doVoid("PUT", `/page/${slug}`, params)
-        }
-
-        /**
-         * CreateTag creates a new blog post.
-         */
-        public CreateTag(params: Tag): Promise<void> {
-            return this.baseClient.doVoid("POST", `/blog.CreateTag`, params)
-        }
-
-        /**
          * GetBlogPost retrieves a blog post by slug.
          */
-        public GetBlogPost(slug: string): Promise<BlogPost> {
-            return this.baseClient.do<BlogPost>("GET", `/blog/${slug}`)
+        public GetBlogPost(slug: string): Promise<BlogPostFull> {
+            return this.baseClient.do<BlogPostFull>("GET", `/blog/${slug}`)
         }
 
         /**
@@ -161,8 +156,6 @@ export namespace blog {
             const query: any[] = [
                 "limit", params.limit,
                 "offset", params.offset,
-                "category", params.category,
-                "tag", params.tag,
             ]
             return this.baseClient.do<GetBlogPostsResponse>("GET", `/blog?${encodeQuery(query)}`)
         }
@@ -184,15 +177,15 @@ export namespace blog {
         /**
          * GetPage retrieves a page by slug.
          */
-        public GetPage(slug: string): Promise<Page> {
-            return this.baseClient.do<Page>("GET", `/page/${slug}`)
+        public GetPage(slug: string): Promise<PageFull> {
+            return this.baseClient.do<PageFull>("GET", `/page/${slug}`)
         }
 
         /**
          * GetTag retrieves a tag by slug.
          */
-        public GetTag(tag: string): Promise<Tag> {
-            return this.baseClient.do<Tag>("GET", `/tag/${tag}`)
+        public GetTag(slug: string): Promise<Tag> {
+            return this.baseClient.do<Tag>("GET", `/tag/${slug}`)
         }
 
         /**
@@ -205,15 +198,36 @@ export namespace blog {
         /**
          * GetTagsBySlug retrieves a list of tags for a post
          */
-        public GetTagsBySlug(slug: string): Promise<GetTagsResponse> {
-            return this.baseClient.do<GetTagsResponse>("GET", `/tagbyslug/${slug}`)
+        public GetTagsByPage(slug: string): Promise<GetTagsResponse> {
+            return this.baseClient.do<GetTagsResponse>("GET", `/tagsbypage/${slug}`)
         }
 
         /**
-         * Promote schedules the promotion a blog post.
+         * GetTagsBySlug retrieves a list of tags for a post
          */
-        public Promote(slug: string, params: PromoteParams): Promise<void> {
-            return this.baseClient.doVoid("POST", `/blog/${slug}/promote`, params)
+        public GetTagsByPost(slug: string): Promise<GetTagsResponse> {
+            return this.baseClient.do<GetTagsResponse>("GET", `/tagsbypost/${slug}`)
+        }
+
+        /**
+         * Post receives incoming post CRUD webhooks from ghost.
+         */
+        public PageHook(): Promise<void> {
+            return this.baseClient.doVoid("POST", `/blog.PageHook`)
+        }
+
+        /**
+         * Post receives incoming post CRUD webhooks from ghost.
+         */
+        public PostHook(): Promise<void> {
+            return this.baseClient.doVoid("POST", `/blog.PostHook`)
+        }
+
+        /**
+         * Post receives incoming post CRUD webhooks from ghost.
+         */
+        public TagHook(): Promise<void> {
+            return this.baseClient.doVoid("POST", `/blog.TagHook`)
         }
     }
 }

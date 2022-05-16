@@ -9,7 +9,7 @@ import { InferGetStaticPropsType } from 'next'
 import Page from '../../components/Page'
 
 import { GetStaticPaths, GetStaticProps } from 'next'
-function BlogIndex({posts, page}: InferGetStaticPropsType<typeof getStaticProps>) {
+function BlogIndex({ posts }: InferGetStaticPropsType<typeof getStaticProps>) {
 
 
   return (
@@ -18,9 +18,7 @@ function BlogIndex({posts, page}: InferGetStaticPropsType<typeof getStaticProps>
         title="Blog"
         description="I wrote this"
       />
-
-<Page page={page} />
-
+      <Page title='Articles' hero_text='It was just too long for a tweet' subtitle='I wrote this'/>
 
       <section>
         {!posts ? (
@@ -33,16 +31,13 @@ function BlogIndex({posts, page}: InferGetStaticPropsType<typeof getStaticProps>
     </div>
   )
 }
-export  const getStaticProps: GetStaticProps = async()=>{
+export const getStaticProps: GetStaticProps = async () => {
 
-  const res = await DefaultClient.blog.GetBlogPosts({limit: 100, offset:0, category:'',tag:''})
+  const res = await DefaultClient.blog.GetBlogPosts({ limit: 100, offset: 0 })
   const posts = res.blog_posts
-      const pageRes = await DefaultClient.blog.GetPage("blog")
-    const page = pageRes
   return {
     props: {
       posts,
-      page,
     },
     // Next.js will attempt to re-generate the page:
     // - When a request comes in

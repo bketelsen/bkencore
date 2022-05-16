@@ -8,13 +8,13 @@ const BytesList: FC<{ bytes: bytes.Byte[] }> = ({ bytes }) => (
       const created = DateTime.fromISO(byte.created)
       return (
         <div key={byte.id} className="pt-8">
-          <a href={byte.url} className="block text-xl font-semibold hover-underline text-neutral-900">
+          <a href={byte.url} className="block text-xl font-semibold hover-underline text-base-content">
             {byte.title}
           </a>
-          <p className="mt-1 text-sm text-neutral-500">
+          <p className="mt-1 text-sm text-primary">
             <time dateTime={byte.created}>{created.toFormat("d LLL yyyy")}</time>
           </p>
-          <p className="mt-2 text-base text-gray-600">{byte.summary}</p>
+          <p className="mt-2 text-base text-base-content">{byte.summary}</p>
         </div>
       )
     })}

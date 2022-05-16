@@ -3,13 +3,8 @@ import { DefaultClient } from '../../client/default'
 import { timeToRead } from '../../components/BlogPostList'
 import { SEO } from '../../components/SEO'
 import { InferGetStaticPropsType } from 'next'
-import { useMemo } from 'react'
 import Image from '@/components/Image'
-import CustomLink from '@/components/Link'
-import Pre from '@/components/Pre'
 import { GetStaticProps } from 'next'
-import { getMdx } from '@/lib/mdx'
-import { getMDXComponent, MDXContentProps } from 'mdx-bundler/client'
 import { DateTime } from 'luxon'
 
 import { ParsedUrlQuery } from 'querystring'
@@ -20,8 +15,7 @@ export const MDXComponents = {
 interface IParams extends ParsedUrlQuery {
   slug: string
 }
-function BlogPost({ post, mdx }: InferGetStaticPropsType<typeof getStaticProps>) {
-  const Component = useMemo(() => getMDXComponent(mdx.mdxSource), [mdx.mdxSource])
+function BlogPost({ post }: InferGetStaticPropsType<typeof getStaticProps>) {
   const created = DateTime.fromISO(post.created_at)
 
   return (
@@ -32,7 +26,18 @@ function BlogPost({ post, mdx }: InferGetStaticPropsType<typeof getStaticProps>)
         'Loading...'
       ) : (
         <>
-          <div className="text-secondary">
+          {post.feature_image && (
+            <div>
+              <Image
+                className="object-fill w-full h-auto max-w-3xl mx-auto mt-6 mb-6 rounded-md"
+                src={post.feature_image}
+                height={'500'}
+                width={'800'}
+                alt={post.title}
+              />
+            </div>
+          )}
+          <div className="text-primary">
             <Link href="/blog">
               <a className="hover:underline hover:decoration-neutral-300 font-sm">Blog</a>
             </Link>{' '}
@@ -42,29 +47,15 @@ function BlogPost({ post, mdx }: InferGetStaticPropsType<typeof getStaticProps>)
           <div className="mt-3 mb-3 text-base text-secondary">
             {' '}
             <time dateTime={post.created_at}>{created.toFormat('d LLL yyyy')}</time> -{' '}
-            {timeToRead(post.body)}
+            {timeToRead(post.html || '')}
           </div>
-          {post.featured_image && (
-            <div>
-              <Image
-                className="object-fill w-full h-auto max-w-3xl mt-6 mb-6 rounded-md"
-                src={post.featured_image}
-                height={'500'}
-                width={'800'}
-                alt={post.title}
-              />
-            </div>
-          )}
+
         </>
       )}
-      <div className="max-w-3xl mx-auto mt-6 prose ">
-        <Component
-          components={{
-            Image,
-            a: CustomLink,
-            pre: Pre,
-          }}
-        />
+      <div className="max-w-3xl mx-auto mt-6 prose prose-xl ">
+
+        <div dangerouslySetInnerHTML={{ __html: post.html }} />
+
       </div>
     </div>
   )
@@ -73,11 +64,9 @@ function BlogPost({ post, mdx }: InferGetStaticPropsType<typeof getStaticProps>)
 export const getStaticProps: GetStaticProps = async (context) => {
   const { slug } = context.params as IParams
   const post = await DefaultClient.blog.GetBlogPost(slug as string)
-  const mdx = await getMdx(post)
   return {
     props: {
       post,
-      mdx,
     },
     // Next.js will attempt to re-generate the page:
     // - When a request comes in
@@ -86,7 +75,7 @@ export const getStaticProps: GetStaticProps = async (context) => {
   }
 }
 export async function getStaticPaths() {
-  const posts = await DefaultClient.blog.GetBlogPosts({ limit: 10, offset: 0 , category:'', tag:''})
+  const posts = await DefaultClient.blog.GetBlogPosts({ limit: 100, offset: 0 })
   const slugs = posts.blog_posts.map((post) => ({ params: { slug: post.slug } }))
   return {
     paths: slugs,

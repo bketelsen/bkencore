@@ -6,7 +6,7 @@ import { InferGetStaticPropsType } from 'next'
 import Page from '../../components/Page'
 
 import {  GetStaticProps } from 'next'
-function BytesIndex({bytes, page}: InferGetStaticPropsType<typeof getStaticProps>) {
+function BytesIndex({bytes}: InferGetStaticPropsType<typeof getStaticProps>) {
 
 
   return (
@@ -15,8 +15,7 @@ function BytesIndex({bytes, page}: InferGetStaticPropsType<typeof getStaticProps
         title="Bytes"
         description="Quick dopamine hits"
       />
-<Page page={page} />
-
+      <Page title='Bytes' hero_text="I found it so you don't have to" subtitle='Quick Dopamine Hits'/>
 
       <section>
         {!bytes ? (
@@ -33,14 +32,12 @@ function BytesIndex({bytes, page}: InferGetStaticPropsType<typeof getStaticProps
 export  const getStaticProps: GetStaticProps = async()=>{
 
   const res = await DefaultClient.bytes.List({ offset: 0, limit: 20 })
-  console.log(res)
-  const bytes = res.bytes
-  const pageRes = await DefaultClient.blog.GetPage("bytes")
-    const page = pageRes
+   const bytes = res.bytes
+
   return {
     props: {
       bytes,
-      page,
+
     },
     // Next.js will attempt to re-generate the page:
     // - When a request comes in

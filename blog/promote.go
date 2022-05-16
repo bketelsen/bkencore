@@ -1,16 +1,6 @@
 package blog
 
-import (
-	"context"
-	"fmt"
-	"time"
-
-	"encore.app/email"
-	"encore.app/social/twitter"
-	"encore.app/url"
-	"encore.dev/beta/errs"
-)
-
+/*
 type ScheduleType string
 
 const (
@@ -77,3 +67,4 @@ func Promote(ctx context.Context, slug string, p *PromoteParams) error {
 
 	return nil
 }
+*/

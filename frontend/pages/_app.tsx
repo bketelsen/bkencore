@@ -1,8 +1,8 @@
 import '@/styles/globals.css'
 import '@/styles/prism.css'
-
+import { SessionProvider } from "next-auth/react"
 import type { AppProps } from 'next/app'
-import Layout from '../components/Layout'
+import Layout from '../components/LayoutDrawer'
 
 
 var baseURL = "http://localhost:4000"
@@ -17,12 +17,15 @@ switch (env) {
   default:
     baseURL = `https://devweek-k65i.encoreapi.com/${env}`
 }
-function MyApp({ Component, pageProps }: AppProps) {
-  return (
 
+
+function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
+  return (
+    <SessionProvider session={session}>
       <Layout>
         <Component {...pageProps} />
       </Layout>
+      </SessionProvider>
   )
 }
 

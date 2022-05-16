@@ -11,7 +11,7 @@ function About({ page }: InferGetStaticPropsType<typeof getStaticProps>) {
     <div className="max-w-3xl mx-auto ">
       <SEO title="About Me" description="More than you probably need to know" />
 
-      <Page page={page} />
+      <Page title='About Me' hero_text="Here's some relevant information about me and my background." subtitle='Oversharing as a Service'/>
 
       <Image
         className="w-full h-auto max-w-3xl mt-6 mb-6 rounded-md"
@@ -20,38 +20,9 @@ function About({ page }: InferGetStaticPropsType<typeof getStaticProps>) {
         height={534}
         alt={'Brian Ketelsen'}
       />
-      <div className="max-w-3xl mx-auto mt-6 prose">
-        <p>
-          Howdy! Thanks for stopping by. I&apos;m Brian Ketelsen, and I&apos;ve been doing
-          technology things since acoustic modem couplers were a thing. I love Open Source and
-          exploring different programming languages. Some highlights about me and my activities:
-        </p>
+      <div className="max-w-3xl mx-auto mt-6 prose prose-xl">
+      <div dangerouslySetInnerHTML={{ __html: page.html }} />
 
-        <ul>
-          <li>Army Veteran, Bradley Fighting Vehicle Gunner, Infantry, 1st Armored Division</li>
-          <li>Father of four with 19 years difference between oldest and youngest child</li>
-          <li>Co-founded GopherCon, the largest conference for Go developers</li>
-          <li>Co-authored Go In Action for Manning Publishing</li>
-          <li>
-            Along with Erik St. Martin, I wrote Skynet and SkyDNS, which was eventually morphed into
-            the DNS service discovery that powers Kubernetes.
-          </li>
-          <li>Contributor to virtual kubelet and Krustlet</li>
-        </ul>
-
-        <p>
-          I&apos;ve worked in a lot of interesting industries from Consumer Credit to Healthcare, in
-          jobs ranging from DBA to Chief Information Officer. I&apos;m currently loving life at
-          Microsoft as a Cloud Developer Advocate.
-        </p>
-        <p>
-          I love to teach because I&apos;m always learning new things. Cloud Advocacy also gives me
-          the freedom to experiment with new and interesting things every day.
-        </p>
-        <p>
-          My most exciting moment in Open Source came when I got a letter of thanks from the JPL at
-          NASA for a library I wrote. They used it on one of the Rover missions.
-        </p>
       </div>
     </div>
   )

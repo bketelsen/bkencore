@@ -18,27 +18,21 @@ export const MDXComponents = {
 interface IParams extends ParsedUrlQuery {
   slug: string
 }
-function NowPage({ page, mdx }: InferGetStaticPropsType<typeof getStaticProps>) {
-  const Component = useMemo(() => getMDXComponent(mdx.mdxSource), [mdx.mdxSource])
+function NowPage({ page }: InferGetStaticPropsType<typeof getStaticProps>) {
   return (
     <div className="max-w-3xl mx-auto">
-      <SEO title={page?.Title} description={page?.Summary} />
+      <SEO title={page?.title} description={page?.excerpt} />
 
       {!page ? (
         'Loading...'
       ) : (
         <>
-          <Page page={page} />
+      <Page title='Uses' hero_text="These are the tools that power my workflows" subtitle="Behind the curtain"/>
         </>
       )}
       <div className="max-w-3xl mx-auto mt-6 prose ">
-        <Component
-          components={{
-            Image,
-            a: CustomLink,
-            pre: Pre,
-          }}
-        />
+      <div dangerouslySetInnerHTML={{ __html: page.html }} />
+
       </div>
     </div>
   )
@@ -47,11 +41,9 @@ function NowPage({ page, mdx }: InferGetStaticPropsType<typeof getStaticProps>) 
 export const getStaticProps: GetStaticProps = async (context) => {
   const slug = 'uses'
   const page = await DefaultClient.blog.GetPage(slug as string)
-  const mdx = await getMdx(page)
   return {
     props: {
       page,
-      mdx,
     },
     // Next.js will attempt to re-generate the page:
     // - When a request comes in

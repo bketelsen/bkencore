@@ -17,7 +17,7 @@ const Nav: FC = (props) => {
   const current = (it: NavItem) => router.asPath.startsWith(it.href)
 
   return (
-    <div className="rounded-lg shadow-lg navbar bg-base-100">
+    <div className="shadow-lg  navbar bg-base-100">
       <div className="navbar-start">
         <div className="dropdown">
           <label tabIndex={0} className="btn btn-ghost lg:hidden">

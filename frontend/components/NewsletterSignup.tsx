@@ -37,7 +37,7 @@ const NewsletterSignup: FC = () => {
   return (
     <div>
       <div className="px-4 pt-12 mx-auto max-w-7xl sm:px-6 lg:pt-16 lg:px-8">
-        <div className="px-6 py-6 rounded-lg bg-secondary md:py-12 md:px-12 lg:py-16 lg:px-16 xl:flex xl:items-center">
+        <div className="px-6 py-6 shadow-xl bg-secondary md:py-12 md:px-12 lg:py-16 lg:px-16 xl:flex xl:items-center">
           <div className="xl:w-0 xl:flex-1">
             <h2 className="text-2xl font-extrabold tracking-tight text-secondary-content sm:text-3xl">
               {result?.result === 'success'
@@ -99,9 +99,9 @@ const NewsletterSignup: FC = () => {
                 Subscribe
               </button>
             </form>
-            <p className="mt-3 text-sm text-indigo-200">
+            <p className="mt-3 text-sm text-secondary-content">
               I care about the protection of your data. Read my{' '}
-              <a href="#" className="font-medium text-white underline">
+              <a href="#" className="font-medium underline text-secondary-accent">
                 Privacy Policy.
               </a>
             </p>
