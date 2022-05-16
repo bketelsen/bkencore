@@ -23,7 +23,7 @@ const root = process.cwd()
 
 
 
-export async function getMdx(post: blog.BlogPost | blog.Page) {
+export async function getMdx(post: blog.BlogPostFull | blog.PageFull) {
 
   // https://github.com/kentcdodds/mdx-bundler#nextjs-esbuild-enoent
   if (process.platform === 'win32') {
@@ -33,7 +33,7 @@ export async function getMdx(post: blog.BlogPost | blog.Page) {
   }
 
   let toc = []
-  const source = post.body
+  const source = post.html
   // Parsing frontmatter here to pass it in as options to rehype plugin
   const { code } = await bundleMDX({
     source,
