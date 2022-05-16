@@ -251,7 +251,7 @@ func GetBlogPosts(ctx context.Context, params *GetBlogPostsParams) (*GetBlogPost
 		primary_tag,
 		url
 		FROM "article"
-		ORDER BY created_at DESC
+		ORDER BY published_at DESC
 		LIMIT $1
 		OFFSET $2
 	`, params.Limit, params.Offset)

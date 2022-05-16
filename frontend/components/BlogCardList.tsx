@@ -8,7 +8,7 @@ const BlogCardList: FC<{ posts: blog.BlogPostFull[] }> = ({ posts }) => (
   <>
     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-2">
       {posts.map((post) => {
-        const created = DateTime.fromISO(post.created_at)
+        const created = DateTime.fromISO(post.published_at)
         return (
           <div key={post.slug} className="p-4">
 <div className="transition duration-300 ease-in-out shadow-xl card card-compact bg-base-300 hover:scale-105">
@@ -38,7 +38,7 @@ const BlogCardList: FC<{ posts: blog.BlogPostFull[] }> = ({ posts }) => (
                 <div className="flex flex-col justify-between text-sm">
 
                   <p className="text-base-content">
-                    <time dateTime={post.created_at}>{created.toFormat('d LLL yyyy')}</time> -
+                    <time dateTime={post.published_at}>{created.toFormat('d LLL yyyy')}</time> -
                     Reading Time {timeToRead(post.html)}
                     <br />
                     {post.tags && post.tags.map((tag) => {
