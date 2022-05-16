@@ -167,7 +167,7 @@ func GetBlogPost(ctx context.Context, slug string) (*BlogPostFull, error) {
 			Message: "article not found",
 		}
 	}
-	if primary_tag.Valid {
+	if primary_tag.Valid && primary_tag.String != "" {
 		t, err := GetTag(ctx, primary_tag.String)
 		if err != nil {
 			return nil, err
