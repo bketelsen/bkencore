@@ -57,7 +57,7 @@ const securityHeaders = [
  **/
 module.exports = withBundleAnalyzer({
   images: {
-    domains: ['static.ghost.org'],
+    domains: ['static.ghost.org', 'bjkghost.fly.dev'],
   },
   reactStrictMode: true,
   pageExtensions: ['ts', 'tsx', 'js', 'jsx', 'md', 'mdx'],
