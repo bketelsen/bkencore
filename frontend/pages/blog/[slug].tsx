@@ -16,7 +16,7 @@ interface IParams extends ParsedUrlQuery {
   slug: string
 }
 function BlogPost({ post }: InferGetStaticPropsType<typeof getStaticProps>) {
-  const created = DateTime.fromISO(post.created_at)
+  const created = DateTime.fromISO(post.published_at)
 
   return (
     <div className="max-w-3xl mx-auto">
@@ -46,7 +46,7 @@ function BlogPost({ post }: InferGetStaticPropsType<typeof getStaticProps>) {
           <h1 className="text-4xl font-extrabold text-primary">{post.title}</h1>
           <div className="mt-3 mb-3 text-base text-secondary">
             {' '}
-            <time dateTime={post.created_at}>{created.toFormat('d LLL yyyy')}</time> -{' '}
+            <time dateTime={post.published_at}>{created.toFormat('d LLL yyyy')}</time> -{' '}
             {timeToRead(post.html || '')}
           </div>
 
