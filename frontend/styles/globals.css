@@ -158,6 +158,10 @@
   .prose .kg-callout-card-yellow {
     @apply bg-warning text-warning-content flex;
   }
+
+  .prose .kg-callout-card-green{
+    @apply bg-success text-success-content flex;
+  }
   .prose .kg-callout-emoji {
   @apply flex-shrink-0 h-6 w-6;
   font-size: 1.5rem;
