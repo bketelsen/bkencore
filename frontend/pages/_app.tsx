@@ -1,6 +1,5 @@
 import '@/styles/globals.css'
 import '@/styles/prism.css'
-import { SessionProvider } from "next-auth/react"
 import type { AppProps } from 'next/app'
 import Layout from '../components/LayoutDrawer'
 
@@ -19,13 +18,11 @@ switch (env) {
 }
 
 
-function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
+function MyApp({ Component, pageProps }: AppProps) {
   return (
-    <SessionProvider session={session}>
       <Layout>
         <Component {...pageProps} />
       </Layout>
-      </SessionProvider>
   )
 }
 
